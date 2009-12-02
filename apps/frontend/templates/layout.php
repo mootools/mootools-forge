@@ -15,13 +15,30 @@
 	<?php include_http_metas() ?>
   <?php include_metas() ?>
   <?php include_title() ?>	
+
+<script type="text/javascript">/*<![CDATA[*/
+
+	var _gaq = _gaq || [];
+	_gaq.push(['_setAccount', 'UA-1122274-8'], ['_trackPageview']);
+
+	(function(){
+		var ga = document.createElement('script');
+		ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+		ga.setAttribute('async', 'true');
+		document.documentElement.firstChild.appendChild(ga);
+	})();
+
+//]]></script>
 </head>
 <body>
 	
 	<div id="header">	
 		<div class="container">
+			<a id="mediatemple" href="http://mediatemple.net">
+				<span>in partnership with mediatemple</span>
+			</a>
 			<div id="logo">
-				<h1><a href="<?php echo url_for('@homepage') ?>"><span>PluginsKit</span></a></h1>
+				<h1><a href="http://mootools.net"><span>MooTools</span></a></h1>
 				<h2><span>a plugins repository</span></h2>
 			</div>
 			<div id="navigation">
@@ -55,8 +72,8 @@
 
 	<div id="footer">
 		<div class="container">
-			<hr />
-			<p>Powered by PluginsKit by <a href="http://devthought.com">Guillermo Rauch</a></p>
+			<p class="copy"><a href="http://mad4milk.net" id="mucca"></a></p>
+			<p>copyright ©2006-2012 <a href="http://mad4milk.net">Valerio Proietti</a></p>
 		</div>
 	</div>
 

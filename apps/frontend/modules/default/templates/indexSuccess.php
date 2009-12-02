@@ -14,17 +14,6 @@
 
 <hr class="clear" />
 
-<div class="block">	
-	<h3 class="blue"><span>Official (<?php echo link_to('all', '@browse') ?>) <?php echo link_to(image_tag('/images/feed.gif'), 'recentfeed', array('format' => 'rss201')) ?></span></h3>	
-	<ul class="projects">
-		<?php foreach ($official as $i => $plugin): ?>
-		<?php include_partial('plugin/bit', array('plugin' => $plugin, 'i' => $i)) ?>
-		<?php endforeach ?>
-	</ul>
-</div>
-
-<hr class="clear" />
-
 <div class="block">
 	<h3 class="blue"><span>Most downloaded (<?php echo link_to('all', '@browse?sort=downloads_count') ?>)</span></h3>
 	

@@ -52,6 +52,7 @@
 	<li><?php echo link_to('How to Add a Plugin', '@howtoadd') ?></li>
 	<li><?php echo link_to('Plugin Writing Guidelines', '@pluginguidelines') ?></li>	
 	<!-- <li><?php echo link_to('Syntax Checker', 'plugin/syntaxChecker') ?></li> -->
+	<li><a href="http://mooforge.uservoice.com/">Send Feedback</a></li>
 </ul>
 
 <h4 class="people"><span>People</span></h4>

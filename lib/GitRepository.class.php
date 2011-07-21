@@ -35,7 +35,8 @@ class GitRepository
 	
 	public function checkout(){
 		$command = sprintf('%s clone %s %s', $this->gitPath, $this->getRepoUrl(), $this->getPath());
-		sfContext::getInstance()->getLogger()->info('{GitRepository} Executing ' . $command);
+		//sfContext::getInstance()->getLogger()->info('{GitRepository} Executing ' . $command);
+		//echo escapeshellcmd($command);
 		exec(escapeshellcmd($command), $output, $return);
 		if ($return !== 0){
 			throw new GitRepositoryException('Git clone failed');
@@ -44,7 +45,7 @@ class GitRepository
 	}
 	
 	public function update(){
-	  if (file_exists($this->getPath())) exec(escapeshellcmd('rm -rf ' . $this->getPath()));
+	 	if (file_exists($this->getPath())) exec(escapeshellcmd('rm -rf ' . $this->getPath()));
 		return $this->checkout();
 	}
 	

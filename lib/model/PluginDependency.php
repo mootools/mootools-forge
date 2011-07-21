@@ -2,5 +2,4 @@
 
 class PluginDependency extends BasePluginDependency
 {
-	
 }

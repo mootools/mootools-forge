@@ -1,7 +1,7 @@
 prod:
   .settings:
     no_script_name:         on
-    logging_enabled:        off
+    logging_enabled:        on
     cache:                  on
     compressed:             on
     etag:                   on
@@ -90,7 +90,7 @@ all:
 #    max_forwards:           5
 #
 #    # Logging
-#    logging_enabled:        on
+    logging_enabled:        on
 #
 #    # i18n
 #    default_culture:        en        # Default user culture

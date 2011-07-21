@@ -23,6 +23,12 @@ class defaultActions extends sfActions
 		$c->setLimit(6);		
 		$this->recent = PluginPeer::doSelect($c);
 		
+		# Official
+		$c = new Criteria();
+		$c->addDescendingOrderByColumn(PluginPeer::OFFICIAL);
+		$c->setLimit(6);		
+		$this->official = PluginPeer::doSelect($c);
+		
 		# Most downloaded
 		$c = new Criteria();
 		$c->addDescendingOrderByColumn(PluginPeer::DOWNLOADS_COUNT);

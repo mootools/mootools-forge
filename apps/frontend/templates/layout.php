@@ -24,6 +24,14 @@
 				<h1><a href="<?php echo url_for('@homepage') ?>"><span>PluginsKit</span></a></h1>
 				<h2><span>a plugins repository</span></h2>
 			</div>
+			<div id="navigation">
+				<a href="/" class="first">Home</a>
+				<a href="/download">Download</a>
+				<a href="/docs">Docs</a>
+				<a href="/forge/">Forge</a>
+				<a href="/blog">Blog</a>
+				<a href="/demos">Demos</a>
+			</div>
 		</div>	
 	</div>	
 

@@ -1,11 +1,10 @@
-<form action="<?php echo url_for('search') ?>" id="search-form" class="block">
+<form action="/forge/browse" id="search-form" class="block">
 	<div id="search_field">
-		<?php echo $search['q']->render(array('class' => 'text', 'placeholder' => 'Search')) ?>
+		<input type="text" placeholder="Search" name="search" id="q" />
 	</div>
 	<div id="search_submit" class="input_submit">
 		<input type="submit" value="Go" />
 	</div>
-	<?php echo $search->renderHiddenFields() ?>
 </form>
 
 <?php if($sf_user->isAuthenticated()): ?>

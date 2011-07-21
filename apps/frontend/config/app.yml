@@ -1,0 +1,31 @@
+prod:
+  git:
+    command:            /usr/bin/git #make sure it's correct
+  
+  twitter:
+    consumer_key:       VqPXzJAWCoiPIDcJXtDjg
+    consumer_secret:    05UlTBJTlQVHgVpV0Sy9Po2J1LDMptootKmoznRY
+    
+dev:
+  git:
+    command:            /usr/bin/git #make sure it's correct
+  
+  twitter:
+    consumer_key:       VqPXzJAWCoiPIDcJXtDjg #fill for your local environment
+    consumer_secret:    05UlTBJTlQVHgVpV0Sy9Po2J1LDMptootKmoznRY #fill for your local environment
+
+# default values
+all:
+  git:
+    storage_path:       <?php echo sfConfig::get('sf_root_dir') ?>/git/
+  
+  browse:
+    # How many to display per page
+    per_page:           12    
+  
+  gravatar:
+    default_size:       48
+    default_rating:     G
+    default_image:      gravatar-48.png
+    cache_dir_name:     avatars
+    cache_expiration:   3 days

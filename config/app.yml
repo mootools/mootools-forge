@@ -1,0 +1,19 @@
+all:
+  
+  title_prefix:         MooTools Forge |
+  
+  webmaster:
+    email:              demo@pluginskit.com
+    
+  screenshots:     
+    path:               screenshots
+    width:              120
+    height:             85
+    primarywidth:       185
+    primaryheight:      78
+    
+  sfImageTransformPlugin:
+    default_adapter: GD
+    mime_type:
+      auto_detect: true
+      library: GD_MIME_Type    

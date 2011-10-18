@@ -171,7 +171,7 @@
 		<h3 class="blue"><span>Discuss</span></h3>
 		<p class="about" style="color: #700"><strong>A note on comments here</strong>: These comments are moderated. No comments will show up until they are approved. Comments that are not productive (i.e. inflammatory, rude, etc) will not be approved.
 		</p>
-		<p><b>Important: Bugs should be posted to <a href="http://github.com/<?php echo $github; ?>/issues">this repository's github issues page</a>, not in the comments below</b></p>
+		<p><b>Important: Bugs should be posted to <a href="http://github.com/<?php echo $github; ?>/issues">this repository's github issues page</a>, not in the comments below.</b></p>
 		<style>
 			ul#dsq-comments {
 				max-height:800px !important;

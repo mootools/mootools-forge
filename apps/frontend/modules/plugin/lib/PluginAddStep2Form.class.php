@@ -45,7 +45,7 @@ class PluginAddStep2Form extends PluginAddStepForm
 			}
 		}
 		
-		$tags = $this->fetch(sprintf('http://github.com/api/v2/json/repos/show/%s/%s/tags', $values['user'], $values['repository']));
+		$tags = $this->fetch(sprintf('https://api.github.com/repos/repos/%s/%s/tags', $values['user'], $values['repository']));
 		
 		if ($tagsArr = @json_decode($tags))
 		{

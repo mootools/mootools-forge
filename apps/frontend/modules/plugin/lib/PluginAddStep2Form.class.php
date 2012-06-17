@@ -45,11 +45,17 @@ class PluginAddStep2Form extends PluginAddStepForm
 			}
 		}
 		
-		$tags = $this->fetch(sprintf('https://api.github.com/repos/repos/%s/%s/tags', $values['user'], $values['repository']));
+		if (substr_count($values['repository'], '.git') > 0){
+			$values['repository'] = substr($values['repository'], 0, strrpos($values['repository'], '.'));
+		}
+
+		$tags = $this->fetch(sprintf('https://api.github.com/repos/%s/%s/tags', $values['user'], $values['repository']));
 		
 		if ($tagsArr = @json_decode($tags))
 		{
-			$this->gitTags = array_keys((array) $tagsArr->tags);
+			foreach((array) $tagsArr as $tag){
+				$this->gitTags[] = $tag->name;
+			}
 			usort($this->gitTags, 'version_compare');
 		} else {
 			throw new sfValidatorError($validator, 'Bad GitHub response. Try again later.');

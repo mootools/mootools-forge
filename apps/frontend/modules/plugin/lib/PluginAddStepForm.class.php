@@ -15,6 +15,8 @@ class PluginAddStepForm extends ForgeForm
 	}
 	
 	public function fetch($url){
+		return file_get_contents($url);
+
 		if (function_exists('curl_init')){
 			$c = curl_init();
       curl_setopt($c, CURLOPT_RETURNTRANSFER, 1);

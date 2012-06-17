@@ -20,7 +20,7 @@ all:
       classname:  PropelPDO
       dsn:        mysql:dbname=forge_mooforge;host=localhost
       username:   root
-      password:   password
+      password:   r
       encoding:   utf8
       persistent: true
       pooling:    true

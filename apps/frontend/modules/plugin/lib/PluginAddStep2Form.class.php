@@ -36,18 +36,33 @@ class PluginAddStep2Form extends PluginAddStepForm {
 		$this->validatorSchema->setPostValidator($c);
 	}
 
-	public function doValidate($validator, $values) {
-		if ($values['id']) {
+	public function doValidate($validator, $values) 
+	{
+		if ($values['id'])
+		{
 			$plugin = PluginPeer::retrieveByPk($values['id']);
-			if (!sfContext::getInstance()->getUser()->ownsPlugin($plugin)) {
+			
+			if (!sfContext::getInstance()->getUser()->ownsPlugin($plugin))
+			{
 				throw new sfValidatorError($validator, 'You don\'t own the plugin you\'re trying to edit');
 			}
 		}
+		
+		if( substr_count($values['repository'], '.git') > 0 ){
+			$values['repository'] = substr($values['repository'],0,strrpos($values['repository'],'.'));
+		}
+		
+		$url = sprintf('https://api.github.com/repos/%s/%s/tags', $values['user'], $values['repository']);
+		$tags = $this->fetch($url);
+		
 
-		$tags = $this->fetch(sprintf('https://api.github.com/repos/repos/%s/%s/tags', $values['user'], $values['repository']));
-
+		
 		if ($tagsArr = @json_decode($tags)) {
-			$this->gitTags = array_keys((array) $tagsArr->tags);
+			
+			foreach( (array) $tagsArr as $tag ){
+				$this->gitTags[] = $tag->name;
+			}
+
 			usort($this->gitTags, 'version_compare');
 		} else {
 			throw new sfValidatorError($validator, 'Bad GitHub response. Try again later.');

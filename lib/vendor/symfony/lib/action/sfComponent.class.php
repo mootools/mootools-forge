@@ -242,13 +242,19 @@ abstract class sfComponent
   }
 
   /**
+
+   *
+   * @return sfUser The current sfUser implementation instance
+   */
+  
+  /**
    * Retrieves the current sfUser object.
    *
    * This is a proxy method equivalent to:
    *
    * <code>$this->getContext()->getUser()</code>
-   *
-   * @return sfUser The current sfUser implementation instance
+   * 
+   * @return sfUser
    */
   public function getUser()
   {

@@ -11,6 +11,7 @@ class PluginAddStep4Form extends PluginAddStepForm
 {
 	
 	protected $gitRepositoryPath = null;
+	protected $gitRepository = null;
 	
 	public function configure(){
 		$this->setWidgets(array(
@@ -29,6 +30,9 @@ class PluginAddStep4Form extends PluginAddStepForm
 	}
 	
 	public function doValidate($validator, $values){
+		// temporarily disabled
+		return $values;
+
 		try {
 			$git = new GitRepository(sprintf('git://github.com/%s/%s.git', $values['user'], $values['repository']), sfConfig::get('app_git_storage_path'), sfConfig::get('app_git_command'));
 			$git->fetch();

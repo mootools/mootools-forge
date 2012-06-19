@@ -6,18 +6,17 @@
  * @package forge
  * @subpackage form
  * @author Guillermo Rauch
- **/
-class ForgeForm extends sfForm
-{
-	
+ * */
+class ForgeForm extends sfForm {
+
 	/**
 	 * Override regular validation schema class
 	 *
 	 * @return void
 	 * @author Guillermo Rauch
 	 */
-	public function setValidators(array $validators){
-    $this->setValidatorSchema(new ForgeValidatorSchema($validators));
+	public function setValidators(array $validators) {
+		$this->setValidatorSchema(new ForgeValidatorSchema($validators));
 	}
 
 	/**
@@ -28,8 +27,7 @@ class ForgeForm extends sfForm
 	 * @return string JSON response
 	 * @author Guillermo Rauch
 	 */
-	public function toJson($successMsg = '', $forceField = null)
-	{
+	public function toJson($successMsg = '', $forceField = null) {
 		if ($this->isValid()) {
 			return json_encode(array('success' => $successMsg));
 		}
@@ -59,5 +57,7 @@ class ForgeForm extends sfForm
 
 		return json_encode(array('errors' => $errors));
 	}
-	
-} // END class ForgeForm extends sfForm
+
+}
+
+// END class ForgeForm extends sfForm

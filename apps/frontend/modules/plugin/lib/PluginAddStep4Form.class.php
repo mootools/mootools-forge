@@ -11,6 +11,7 @@ class PluginAddStep4Form extends PluginAddStepForm
 {
 	
 	protected $gitRepositoryPath = null;
+	protected $gitRepository = null;
 	
 	public function configure(){
 		$this->setWidgets(array(
@@ -29,14 +30,17 @@ class PluginAddStep4Form extends PluginAddStepForm
 	}
 	
 	public function doValidate($validator, $values){
-		try {
-			$git = new GitRepository(sprintf('git://github.com/%s/%s.git', $values['user'], $values['repository']), sfConfig::get('app_git_storage_path'), sfConfig::get('app_git_command'));
-			$git->fetch();
-			
-			$this->gitRepositoryPath = $git->getPath();			
-		} catch (GitRepositoryException $e){
-			throw new sfValidatorError($validator, 'Problems pulling/updating the repository.');
-		}				
+		
+		// temp diabled
+		
+//		try {
+//			$git = new GitRepository(sprintf('git://github.com/%s/%s.git', $values['user'], $values['repository']), sfConfig::get('app_git_storage_path'), sfConfig::get('app_git_command'));
+//			$git->fetch();
+//			
+//			$this->gitRepositoryPath = $git->getPath();			
+//		} catch (GitRepositoryException $e){
+//			throw new sfValidatorError($validator, 'Problems pulling/updating the repository.');
+//		}				
 		
 		return $values;
 	}

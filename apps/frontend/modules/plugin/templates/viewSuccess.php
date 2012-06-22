@@ -167,11 +167,13 @@
 	</div>
 	<?php endif ?>
 
+	<hr class="clear" />
+
 	<div class="block section">
 		<h3 class="blue"><span>Discuss</span></h3>
 		<p class="about" style="color: #700"><strong>A note on comments here</strong>: These comments are moderated. No comments will show up until they are approved. Comments that are not productive (i.e. inflammatory, rude, etc) will not be approved.
 		</p>
-		<p><b>Important: Bugs should be posted to <a href="http://github.com/<?php echo $github; ?>/issues">this repository's github issues page</a>, not in the comments below.</b></p>
+		<p class="about" style="color: #700">Found a bug in this plugin? Please report it <a href="http://github.com/<?php echo $github; ?>/issues">this repository's Github Issues</a>.</p>
 		<style>
 			ul#dsq-comments {
 				max-height:800px !important;
@@ -181,7 +183,8 @@
 		</style>
 		<div id="disqus_thread"></div>
 		<script type="text/javascript">
-		    var disqus_shortname = 'mootoolsforge';
+		    var disqus_shortname = 'mootools-forge';
+		    var disqus_url = 'http://mootools.net<?php echo $_SERVER['REQUEST_URI']; ?>';
 
 		    /* * * DON'T EDIT BELOW THIS LINE * * */
 		    (function() {

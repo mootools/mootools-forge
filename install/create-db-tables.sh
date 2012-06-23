@@ -6,7 +6,7 @@
 # <project>/config/databases.yml are correct and set up.
 
 DIR="`dirname $0`/.."
-SYMFONY="$DIR/symfony"
+SYMFONY="php -d memory_limit=512M $DIR/symfony"
 
 $SYMFONY propel:build-sql
 $SYMFONY propel:insert-sql

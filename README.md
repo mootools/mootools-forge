@@ -26,3 +26,12 @@ Generates the required Propel Base-classes, which are extended by the different 
 ##### load-db-data.sh
 Loads some base data (from the `<project>/data/fixtures` directory) into the database.
 Make sure you have created both the database tables and database classes at this point.
+
+Installation problems
+---------------------
+
+##### Cache
+If you are getting `Access denied for user` or `Unknown database` errors even after updating your `<project>/config/database.yml`, see if `<project>/symfony cache:clear` helps.
+
+##### Rewriting
+If you are getting redirect loops (errors in your error log like `Request exceeded the limit of internal redirects`), make sure you have your `DocumentRoot` set up right, or uncomment the `RewriteBase` line in `<project>/web/.htaccess`.

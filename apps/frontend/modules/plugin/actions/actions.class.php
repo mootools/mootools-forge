@@ -159,10 +159,25 @@ class pluginActions extends ForgeActions
 			
 			$this->checkStep(4, $addid);
 			
-			$gitPath = $this->getUser()->getAttribute('github.path', '', 'plugin.add.' . $addid);
+			$this->getUser()->getAttributeHolder()->getNames();
+
+			$user = $this->getUser()->getAttribute('github.user', null, 'plugin.add.' . $addid);
+			$repository = $this->getUser()->getAttribute('github.repository', null, 'plugin.add.' . $addid);
+
+			// the validator just checks if files are in the repos. Because github changed
+			// everything with version 3 this needs a complete rewrite.
+			if (substr_count($repository, '.git') > 0){
+				$repository = substr($repository,0,strrpos($repository,'.'));
+			}
+
+			$gitPath = 'https://api.github.com/repos/' . $user . '/' . $repository . '/contents';
 			$gitTags = $this->getUser()->getAttribute('github.tags', array(), 'plugin.add.' . $addid);
-			$readme = new ForgeMDParser(file_get_contents($gitPath . '/README.md'));
-			$manifest = new ForgeYamlParser(file_get_contents($gitPath . '/package.yml'));
+
+			$readme = json_decode(file_get_contents($gitPath . '/README.md'));
+			$readme = new ForgeMDParser(base64_decode(@$readme->content));
+
+			$manifest = json_decode(file_get_contents($gitPath . '/package.yml'));
+			$manifest = new ForgeYamlParser(base64_decode(@$manifest->content));
 						
 			$params = array(
 				'author' => $manifest->get('author'),

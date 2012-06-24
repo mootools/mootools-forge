@@ -35,3 +35,6 @@ If you are getting `Access denied for user` or `Unknown database` errors even af
 
 ##### Rewriting
 If you are getting redirect loops (errors in your error log like `Request exceeded the limit of internal redirects`), make sure you have your `DocumentRoot` set up right, or uncomment the `RewriteBase` line in `<project>/web/.htaccess`.
+
+##### XSLT errors
+If you are getting errors like `Could not perform XLST transformation. Make sure PHP has been compiled/configured to support XSLT.` (when generating database classes or creating database tables) make sure you have a version of PHP with XSL support. In Debian or Ubuntu you'll have to install the `php5-xsl` package.

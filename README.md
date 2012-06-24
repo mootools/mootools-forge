@@ -40,3 +40,6 @@ If you are getting redirect loops (errors in your error log like `Request exceed
 
 ##### XSLT errors
 If you are getting errors like `Could not perform XLST transformation. Make sure PHP has been compiled/configured to support XSLT.` (when generating database classes or creating database tables) make sure you have a version of PHP with XSL support. In Debian or Ubuntu you'll have to install the `php5-xsl` package.
+
+##### Command not found
+If you are getting `php: command not found` or similar errors, make sure you have a version of PHP with a command line interpreter. In Debian or Ubuntu you'll find this in a separate package `php5-cli`.

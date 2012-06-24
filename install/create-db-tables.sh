@@ -7,6 +7,9 @@
 
 DIR="`dirname $0`/.."
 SYMFONY="php -d memory_limit=512M $DIR/symfony"
+SQLFILE="$DIR/data/sql/lib.model.schema.sql"
 
 $SYMFONY propel:build-sql
+sed -i'.orig'  's/^)Type/) ENGINE/' "$SQLFILE"
+
 $SYMFONY propel:insert-sql

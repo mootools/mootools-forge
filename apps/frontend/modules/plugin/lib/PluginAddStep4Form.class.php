@@ -11,7 +11,6 @@ class PluginAddStep4Form extends PluginAddStepForm
 {
 	
 	protected $gitRepositoryPath = null;
-	protected $gitRepository = null;
 	
 	public function configure(){
 		$this->setWidgets(array(

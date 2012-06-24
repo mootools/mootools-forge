@@ -51,7 +51,7 @@ class PluginAddStep2Form extends PluginAddStepForm
 
 		$tags = $this->fetch(sprintf('https://api.github.com/repos/%s/%s/tags', $values['user'], $values['repository']));
 		
-		if ($tagsArr = @json_decode($tags))
+		if (($tagsArr = @json_decode($tags)) !== null)
 		{
 			foreach((array) $tagsArr as $tag){
 				$this->gitTags[] = $tag->name;

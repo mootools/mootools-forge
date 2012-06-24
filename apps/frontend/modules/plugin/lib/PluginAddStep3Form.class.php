@@ -45,7 +45,7 @@ class PluginAddStep3Form extends PluginAddStepForm
 
 		$contentList = $this->fetch(sprintf('https://api.github.com/repos/%s/%s/contents/%s', $values['user'], $values['repository'], $file));
 
-		if (($contentList = @json_decode($contentList)) !== false)
+		if (($contentList = @json_decode($contentList)) !== null)
 		{
 			
 			foreach ($files as $filename => $filetype)

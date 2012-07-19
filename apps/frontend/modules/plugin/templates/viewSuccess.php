@@ -175,7 +175,7 @@
 		</p>
 		<p class="about" style="color: #700">Found a bug in this plugin? Please report it <a href="http://github.com/<?php echo $github; ?>/issues">this repository's Github Issues</a>.</p>
 		<style>
-			ul#dsq-comments {
+			#disqus_thread {
 				max-height:800px !important;
 				overflow:auto !important;
 				padding:0 10px 0 0 !important;

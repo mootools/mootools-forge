@@ -9,23 +9,23 @@
  **/
 class PluginAddStep6Form extends PluginAddStepForm
 {
-	
+
 	protected $dependencies = array();
-	
+
 	public function configure(){
 		$this->setWidgets(array(
 			'files' => new sfWidgetFormInput
 		));
-		
+
 		$this->setValidators(array(
 			'files' => new sfValidatorPass
 		));
-		
+
 		$c = new sfValidatorCallback(array('callback' => array($this, 'doValidate')));
 		$c->addOption('execute-if-passed', true);
 		$this->validatorSchema->setPostValidator($c);
 	}
-	
+
 	public function doValidate($validator, $values){
 		foreach ((array) $values['files'] as $file){
 			try {
@@ -33,45 +33,45 @@ class PluginAddStep6Form extends PluginAddStepForm
 			} catch (ForgeJSParserException $e){
 				throw new sfValidatorError($validator, $e->getMessage() . sprintf(' (%s)', basename($file)));
 			}
-			
+
 			$data = $parser->getData();
 
 			// check for *presence* of required fields
-			$requiredFields = array('provides', 'authors');			
+			$requiredFields = array('provides', 'authors');
 			foreach ($requiredFields as $required){
 				if (!isset($data[$required])){
 					throw new sfValidatorError($validator, sprintf('`%s` field missing or empty in %s', $required, basename($file)));
 				}
 			}
-			
+
 			// check for well formed dependencies
 			if (isset($data['requires'])){
-			  
-			  if (!is_array($data['requires'])) $data['requires'] = array($data['requires']);
-			  
+
+				if (!is_array($data['requires'])) $data['requires'] = array($data['requires']);
+
 				foreach ($data['requires'] as $a => $b){
-					
+
 					if (is_string($b) && preg_match('/([^:]+):([^\/]*)\/(.+)/', $b, $match)){
-					  $pluginName = $match[0];
-					  $version = $match[1];
-					  $b = $match[2];
+						$pluginName = $match[0];
+						$version = $match[1];
+						$b = $match[2];
 					} else {
-  					if (strstr($a, '/') || strstr($a, ':')){
-  						$pieces = explode(strstr($a, '/') ? '/' : ':', $a);
-  						$pluginName = $pieces[0];
-  						$version = $pieces[1];						
-  					} else if (is_numeric($a)){
-  					  $pluginName = '_self_';
-  					  $version = '_current_';
-  					} else {
-  						throw new sfValidatorError($validator, sprintf('Dependency "%s" is invalid. The format should be <b>plugin-uid</b>/<b>release</b>: [<b>provided-component</b>, ...]', $a . ': ' . $b ));
-  					}
+						if (strstr($a, '/') || strstr($a, ':')){
+							$pieces = explode(strstr($a, '/') ? '/' : ':', $a);
+							$pluginName = $pieces[0];
+							$version = $pieces[1];
+						} else if (is_numeric($a)){
+							$pluginName = '_self_';
+							$version = '_current_';
+						} else {
+							throw new sfValidatorError($validator, sprintf('Dependency "%s" is invalid. The format should be <b>plugin-uid</b>/<b>release</b>: [<b>provided-component</b>, ...]', $a . ': ' . $b ));
+						}
 					}
-										
+
 					$plugin = PluginPeer::retrieveBySlug($pluginName);
-					
+
 					if (!is_array($b)) $b = array($b);
-					
+
 					foreach ($b as $dep){
 						if ($plugin){
 							$c = new Criteria();
@@ -85,18 +85,18 @@ class PluginAddStep6Form extends PluginAddStepForm
 						} else {
 							$plugin_tag_id = null;
 						}
-						
+
 						$this->dependencies[] = array('scope' => $pluginName, 'version' => $version, 'component' => $dep, 'plugin_tag_id' => $plugin_tag_id);
 					}
-												
-				}				
+
+				}
 			}
-			
+
 		}
 	}
-	
+
 	public function getDependencies(){
 		return $this->dependencies;
 	}
-	
+
 } // END class PluginAddStep6Form extends PluginAddStepForm

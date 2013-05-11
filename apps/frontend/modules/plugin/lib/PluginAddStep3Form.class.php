@@ -8,22 +8,22 @@
  * @author Guillermo Rauch
  **/
 class PluginAddStep3Form extends PluginAddStepForm
-{	
-	
+{
+
 	protected $gitTrees = array();
 	protected $gitFileList = array();
-	
+
 	public function configure(){
 		$this->setWidgets(array(
 			'user' => new sfWidgetFormInput,
 			'repository' => new sfWidgetFormInput
 		));
-	
+
 		$this->setValidators(array(
 			'user' => new sfValidatorString,
 			'repository' => new sfValidatorString
 		));
-		
+
 		$c = new sfValidatorCallback(array('callback' => array($this, 'doValidate')));
 		$c->addOption('execute-if-passed', true);
 		$this->validatorSchema->setPostValidator($c);
@@ -35,7 +35,7 @@ class PluginAddStep3Form extends PluginAddStepForm
 			'README.md' => 'file',
 			'Source' => 'dir'
 		);
-		
+
 		// the validator just checks if files are in the repos. Because github changed
 		// everything with version 3 this needs a complete rewrite.
 		if (substr_count($values['repository'], '.git') > 0)
@@ -47,7 +47,7 @@ class PluginAddStep3Form extends PluginAddStepForm
 
 		if (($contentList = @json_decode($contentList)) !== null)
 		{
-			
+
 			foreach ($files as $filename => $filetype)
 			{
 				foreach ((array) $contentList as $contentItem)
@@ -64,11 +64,11 @@ class PluginAddStep3Form extends PluginAddStepForm
 			{
 				throw new sfValidatorError($validator, sprintf('Could not find one of necessary files (%s) <a href="http://github.com/%s/%s/blob/master/">%s / %s</a> not found in repository root.', implode(', ', array_keys($files)), $values['user'], $values['repository'], $values['user'], $values['repository']));
 			}
-		}		
-	
+		}
+
 		return $values;
 	}
-	
+
 	/**
 	 * Returns the tree hashes for the latest commit of each required file.
 	 *
@@ -78,5 +78,5 @@ class PluginAddStep3Form extends PluginAddStepForm
 	public function getGitTrees(){
 		return $this->gitTrees;
 	}
-	
+
 } // END class PluginAddStep2Form extends ForgeForm

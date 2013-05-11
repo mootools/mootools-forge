@@ -9,7 +9,7 @@
  **/
 class ForgeForm extends sfForm
 {
-	
+
 	/**
 	 * Override regular validation schema class
 	 *
@@ -17,7 +17,7 @@ class ForgeForm extends sfForm
 	 * @author Guillermo Rauch
 	 */
 	public function setValidators(array $validators){
-    $this->setValidatorSchema(new ForgeValidatorSchema($validators));
+		$this->setValidatorSchema(new ForgeValidatorSchema($validators));
 	}
 
 	/**
@@ -59,5 +59,5 @@ class ForgeForm extends sfForm
 
 		return json_encode(array('errors' => $errors));
 	}
-	
+
 } // END class ForgeForm extends sfForm

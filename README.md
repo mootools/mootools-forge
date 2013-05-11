@@ -43,3 +43,8 @@ If you are getting errors like `Could not perform XLST transformation. Make sure
 
 ##### Command not found
 If you are getting `php: command not found` or similar errors, make sure you have a version of PHP with a command line interpreter. In Debian or Ubuntu you'll find this in a separate package `php5-cli`.
+
+Vagrant Installation
+--------------------
+
+Vagrant can be used to run the MooTools Forge. Once [Vagrant](http://www.vagrantup.com/) is installed and this repository is cloned `vagrant up` can be executed. This starts the Vagrant virtual machine. The provisioning takes care of the entire installation and setup. To view the open the site go to `http://192.168.8.120` in the browser.

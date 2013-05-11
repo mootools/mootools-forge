@@ -1,0 +1,19 @@
+<VirtualHost 192.168.8.120:80>
+	ServerName forge.localhost
+
+	DocumentRoot /vagrant/web
+
+	DirectoryIndex index.php
+
+	<Directory "/vagrant/web">
+		AllowOverride All
+		Allow from All
+	</Directory>
+
+	Alias /sf /vagrant/lib/vendor/symfony/data/web/sf
+	<Directory "/vagrant/lib/vendor/symfony/data/web/sf">
+		AllowOverride All
+		Allow from All
+	</Directory>
+</VirtualHost>
+

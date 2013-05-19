@@ -43,7 +43,7 @@ class PluginAddStep3Form extends PluginAddStepForm
 			$values['repository'] = substr($values['repository'], 0, strrpos($values['repository'], '.'));
 		}
 
-		$contentList = $this->fetch(sprintf('https://api.github.com/repos/%s/%s/contents/%s', $values['user'], $values['repository'], $file));
+		$contentList = GitHubFetcher::fetchContent(sprintf('/repos/%s/%s/contents/%s', $values['user'], $values['repository'], $file));
 
 		if (($contentList = @json_decode($contentList)) !== null)
 		{

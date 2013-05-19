@@ -25,18 +25,6 @@ class pluginActions extends ForgeActions
 		$this->forward404Unless($num === $this->getUser()->getAttribute('step', null, 'plugin.add.' . $addid));
 	}
 
-	private function fetch($url){
-		if (function_exists('curl_init')){
-			$c = curl_init();
-			curl_setopt($c, CURLOPT_RETURNTRANSFER, 1);
-			curl_setopt($c, CURLOPT_URL, $url);
-			curl_setopt($c, CURLOPT_USERAGENT, 'curl/7.15.5 (i686-redhat-linux-gnu) libcurl/7.15.5 OpenSSL/0.9.8b zlib/1.2.3 libidn/0.6.5');
-			$contents = curl_exec($c);
-			curl_close($c);
-			return $contents;
-		} else throw new ForgeException('cURL is required');
-	}
-
 	/**
 	 * Add first step
 	 *
@@ -182,13 +170,13 @@ class pluginActions extends ForgeActions
 				$repository = substr($repository,0,strrpos($repository,'.'));
 			}
 
-			$gitPath = 'https://api.github.com/repos/' . $user . '/' . $repository . '/contents';
+			$gitPath = '/repos/' . $user . '/' . $repository . '/contents';
 			$gitTags = $this->getUser()->getAttribute('github.tags', array(), 'plugin.add.' . $addid);
 
-			$readme = json_decode($this->fetch($gitPath . '/README.md'));
+			$readme = json_decode(GitHubFetcher::fetchContent($gitPath . '/README.md'));
 			$readme = new ForgeMDParser(base64_decode(@$readme->content));
 
-			$manifest = json_decode($this->fetch($gitPath . '/package.yml'));
+			$manifest = json_decode(GitHubFetcher::fetchContent($gitPath . '/package.yml'));
 			$manifest = new ForgeYamlParser(base64_decode(@$manifest->content));
 
 			$params = array(

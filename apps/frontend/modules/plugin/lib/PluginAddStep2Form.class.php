@@ -49,7 +49,7 @@ class PluginAddStep2Form extends PluginAddStepForm
 			$values['repository'] = substr($values['repository'], 0, strrpos($values['repository'], '.'));
 		}
 
-		$tags = $this->fetch(sprintf('https://api.github.com/repos/%s/%s/tags', $values['user'], $values['repository']));
+		$tags = GitHubFetcher::fetchContent(sprintf('/repos/%s/%s/tags', $values['user'], $values['repository']));
 
 		if (($tagsArr = @json_decode($tags)) !== null)
 		{

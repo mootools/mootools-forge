@@ -36,7 +36,7 @@ require_once 'phing/BuildListener.php';
  * </code>
  * 
  * @author    Hans Lellelid <hans@xmpl.org>
- * @version   $Revision: 1.3 $ $Date: 2007-08-27 19:17:00 -0700 (Mon, 27 Aug 2007) $
+ * @version   $Revision: 1.3 $ $Date: 2007-08-28 04:17:00 +0200 (Tue, 28 Aug 2007) $
  * @see       BuildEvent
  * @package   phing.listener
  */

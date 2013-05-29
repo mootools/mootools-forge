@@ -25,7 +25,7 @@ include_once 'phing/system/io/Reader.php';
  * Convenience class for reading files.
  *
  * @author    <a href="mailto:yl@seasonfive.com">Yannick Lecaillez</a>
- * @version   $Revision: 1.6 $ $Date: 2007-08-27 19:17:00 -0700 (Mon, 27 Aug 2007) $
+ * @version   $Revision: 1.6 $ $Date: 2007-08-28 04:17:00 +0200 (Tue, 28 Aug 2007) $
  * @access    public
  * @see       FilterReader
  * @package   phing.system.io

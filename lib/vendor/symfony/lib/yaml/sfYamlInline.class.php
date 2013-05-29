@@ -8,24 +8,22 @@
  * file that was distributed with this source code.
  */
 
-require_once dirname(__FILE__).'/sfYaml.class.php';
-
 /**
  * sfYamlInline implements a YAML parser/dumper for the YAML inline syntax.
  *
  * @package    symfony
- * @subpackage yaml
+ * @subpackage util
  * @author     Fabien Potencier <fabien.potencier@symfony-project.com>
- * @version    SVN: $Id: sfYamlInline.class.php 16177 2009-03-11 08:32:48Z fabien $
+ * @version    SVN: $Id: sfYamlInline.class.php 17749 2009-04-29 11:54:22Z fabien $
  */
 class sfYamlInline
 {
   /**
-   * Convert a YAML string to a PHP array.
+   * Load YAML into a PHP array.
    *
-   * @param string $value A YAML string
+   * @param string $value YAML
    *
-   * @return array A PHP array representing the YAML string
+   * @return array PHP array
    */
   static public function load($value)
   {
@@ -48,25 +46,14 @@ class sfYamlInline
   }
 
   /**
-   * Dumps a given PHP variable to a YAML string.
+   * Dumps PHP array to YAML.
    *
-   * @param mixed $value The PHP variable to convert
+   * @param mixed $value PHP
    *
-   * @return string The YAML string representing the PHP array
+   * @return string YAML
    */
   static public function dump($value)
   {
-    if ('1.1' === sfYaml::getSpecVersion())
-    {
-      $trueValues = array('true', 'on', '+', 'yes', 'y');
-      $falseValues = array('false', 'off', '-', 'no', 'n');
-    }
-    else
-    {
-      $trueValues = array('true');
-      $falseValues = array('false');
-    }
-
     switch (true)
     {
       case is_resource($value):
@@ -75,7 +62,7 @@ class sfYamlInline
         return '!!php/object:'.serialize($value);
       case is_array($value):
         return self::dumpArray($value);
-      case null === $value:
+      case is_null($value):
         return 'null';
       case true === $value:
         return 'true';
@@ -87,17 +74,15 @@ class sfYamlInline
         return is_infinite($value) ? str_ireplace('INF', '.Inf', strval($value)) : (is_string($value) ? "'$value'" : $value);
       case false !== strpos($value, "\n"):
         return sprintf('"%s"', str_replace(array('"', "\n", "\r"), array('\\"', '\n', '\r'), $value));
-      case preg_match('/[ \s \' " \: \{ \} \[ \] , & \* \#] | \A[ - ? | < > = ! % @ ]/x', $value):
+      case preg_match('/[ \s \' " \: \{ \} \[ \] , & \* \#]/x', $value):
         return sprintf("'%s'", str_replace('\'', '\'\'', $value));
       case '' == $value:
         return "''";
       case preg_match(self::getTimestampRegex(), $value):
         return "'$value'";
-      case in_array(strtolower($value), $trueValues):
+      case in_array(strtolower($value), array('true', 'on', '+', 'yes', 'y')):
         return "'$value'";
-      case in_array(strtolower($value), $falseValues):
-        return "'$value'";
-      case in_array(strtolower($value), array('null', '~')):
+      case in_array(strtolower($value), array('false', 'off', '-', 'no', 'n')):
         return "'$value'";
       default:
         return $value;
@@ -105,11 +90,11 @@ class sfYamlInline
   }
 
   /**
-   * Dumps a PHP array to a YAML string.
+   * Dumps PHP array to YAML
    *
-   * @param array $value The PHP array to dump
+   * @param array $value The array to dump
    *
-   * @return string The YAML string representing the PHP array
+   * @return string YAML
    */
   static protected function dumpArray($value)
   {
@@ -140,15 +125,15 @@ class sfYamlInline
   }
 
   /**
-   * Parses a scalar to a YAML string.
+   * Parses scalar to yaml
    *
-   * @param scalar  $scalar
-   * @param string  $delimiters
-   * @param array   $stringDelimiter
+   * @param scalar $scalar
+   * @param string $delimiters
+   * @param array  $stringDelimiter
    * @param integer $i
    * @param boolean $evaluate
    *
-   * @return string A YAML string
+   * @return string YAML
    */
   static public function parseScalar($scalar, $delimiters = null, $stringDelimiters = array('"', "'"), &$i = 0, $evaluate = true)
   {
@@ -191,12 +176,12 @@ class sfYamlInline
   }
 
   /**
-   * Parses a quoted scalar to YAML.
+   * Parses quotes scalar
    *
-   * @param string  $scalar
+   * @param string $scalar
    * @param integer $i
    *
-   * @return string A YAML string
+   * @return string YAML
    */
   static protected function parseQuotedScalar($scalar, &$i)
   {
@@ -235,12 +220,12 @@ class sfYamlInline
   }
 
   /**
-   * Parses a sequence to a YAML string.
+   * Parse sequence to yaml
    *
-   * @param string  $sequence
+   * @param string $sequence
    * @param integer $i
    *
-   * @return string A YAML string
+   * @return string YAML
    */
   static protected function parseSequence($sequence, &$i = 0)
   {
@@ -295,12 +280,12 @@ class sfYamlInline
   }
 
   /**
-   * Parses a mapping to a YAML string.
+   * Parses mapping.
    *
-   * @param string  $mapping
+   * @param string $mapping
    * @param integer $i
    *
-   * @return string A YAML string
+   * @return string YAML
    */
   static protected function parseMapping($mapping, &$i = 0)
   {
@@ -366,22 +351,11 @@ class sfYamlInline
    *
    * @param string $scalar
    *
-   * @return string A YAML string
+   * @return string YAML
    */
   static protected function evaluateScalar($scalar)
   {
     $scalar = trim($scalar);
-
-    if ('1.1' === sfYaml::getSpecVersion())
-    {
-      $trueValues = array('true', 'on', '+', 'yes', 'y');
-      $falseValues = array('false', 'off', '-', 'no', 'n');
-    }
-    else
-    {
-      $trueValues = array('true');
-      $falseValues = array('false');
-    }
 
     switch (true)
     {
@@ -399,9 +373,9 @@ class sfYamlInline
         $raw = $scalar;
         $cast = intval($scalar);
         return '0' == $scalar[0] ? octdec($scalar) : (((string) $raw == (string) $cast) ? $cast : $raw);
-      case in_array(strtolower($scalar), $trueValues):
+      case in_array(strtolower($scalar), array('true', 'on', '+', 'yes', 'y')):
         return true;
-      case in_array(strtolower($scalar), $falseValues):
+      case in_array(strtolower($scalar), array('false', 'off', '-', 'no', 'n')):
         return false;
       case is_numeric($scalar):
         return '0x' == $scalar[0].$scalar[1] ? hexdec($scalar) : floatval($scalar);

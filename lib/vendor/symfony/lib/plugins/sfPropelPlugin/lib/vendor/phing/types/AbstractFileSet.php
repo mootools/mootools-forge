@@ -62,7 +62,7 @@ include_once 'phing/util/DirectoryScanner.php';
  *
  * @author    Andreas Aderhold <andi@binarycloud.com>
  * @author    Hans Lellelid <hans@xmpl.org>
- * @version    $Revision: 1.15 $ $Date: 2007-02-05 07:19:00 -0800 (Mon, 05 Feb 2007) $
+ * @version    $Revision: 1.15 $ $Date: 2007-02-05 16:19:00 +0100 (Mon, 05 Feb 2007) $
  * @see        ProjectComponent
  * @package    phing.types
  */

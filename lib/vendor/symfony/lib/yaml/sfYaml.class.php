@@ -9,45 +9,17 @@
  */
 
 /**
- * sfYaml offers convenience methods to load and dump YAML.
+ * sfYaml class.
  *
  * @package    symfony
- * @subpackage yaml
+ * @subpackage util
  * @author     Fabien Potencier <fabien.potencier@symfony-project.com>
- * @version    SVN: $Id: sfYaml.class.php 8988 2008-05-15 20:24:26Z fabien $
+ * @version    SVN: $Id: sfYaml.class.php 18492 2009-05-20 14:19:35Z nicolas $
  */
 class sfYaml
 {
-  static protected
-    $spec = '1.1';
-
   /**
-   * Sets the YAML specification version to use.
-   *
-   * @param string $version The YAML specification version
-   */
-  static public function setSpecVersion($version)
-  {
-    if (!in_array($version, array('1.1', '1.2')))
-    {
-      throw new InvalidArgumentException(sprintf('Version %s of the YAML specifications is not supported', $version));
-    }
-
-    self::$spec = $version;
-  }
-
-  /**
-   * Gets the YAML specification version to use.
-   *
-   * @return string The YAML specification version
-   */
-  static public function getSpecVersion()
-  {
-    return self::$spec;
-  }
-
-  /**
-   * Loads YAML into a PHP array.
+   * Load YAML into a PHP array statically
    *
    * The load method, when supplied with a YAML stream (string or file),
    * will do its best to convert YAML in a file into a PHP array.
@@ -60,9 +32,7 @@ class sfYaml
    *
    * @param string $input Path of YAML file or string containing YAML
    *
-   * @return array The YAML converted to a PHP array
-   *
-   * @throws InvalidArgumentException If the YAML is not valid
+   * @return array
    */
   public static function load($input)
   {
@@ -77,11 +47,11 @@ class sfYaml
       $retval = include($input);
       $content = ob_get_clean();
 
-      // if an array is returned by the config file assume it's in plain php form else in YAML
+      // if an array is returned by the config file assume it's in plain php form else in yaml
       $input = is_array($retval) ? $retval : $content;
     }
 
-    // if an array is returned by the config file assume it's in plain php form else in YAML
+    // if an array is returned by the config file assume it's in plain php form else in yaml
     if (is_array($input))
     {
       return $input;
@@ -104,15 +74,15 @@ class sfYaml
   }
 
   /**
-   * Dumps a PHP array to a YAML string.
+   * Dump YAML from PHP array statically
    *
    * The dump method, when supplied with an array, will do its best
    * to convert the array into friendly YAML.
    *
-   * @param array   $array PHP array
-   * @param integer $inline The level where you switch to inline YAML
+   * @param  array    $array   PHP array
+   * @param  integer  $inline  The level where you switch to inline YAML
    *
-   * @return string A YAML string representing the original PHP array
+   * @return string
    */
   public static function dump($array, $inline = 2)
   {

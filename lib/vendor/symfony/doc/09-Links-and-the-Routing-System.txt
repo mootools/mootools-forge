@@ -96,7 +96,7 @@ Listing 9-2 - A Sample Routing Rule
       url:    articles/:subject/:year/:title.html
       param:  { module: article, action: permalink }
 
-Every request sent to a symfony application is first analyzed by the routing system (which is simple because every request in handled by a single front controller). The routing system looks for a match between the request URL and the patterns defined in the routing rules. If a match is found, the named wildcards become request parameters and are merged with the ones defined in the `param:` key. See how it works in Listing 9-3.
+Every request sent to a symfony application is first analyzed by the routing system (which is simple because every request is handled by a single front controller). The routing system looks for a match between the request URL and the patterns defined in the routing rules. If a match is found, the named wildcards become request parameters and are merged with the ones defined in the `param:` key. See how it works in Listing 9-3.
 
 Listing 9-3 - The Routing System Interprets Incoming Request URLs
 
@@ -514,7 +514,7 @@ Now an `article/delete` URL can't match the `article_by_id` rule anymore, becaus
 >The `permalink` action needs to determine the requested article from its title, so your model must provide an appropriate method.
 >
 >     [php]
->     public function executePermalink($request)
+>     public function executePermalink(sfWebRequest $request)
 >     {
 >       $article = ArticlePeer::retrieveBySlug($request->getParameter('slug');
 >       $this->forward404Unless($article);  // Display 404 if no article matches slug

@@ -125,7 +125,7 @@ EOF;
     // clear global cache
     if (is_null($options['app']) && 'all' == $options['type'])
     {
-      $this->getFilesystem()->remove(sfFinder::type('file')->discard('.gitignore')->discard('.sf')->in(sfConfig::get('sf_cache_dir')));
+      $this->getFilesystem()->remove(sfFinder::type('file')->discard('.sf')->in(sfConfig::get('sf_cache_dir')));
     }
   }
 

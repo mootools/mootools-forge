@@ -33,7 +33,7 @@ include_once 'phing/system/io/PhingFile.php';
  *
  * @author      Andreas Aderhold <andi@binarycloud.com>
  * @copyright � 2001,2002 THYRELL. All rights reserved
- * @version   $Revision: 1.17 $ $Date: 2007-02-06 12:32:22 -0800 (Tue, 06 Feb 2007) $
+ * @version   $Revision: 1.17 $ $Date: 2007-02-06 21:32:22 +0100 (Tue, 06 Feb 2007) $
  * @access    public
  * @package   phing.parser
  */

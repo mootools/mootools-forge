@@ -1,28 +1,8 @@
-prod:
-  git:
-    command:            /usr/bin/git #make sure it's correct
-  
-  twitter:
-    consumer_key:       #fill
-    consumer_secret:    #fill
-    
-dev:
-  git:
-    command:            /usr/bin/git #make sure it's correct
-  
-  twitter:
-    consumer_key:       FrPf98reevKh2BGKzqRoA #fill for your local environment
-    consumer_secret:    LiIKnnribXNt2VHXHXbAnZpeo0gtDVnA2gsSFSrWPsw #fill for your local environment
-
-# default values
 all:
-  git:
-    storage_path:       <?php echo sfConfig::get('sf_root_dir') ?>/git/
-  
   browse:
     # How many to display per page
-    per_page:           12    
-  
+    per_page:           12
+
   gravatar:
     default_size:       48
     default_rating:     G

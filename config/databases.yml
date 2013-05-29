@@ -1,3 +1,5 @@
+# vim:filetype=yaml:expandtab:tabstop=2:shiftwidth=2:
+
 dev:
   propel:
     param:

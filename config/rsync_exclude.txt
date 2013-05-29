@@ -3,3 +3,4 @@
 /cache/*
 /log/*
 /web/*_dev.php
+/git/*

@@ -38,7 +38,7 @@
 				<span>in partnership with mediatemple</span>
 			</a>
 			<div id="logo">
-				<h1><a href="http://mootools.net"><span>MooTools</span></a></h1>
+				<h1><a href="/"><span>MooTools</span></a></h1>
 				<h2><span>a plugins repository</span></h2>
 			</div>
 			<div id="navigation">

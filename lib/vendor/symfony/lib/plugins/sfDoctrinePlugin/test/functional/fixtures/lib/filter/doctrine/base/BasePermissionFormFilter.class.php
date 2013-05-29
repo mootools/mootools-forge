@@ -1,33 +1,34 @@
 <?php
 
-require_once(sfConfig::get('sf_lib_dir').'/filter/doctrine/BaseFormFilterDoctrine.class.php');
-
 /**
  * Permission filter form base class.
  *
- * @package    filters
- * @subpackage Permission *
- * @version    SVN: $Id: sfDoctrineFormFilterGeneratedTemplate.php 11675 2008-09-19 15:21:38Z fabien $
+ * @package    symfony12
+ * @subpackage filter
+ * @author     Your name here
+ * @version    SVN: $Id: sfDoctrineFormFilterGeneratedTemplate.php 29570 2010-05-21 14:49:47Z Kris.Wallsmith $
  */
-class BasePermissionFormFilter extends BaseFormFilterDoctrine
+abstract class BasePermissionFormFilter extends BaseFormFilterDoctrine
 {
   public function setup()
   {
     $this->setWidgets(array(
       'name'        => new sfWidgetFormFilterInput(),
-      'users_list'  => new sfWidgetFormDoctrineChoiceMany(array('model' => 'User')),
-      'groups_list' => new sfWidgetFormDoctrineChoiceMany(array('model' => 'Group')),
+      'users_list'  => new sfWidgetFormDoctrineChoice(array('multiple' => true, 'model' => 'User')),
+      'groups_list' => new sfWidgetFormDoctrineChoice(array('multiple' => true, 'model' => 'Group')),
     ));
 
     $this->setValidators(array(
       'name'        => new sfValidatorPass(array('required' => false)),
-      'users_list'  => new sfValidatorDoctrineChoiceMany(array('model' => 'User', 'required' => false)),
-      'groups_list' => new sfValidatorDoctrineChoiceMany(array('model' => 'Group', 'required' => false)),
+      'users_list'  => new sfValidatorDoctrineChoice(array('multiple' => true, 'model' => 'User', 'required' => false)),
+      'groups_list' => new sfValidatorDoctrineChoice(array('multiple' => true, 'model' => 'Group', 'required' => false)),
     ));
 
     $this->widgetSchema->setNameFormat('permission_filters[%s]');
 
     $this->errorSchema = new sfValidatorErrorSchema($this->validatorSchema);
+
+    $this->setupInheritance();
 
     parent::setup();
   }
@@ -44,8 +45,10 @@ class BasePermissionFormFilter extends BaseFormFilterDoctrine
       return;
     }
 
-    $query->leftJoin('r.UserPermission UserPermission')
-          ->andWhereIn('UserPermission.user_id', $values);
+    $query
+      ->leftJoin($query->getRootAlias().'.UserPermission UserPermission')
+      ->andWhereIn('UserPermission.user_id', $values)
+    ;
   }
 
   public function addGroupsListColumnQuery(Doctrine_Query $query, $field, $values)
@@ -60,8 +63,10 @@ class BasePermissionFormFilter extends BaseFormFilterDoctrine
       return;
     }
 
-    $query->leftJoin('r.GroupPermission GroupPermission')
-          ->andWhereIn('GroupPermission.group_id', $values);
+    $query
+      ->leftJoin($query->getRootAlias().'.GroupPermission GroupPermission')
+      ->andWhereIn('GroupPermission.group_id', $values)
+    ;
   }
 
   public function getModelName()

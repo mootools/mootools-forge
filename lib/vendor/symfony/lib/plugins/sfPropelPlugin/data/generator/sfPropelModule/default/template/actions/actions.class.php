@@ -7,7 +7,8 @@
  * @subpackage <?php echo $this->getModuleName()."\n" ?>
  * @author     ##AUTHOR_NAME##
  */
-class <?php echo $this->getGeneratedModuleName() ?>Actions extends sfActions
+class <?php echo $this->getGeneratedModuleName() ?>Actions extends <?php echo $this->getActionsBaseClass() ?>
+
 {
 <?php include dirname(__FILE__).'/../../parts/indexAction.php' ?>
 

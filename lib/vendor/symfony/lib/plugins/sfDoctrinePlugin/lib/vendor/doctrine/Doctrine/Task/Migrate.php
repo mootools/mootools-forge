@@ -16,7 +16,7 @@
  *
  * This software consists of voluntary contributions made by many individuals
  * and is licensed under the LGPL. For more information, see
- * <http://www.phpdoctrine.org>.
+ * <http://www.doctrine-project.org>.
  */
 
 /**
@@ -25,7 +25,7 @@
  * @package     Doctrine
  * @subpackage  Task
  * @license     http://www.opensource.org/licenses/lgpl-license.php LGPL
- * @link        www.phpdoctrine.org
+ * @link        www.doctrine-project.org
  * @since       1.0
  * @version     $Revision: 2761 $
  * @author      Jonathan H. Wage <jwage@mac.com>
@@ -38,7 +38,7 @@ class Doctrine_Task_Migrate extends Doctrine_Task
     
     public function execute()
     {
-        $version = Doctrine::migrate($this->getArgument('migrations_path'), $this->getArgument('version'));
+        $version = Doctrine_Core::migrate($this->getArgument('migrations_path'), $this->getArgument('version'));
         
         $this->notify('migrated successfully to version #' . $version);
     }

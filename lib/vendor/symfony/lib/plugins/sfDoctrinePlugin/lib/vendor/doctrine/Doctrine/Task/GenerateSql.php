@@ -16,7 +16,7 @@
  *
  * This software consists of voluntary contributions made by many individuals
  * and is licensed under the LGPL. For more information, see
- * <http://www.phpdoctrine.org>.
+ * <http://www.doctrine-project.org>.
  */
 
 /**
@@ -25,7 +25,7 @@
  * @package     Doctrine
  * @subpackage  Task
  * @license     http://www.opensource.org/licenses/lgpl-license.php LGPL
- * @link        www.phpdoctrine.org
+ * @link        www.doctrine-project.org
  * @since       1.0
  * @version     $Revision: 2761 $
  * @author      Jonathan H. Wage <jwage@mac.com>
@@ -47,7 +47,7 @@ class Doctrine_Task_GenerateSql extends Doctrine_Task
             throw new Doctrine_Task_Exception('Invalid sql path.');
         }
         
-        $sql = Doctrine::generateSqlFromModels($this->getArgument('models_path'));
+        $sql = Doctrine_Core::generateSqlFromModels($this->getArgument('models_path'));
         
         file_put_contents($path, $sql);
         

@@ -32,7 +32,7 @@
  * @package    symfony
  * @subpackage validator
  * @author     Fabien Potencier <fabien.potencier@symfony-project.com>
- * @version    SVN: $Id: sfCompareValidator.class.php 7902 2008-03-15 13:17:33Z fabien $
+ * @version    SVN: $Id: sfCompareValidator.class.php 23810 2009-11-12 11:07:44Z Kris.Wallsmith $
  */
 class sfCompareValidator extends sfValidator
 {

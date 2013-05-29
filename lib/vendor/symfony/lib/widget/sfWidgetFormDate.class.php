@@ -3,7 +3,7 @@
 /*
  * This file is part of the symfony package.
  * (c) Fabien Potencier <fabien.potencier@symfony-project.com>
- * 
+ *
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
  */
@@ -14,7 +14,7 @@
  * @package    symfony
  * @subpackage widget
  * @author     Fabien Potencier <fabien.potencier@symfony-project.com>
- * @version    SVN: $Id: sfWidgetFormDate.class.php 16259 2009-03-12 11:42:00Z fabien $
+ * @version    SVN: $Id: sfWidgetFormDate.class.php 30762 2010-08-25 12:33:33Z fabien $
  */
 class sfWidgetFormDate extends sfWidgetForm
 {
@@ -49,6 +49,8 @@ class sfWidgetFormDate extends sfWidgetForm
   }
 
   /**
+   * Renders the widget.
+   *
    * @param  string $name        The element name
    * @param  string $value       The date displayed in this widget
    * @param  array  $attributes  An array of HTML attributes to be merged with the default HTML attributes
@@ -82,18 +84,49 @@ class sfWidgetFormDate extends sfWidgetForm
     $date = array();
     $emptyValues = $this->getOption('empty_values');
 
-    // days
-    $widget = new sfWidgetFormSelect(array('choices' => $this->getOption('can_be_empty') ? array('' => $emptyValues['day']) + $this->getOption('days') : $this->getOption('days')), array_merge($this->attributes, $attributes));
-    $date['%day%'] = $widget->render($name.'[day]', $value['day']);
-
-    // months
-    $widget = new sfWidgetFormSelect(array('choices' => $this->getOption('can_be_empty') ? array('' => $emptyValues['month']) + $this->getOption('months') : $this->getOption('months')), array_merge($this->attributes, $attributes));
-    $date['%month%'] = $widget->render($name.'[month]', $value['month']);
-
-    // years
-    $widget = new sfWidgetFormSelect(array('choices' => $this->getOption('can_be_empty') ? array('' => $emptyValues['year']) + $this->getOption('years') : $this->getOption('years')), array_merge($this->attributes, $attributes));
-    $date['%year%'] = $widget->render($name.'[year]', $value['year']);
+    $date['%day%'] = $this->renderDayWidget($name.'[day]', $value['day'], array('choices' => $this->getOption('can_be_empty') ? array('' => $emptyValues['day']) + $this->getOption('days') : $this->getOption('days'), 'id_format' => $this->getOption('id_format')), array_merge($this->attributes, $attributes));
+    $date['%month%'] = $this->renderMonthWidget($name.'[month]', $value['month'], array('choices' => $this->getOption('can_be_empty') ? array('' => $emptyValues['month']) + $this->getOption('months') : $this->getOption('months'), 'id_format' => $this->getOption('id_format')), array_merge($this->attributes, $attributes));
+    $date['%year%'] = $this->renderYearWidget($name.'[year]', $value['year'], array('choices' => $this->getOption('can_be_empty') ? array('' => $emptyValues['year']) + $this->getOption('years') : $this->getOption('years'), 'id_format' => $this->getOption('id_format')), array_merge($this->attributes, $attributes));
 
     return strtr($this->getOption('format'), $date);
+  }
+
+  /**
+   * @param string $name
+   * @param string $value
+   * @param array $options
+   * @param array $attributes
+   * @return string rendered widget
+   */
+  protected function renderDayWidget($name, $value, $options, $attributes)
+  {
+    $widget = new sfWidgetFormSelect($options, $attributes);
+    return $widget->render($name, $value);
+  }
+
+  /**
+   * @param string $name
+   * @param string $value
+   * @param array $options
+   * @param array $attributes
+   * @return string rendered widget
+   */
+  protected function renderMonthWidget($name, $value, $options, $attributes)
+  {
+    $widget = new sfWidgetFormSelect($options, $attributes);
+    return $widget->render($name, $value);
+  }
+
+  /**
+   * @param string $name
+   * @param string $value
+   * @param array $options
+   * @param array $attributes
+   * @return string rendered widget
+   */
+  protected function renderYearWidget($name, $value, $options, $attributes)
+  {
+    $widget = new sfWidgetFormSelect($options, $attributes);
+    return $widget->render($name, $value);
   }
 }

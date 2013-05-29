@@ -3,38 +3,40 @@
 /**
  * Article form base class.
  *
+ * @method Article getObject() Returns the current form's model object
+ *
  * @package    ##PROJECT_NAME##
  * @subpackage form
  * @author     Your name here
  */
-class BaseArticleForm extends BaseFormPropel
+abstract class BaseArticleForm extends BaseFormPropel
 {
   public function setup()
   {
     $this->setWidgets(array(
       'id'                  => new sfWidgetFormInputHidden(),
-      'title'               => new sfWidgetFormInput(),
+      'title'               => new sfWidgetFormInputText(),
       'body'                => new sfWidgetFormTextarea(),
       'Online'              => new sfWidgetFormInputCheckbox(),
-      'excerpt'             => new sfWidgetFormInput(),
+      'excerpt'             => new sfWidgetFormInputText(),
       'category_id'         => new sfWidgetFormPropelChoice(array('model' => 'Category', 'add_empty' => false)),
       'created_at'          => new sfWidgetFormDateTime(),
       'end_date'            => new sfWidgetFormDateTime(),
       'book_id'             => new sfWidgetFormPropelChoice(array('model' => 'Book', 'add_empty' => true)),
-      'author_article_list' => new sfWidgetFormPropelChoiceMany(array('model' => 'Author')),
+      'author_article_list' => new sfWidgetFormPropelChoice(array('multiple' => true, 'model' => 'Author')),
     ));
 
     $this->setValidators(array(
-      'id'                  => new sfValidatorPropelChoice(array('model' => 'Article', 'column' => 'id', 'required' => false)),
+      'id'                  => new sfValidatorChoice(array('choices' => array($this->getObject()->getId()), 'empty_value' => $this->getObject()->getId(), 'required' => false)),
       'title'               => new sfValidatorString(array('max_length' => 255)),
       'body'                => new sfValidatorString(array('required' => false)),
       'Online'              => new sfValidatorBoolean(array('required' => false)),
-      'excerpt'             => new sfValidatorString(array('required' => false)),
+      'excerpt'             => new sfValidatorString(array('max_length' => 255, 'required' => false)),
       'category_id'         => new sfValidatorPropelChoice(array('model' => 'Category', 'column' => 'id')),
       'created_at'          => new sfValidatorDateTime(array('required' => false)),
       'end_date'            => new sfValidatorDateTime(array('required' => false)),
       'book_id'             => new sfValidatorPropelChoice(array('model' => 'Book', 'column' => 'id', 'required' => false)),
-      'author_article_list' => new sfValidatorPropelChoiceMany(array('model' => 'Author', 'required' => false)),
+      'author_article_list' => new sfValidatorPropelChoice(array('multiple' => true, 'model' => 'Author', 'required' => false)),
     ));
 
     $this->validatorSchema->setPostValidator(
@@ -91,7 +93,7 @@ class BaseArticleForm extends BaseFormPropel
       return;
     }
 
-    if (is_null($con))
+    if (null === $con)
     {
       $con = $this->getConnection();
     }

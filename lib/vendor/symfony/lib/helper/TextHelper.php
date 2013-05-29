@@ -16,7 +16,7 @@
  * @subpackage helper
  * @author     Fabien Potencier <fabien.potencier@symfony-project.com>
  * @author     David Heinemeier Hansson
- * @version    SVN: $Id: TextHelper.php 24396 2009-11-25 19:13:19Z FabianLange $
+ * @version    SVN: $Id: TextHelper.php 31895 2011-01-24 18:37:43Z fabien $
  */
 
 /**
@@ -213,7 +213,7 @@ function auto_link_text($text, $link = 'all', $href_options = array(), $truncate
  */
 function strip_links_text($text)
 {
-  return preg_replace('/<a.*>(.*)<\/a>/m', '\\1', $text);
+  return preg_replace('/<a[^>]*>(.*?)<\/a>/s', '\\1', $text);
 }
 
 if (!defined('SF_AUTO_LINK_RE'))
@@ -234,7 +234,7 @@ if (!defined('SF_AUTO_LINK_RE'))
       (?::\d+)?                # port
       (?:/(?:(?:[\~\w\+%-]|(?:[,.;:][^\s$]))+)?)* # path
       (?:\?[\w\+%&=.;-]+)?     # query string
-      (?:\#[\w\-]*)?           # trailing anchor
+      (?:\#[\w\-/\?!=]*)?        # trailing anchor
     )
     ([[:punct:]]|\s|<|$)    # trailing text
    ~x');

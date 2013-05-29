@@ -3,21 +3,23 @@
 /**
  * Movie form base class.
  *
+ * @method Movie getObject() Returns the current form's model object
+ *
  * @package    ##PROJECT_NAME##
  * @subpackage form
  * @author     Your name here
  */
-class BaseMovieForm extends BaseFormPropel
+abstract class BaseMovieForm extends BaseFormPropel
 {
   public function setup()
   {
     $this->setWidgets(array(
       'id'       => new sfWidgetFormInputHidden(),
-      'director' => new sfWidgetFormInput(),
+      'director' => new sfWidgetFormInputText(),
     ));
 
     $this->setValidators(array(
-      'id'       => new sfValidatorPropelChoice(array('model' => 'Movie', 'column' => 'id', 'required' => false)),
+      'id'       => new sfValidatorChoice(array('choices' => array($this->getObject()->getId()), 'empty_value' => $this->getObject()->getId(), 'required' => false)),
       'director' => new sfValidatorString(array('max_length' => 255, 'required' => false)),
     ));
 

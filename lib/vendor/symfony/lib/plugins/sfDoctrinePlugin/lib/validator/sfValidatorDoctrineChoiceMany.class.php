@@ -16,36 +16,19 @@
  * @subpackage doctrine
  * @author     Fabien Potencier <fabien.potencier@symfony-project.com>
  * @author     Jonathan H. Wage <jonwage@gmail.com>
- * @version    SVN: $Id: sfValidatorDoctrineChoiceMany.class.php 7902 2008-03-15 13:17:33Z fabien $
+ * @version    SVN: $Id: sfValidatorDoctrineChoiceMany.class.php 23810 2009-11-12 11:07:44Z Kris.Wallsmith $
  */
 class sfValidatorDoctrineChoiceMany extends sfValidatorDoctrineChoice
 {
   /**
-   * @see sfValidatorBase
+   * Configures the current validator.
+   *
+   * @see sfValidatorPropelChoice
    */
-  protected function doClean($values)
+  protected function configure($options = array(), $messages = array())
   {
-    if (!is_array($values))
-    {
-      $values = array($values);
-    }
+    parent::configure($options, $messages);
 
-    if(isset($values[0]) && !$values[0])
-    {
-      unset($values[0]);
-    }
-
-    $a = $this->getOption('alias');
-    $q = is_null($this->getOption('query')) ? Doctrine_Query::create()->from($this->getOption('model') . ' ' . $a) : $this->getOption('query');
-    $q = $q->andWhereIn($a . '.' . $this->getColumn(), $values);
-
-    $objects = $q->execute();
-
-    if (count($objects) != count($values))
-    {
-      throw new sfValidatorError($this, 'invalid', array('value' => $values));
-    }
-
-    return $values;
+    $this->setOption('multiple', true);
   }
 }

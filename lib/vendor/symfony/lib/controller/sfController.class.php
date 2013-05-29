@@ -16,7 +16,7 @@
  * @subpackage controller
  * @author     Fabien Potencier <fabien.potencier@symfony-project.com>
  * @author     Sean Kerr <sean@code-box.org>
- * @version    SVN: $Id: sfController.class.php 19442 2009-06-21 12:27:42Z fabien $
+ * @version    SVN: $Id: sfController.class.php 30912 2010-09-15 11:10:46Z fabien $
  */
 abstract class sfController
 {
@@ -24,8 +24,8 @@ abstract class sfController
     $context           = null,
     $dispatcher        = null,
     $controllerClasses = array(),
-    $maxForwards       = 5,
-    $renderMode        = sfView::RENDER_CLIENT;
+    $renderMode        = sfView::RENDER_CLIENT,
+    $maxForwards       = 5;
 
   /**
    * Class constructor.
@@ -46,9 +46,6 @@ abstract class sfController
   {
     $this->context    = $context;
     $this->dispatcher = $context->getEventDispatcher();
-
-    // set max forwards
-    $this->maxForwards = sfConfig::get('sf_max_forwards', $this->maxForwards);
   }
 
   /**
@@ -87,7 +84,7 @@ abstract class sfController
    * @param boolean $throwExceptions Whether to throw exceptions if the controller doesn't exist
    *
    * @throws sfConfigurationException thrown if the module is not enabled
-   * @throws sfControllerException thrown if the controller doesn't exist and the $throwExceptions parameter is set to true
+   * @throws sfControllerException    thrown if the controller doesn't exist and the $throwExceptions parameter is set to true
    *
    * @return boolean true if the controller exists, false otherwise
    */
@@ -101,6 +98,9 @@ abstract class sfController
       {
         throw new sfConfigurationException(sprintf('The module "%s" is not enabled.', $moduleName));
       }
+
+      // check for a module generator config file
+      $this->context->getConfigCache()->import('modules/'.$moduleName.'/config/generator.yml', false, true);
 
       // one action per file or one file for all actions
       $classFile   = strtolower($extension);
@@ -151,13 +151,7 @@ abstract class sfController
     // send an exception if debug
     if ($throwExceptions && sfConfig::get('sf_debug'))
     {
-      $dirs = array_keys($dirs);
-
-      // remove sf_root_dir from dirs
-      foreach ($dirs as &$dir)
-      {
-        $dir = str_replace(sfConfig::get('sf_root_dir'), '%SF_ROOT_DIR%', $dir);
-      }
+      $dirs = array_map(array('sfDebug', 'shortenFilePath'), array_keys($dirs));
 
       throw new sfControllerException(sprintf('Controller "%s/%s" does not exist in: %s.', $moduleName, $controllerName, implode(', ', $dirs)));
     }
@@ -171,10 +165,10 @@ abstract class sfController
    * @param string $moduleName A module name
    * @param string $actionName An action name
    *
-   * @throws <b>sfConfigurationException</b> If an invalid configuration setting has been found
-   * @throws <b>sfForwardException</b> If an error occurs while forwarding the request
-   * @throws <b>sfInitializationException</b> If the action could not be initialized
-   * @throws <b>sfSecurityException</b> If the action requires security but the user implementation is not of type sfSecurityUser
+   * @throws sfConfigurationException  If an invalid configuration setting has been found
+   * @throws sfForwardException        If an error occurs while forwarding the request
+   * @throws sfError404Exception       If the action not exist
+   * @throws sfInitializationException If the action could not be initialized
    */
   public function forward($moduleName, $actionName)
   {
@@ -185,7 +179,7 @@ abstract class sfController
     if ($this->getActionStack()->getSize() >= $this->maxForwards)
     {
       // let's kill this party before it turns into cpu cycle hell
-      throw new sfForwardException(sprintf('Too many forwards have been detected for this request (> %d).', $this->maxForwards));
+      throw new sfForwardException('Too many forwards have been detected for this request.');
     }
 
     // check for a module generator config file
@@ -209,7 +203,12 @@ abstract class sfController
     $this->getActionStack()->addEntry($moduleName, $actionName, $actionInstance);
 
     // include module configuration
+    $viewClass = sfConfig::get('mod_'.strtolower($moduleName).'_view_class', false);
     require($this->context->getConfigCache()->checkConfig('modules/'.$moduleName.'/config/module.yml'));
+    if (false !== $viewClass)
+    {
+      sfConfig::set('mod_'.strtolower($moduleName).'_view_class', $viewClass);
+    }
 
     // check if this module is internal
     if ($this->getActionStack()->getSize() == 1 && sfConfig::get('mod_'.strtolower($moduleName).'_is_internal') && !sfConfig::get('sf_test'))
@@ -381,8 +380,8 @@ abstract class sfController
    *
    * This methods calls a module/action with the sfMailView class.
    *
-   * @param string $module A module name
-   * @param string $action An action name
+   * @param  string  $module  A module name
+   * @param  string  $action  An action name
    *
    * @return string The generated mail content
    *
@@ -436,7 +435,7 @@ abstract class sfController
 
     try
     {
-      // forward to the mail action
+      // forward to the action
       $this->forward($module, $action);
     }
     catch (Exception $e)
@@ -456,7 +455,7 @@ abstract class sfController
     // grab the action entry from this forward
     $actionEntry = $actionStack->getEntry($index);
 
-    // get raw email content
+    // get raw content
     $presentation =& $actionEntry->getPresentation();
 
     // put render mode back
@@ -490,7 +489,12 @@ abstract class sfController
   /**
    * Sets the presentation rendering mode.
    *
-   * @param int $mode A rendering mode
+   * @param int $mode A rendering mode one of the following:
+   *                  - sfView::RENDER_CLIENT
+   *                  - sfView::RENDER_VAR
+   *                  - sfView::RENDER_NONE
+   *
+   * @return true
    *
    * @throws sfRenderException If an invalid render mode has been set
    */

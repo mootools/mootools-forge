@@ -16,7 +16,7 @@
  * @package    symfony
  * @subpackage response
  * @author     Fabien Potencier <fabien.potencier@symfony-project.com>
- * @version    SVN: $Id: sfWebResponse.class.php 24619 2009-11-30 23:14:18Z FabianLange $
+ * @version    SVN: $Id: sfWebResponse.class.php 31400 2010-11-15 16:51:16Z fabien $
  */
 class sfWebResponse extends sfResponse
 {
@@ -235,7 +235,7 @@ class sfWebResponse extends sfResponse
   {
     $name = $this->normalizeHeaderName($name);
 
-    if (is_null($value))
+    if (null === $value)
     {
       unset($this->headers[$name]);
 
@@ -320,8 +320,9 @@ class sfWebResponse extends sfResponse
   }
 
   /**
-   * Sends HTTP headers and cookies.
-   *
+   * Sends HTTP headers and cookies. Only the first invocation of this method will send the headers.
+   * Subsequent invocations will silently do nothing. This allows certain actions to send headers early,
+   * while still using the standard controller.
    */
   public function sendHttpHeaders()
   {
@@ -351,7 +352,6 @@ class sfWebResponse extends sfResponse
     {
       $this->setContentType($this->options['content_type']);
     }
-
     foreach ($this->headers as $name => $value)
     {
       header($name.': '.$value);
@@ -372,6 +372,8 @@ class sfWebResponse extends sfResponse
         $this->dispatcher->notify(new sfEvent($this, 'application.log', array(sprintf('Send cookie "%s": "%s"', $cookie['name'], $cookie['value']))));
       }
     }
+    // prevent resending the headers
+    $this->options['send_http_headers'] = false;
   }
 
   /**
@@ -512,7 +514,7 @@ class sfWebResponse extends sfResponse
     // set HTTP header
     $this->setHttpHeader($key, $value, $replace);
 
-    if (is_null($value))
+    if (null === $value)
     {
       unset($this->httpMetas[$key]);
 
@@ -554,7 +556,7 @@ class sfWebResponse extends sfResponse
   {
     $key = strtolower($key);
 
-    if (is_null($value))
+    if (null === $value)
     {
       unset($this->metas[$key]);
 
@@ -793,6 +795,10 @@ class sfWebResponse extends sfResponse
     $this->stylesheets = $response->getStylesheets(self::RAW);
     $this->javascripts = $response->getJavascripts(self::RAW);
     $this->slots       = $response->getSlots();
+
+    // HTTP protocol must be from the current request
+    // this fix is not nice but that's the only way to fix it and keep BC (see #9254)
+    $this->options['http_protocol'] = isset($_SERVER['SERVER_PROTOCOL']) ? $_SERVER['SERVER_PROTOCOL'] : 'HTTP/1.0';
   }
 
   /**
@@ -816,7 +822,7 @@ class sfWebResponse extends sfResponse
    */
   public function serialize()
   {
-    return serialize(array($this->content, $this->statusCode, $this->statusText, $this->options, $this->cookies, $this->headerOnly, $this->headers, $this->metas, $this->httpMetas, $this->stylesheets, $this->javascripts, $this->slots));
+    return serialize(array($this->content, $this->statusCode, $this->statusText, $this->options, $this->headerOnly, $this->headers, $this->metas, $this->httpMetas, $this->stylesheets, $this->javascripts, $this->slots));
   }
 
   /**
@@ -824,7 +830,7 @@ class sfWebResponse extends sfResponse
    */
   public function unserialize($serialized)
   {
-    list($this->content, $this->statusCode, $this->statusText, $this->options, $this->cookies, $this->headerOnly, $this->headers, $this->metas, $this->httpMetas, $this->stylesheets, $this->javascripts, $this->slots) = unserialize($serialized);
+    list($this->content, $this->statusCode, $this->statusText, $this->options, $this->headerOnly, $this->headers, $this->metas, $this->httpMetas, $this->stylesheets, $this->javascripts, $this->slots) = unserialize($serialized);
   }
 
   /**

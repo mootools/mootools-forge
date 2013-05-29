@@ -1,6 +1,6 @@
 <?php
 /*
- *  $Id: Pgsql.php 5801 2009-06-02 17:30:27Z piccoloprincipe $
+ *  $Id: Pgsql.php 7685 2010-08-24 16:43:34Z jwage $
  *
  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
  * "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT
@@ -16,7 +16,7 @@
  *
  * This software consists of voluntary contributions made by many individuals
  * and is licensed under the LGPL. For more information, see
- * <http://www.phpdoctrine.org>.
+ * <http://www.doctrine-project.org>.
  */
 
 /**
@@ -25,9 +25,9 @@
  * @package     Doctrine
  * @subpackage  Expression
  * @license     http://www.opensource.org/licenses/lgpl-license.php LGPL
- * @link        www.phpdoctrine.org
+ * @link        www.doctrine-project.org
  * @since       1.0
- * @version     $Revision: 5801 $
+ * @version     $Revision: 7685 $
  * @author      Konsta Vesterinen <kvesteri@cc.hut.fi>
  */
 class Doctrine_Expression_Pgsql extends Doctrine_Expression_Driver
@@ -111,10 +111,10 @@ class Doctrine_Expression_Pgsql extends Doctrine_Expression_Driver
      * @param string $time timestamp or interval to extract from
      * @return string
      */
-    public function date_part($text, $time) {
+    public function date_part($text, $time)
+    {
         return 'DATE_PART(' . $text . ', ' . $time . ')';
     }
-
 
     /**
      * PostgreSQLs TO_CHAR( <time>, <text> ) function.
@@ -229,5 +229,32 @@ class Doctrine_Expression_Pgsql extends Doctrine_Expression_Driver
     {
     	$translate = 'TRANSLATE(' . $string . ', ' . $from . ', ' . $to . ')';
     	return $translate;
+    }
+
+    /**
+     * transform locate to position
+     *
+     * @param string $substr string to find
+     * @param string $str to find where
+     * @return string
+     */
+    public function locate($substr, $str)
+    {
+        return $this->position($substr, $str);
+    }
+    
+    /**
+     * position
+     *
+     * @param string $substr string to find
+     * @param string $str to find where
+     * @return string
+     */
+    public function position($substr, $str)
+    {
+        $substr = $this->getIdentifier($substr);
+        $str = $this->getIdentifier($str);
+        
+        return sprintf('POSITION(%s IN %s)', $substr, $str);
     }
 }

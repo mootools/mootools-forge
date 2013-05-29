@@ -16,7 +16,7 @@
  *
  * This software consists of voluntary contributions made by many individuals
  * and is licensed under the LGPL. For more information, see
- * <http://www.phpdoctrine.org>.
+ * <http://www.doctrine-project.org>.
  */
 
 /**
@@ -27,7 +27,7 @@
  * @author      Konsta Vesterinen <kvesteri@cc.hut.fi>
  * @license     http://www.opensource.org/licenses/lgpl-license.php LGPL
  * @version     $Revision$
- * @link        www.phpdoctrine.org
+ * @link        www.doctrine-project.org
  * @since       1.0
  */
 class Doctrine_Search_Query
@@ -54,7 +54,7 @@ class Doctrine_Search_Query
     public function __construct($table)
     {
         if (is_string($table)) {
-           $table = Doctrine::getTable($table);
+           $table = Doctrine_Core::getTable($table);
         } else {
             if ( ! $table instanceof Doctrine_Table) {
                 throw new Doctrine_Search_Exception('Invalid argument type. Expected instance of Doctrine_Table.');
@@ -177,6 +177,7 @@ class Doctrine_Search_Query
             return $return;
         }
     }
+
     public function isExpression($term)
     {
         if (strpos($term, '(') !== false) {
@@ -204,11 +205,12 @@ class Doctrine_Search_Query
                 if ($k === 0) {
                     continue;
                 }
-                $where .= ' AND (position + ' . $k . ') = (SELECT position FROM ' . $this->_table->getTableName() . ' WHERE ' . $this->parseWord($word) . ')';
+                $where .= ' AND (position + ' . $k . ') IN (SELECT position FROM ' . $this->_table->getTableName() . ' WHERE ' . $this->parseWord($word) . ')';
             }
         }
         return $where;
     }
+
     public function parseWord($word)
     {
         $this->_words[] = str_replace('*', '', $word);
@@ -234,11 +236,13 @@ class Doctrine_Search_Query
     {
         return $this->_words;
     }
+
     public function getParams()
     {
         return $this->_params;
     }
-    public function getSql()
+
+    public function getSqlQuery()
     {
         return $this->_sql;
     }

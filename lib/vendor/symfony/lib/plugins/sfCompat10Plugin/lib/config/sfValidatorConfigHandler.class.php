@@ -16,7 +16,7 @@
  * @subpackage config
  * @author     Fabien Potencier <fabien.potencier@symfony-project.com>
  * @author     Sean Kerr <sean@code-box.org>
- * @version    SVN: $Id: sfValidatorConfigHandler.class.php 8758 2008-05-03 21:03:08Z FabianLange $
+ * @version    SVN: $Id: sfValidatorConfigHandler.class.php 23810 2009-11-12 11:07:44Z Kris.Wallsmith $
  */
 class sfValidatorConfigHandler extends sfYamlConfigHandler
 {

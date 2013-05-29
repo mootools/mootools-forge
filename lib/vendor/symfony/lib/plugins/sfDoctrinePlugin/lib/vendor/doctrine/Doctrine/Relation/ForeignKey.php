@@ -1,6 +1,6 @@
 <?php
 /*
- *  $Id: ForeignKey.php 5801 2009-06-02 17:30:27Z piccoloprincipe $
+ *  $Id: ForeignKey.php 7490 2010-03-29 19:53:27Z jwage $
  *
  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
  * "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT
@@ -16,7 +16,7 @@
  *
  * This software consists of voluntary contributions made by many individuals
  * and is licensed under the LGPL. For more information, see
- * <http://www.phpdoctrine.org>.
+ * <http://www.doctrine-project.org>.
  */
 
 /**
@@ -27,9 +27,9 @@
  * @subpackage  Relation
  * @author      Konsta Vesterinen <kvesteri@cc.hut.fi>
  * @license     http://www.opensource.org/licenses/lgpl-license.php LGPL
- * @link        www.phpdoctrine.org
+ * @link        www.doctrine-project.org
  * @since       1.0
- * @version     $Revision: 5801 $
+ * @version     $Revision: 7490 $
  */
 class Doctrine_Relation_ForeignKey extends Doctrine_Relation
 {
@@ -53,12 +53,12 @@ class Doctrine_Relation_ForeignKey extends Doctrine_Relation
         }
         if ($this->isOneToOne()) {
             if ( ! $record->exists() || empty($id) || 
-                 ! $this->definition['table']->getAttribute(Doctrine::ATTR_LOAD_REFERENCES)) {
+                 ! $this->definition['table']->getAttribute(Doctrine_Core::ATTR_LOAD_REFERENCES)) {
                 
                 $related = $this->getTable()->create();
             } else {
                 $dql  = 'FROM ' . $this->getTable()->getComponentName()
-                      . ' WHERE ' . $this->getCondition();
+                      . ' WHERE ' . $this->getCondition() . $this->getOrderBy(null, false);
 
                 $coll = $this->getTable()->getConnection()->query($dql, $id);
                 $related = $coll[0];
@@ -69,9 +69,9 @@ class Doctrine_Relation_ForeignKey extends Doctrine_Relation
         } else {
 
             if ( ! $record->exists() || empty($id) || 
-                 ! $this->definition['table']->getAttribute(Doctrine::ATTR_LOAD_REFERENCES)) {
+                 ! $this->definition['table']->getAttribute(Doctrine_Core::ATTR_LOAD_REFERENCES)) {
                 
-                $related = new Doctrine_Collection($this->getTable());
+                $related = Doctrine_Collection::create($this->getTable());
             } else {
                 $query      = $this->getRelationDql(1);
                 $related    = $this->getTable()->getConnection()->query($query, $id);

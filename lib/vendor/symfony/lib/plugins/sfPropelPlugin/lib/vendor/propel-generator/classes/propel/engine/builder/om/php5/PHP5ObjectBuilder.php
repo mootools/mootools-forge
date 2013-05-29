@@ -1,7 +1,7 @@
 <?php
 
 /*
- *  $Id: PHP5ObjectBuilder.php 1099 2009-02-10 08:24:47Z ron $
+ *  $Id: PHP5ObjectBuilder.php 1639 2010-03-25 22:11:59Z francois $
  *
  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
  * "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT
@@ -134,6 +134,8 @@ class PHP5ObjectBuilder extends ObjectBuilder {
 						$defaultValue = var_export($defDt->format($fmt), true);
 					}
 				} catch (Exception $x) {
+					// prevent endless loop when timezone is undefined
+					date_default_timezone_set('America/Los_Angeles');
 					throw new EngineException("Unable to parse default temporal value for " . $col->getFullyQualifiedName() . ": " .$this->getDefaultValueString($col), $x);
 				}
 			} else {
@@ -212,8 +214,10 @@ abstract class ".$this->getClassname()." extends ".ClassTools::classname($this->
 			$this->addAttributes($script);
 		}
 
-		$this->addConstructor($script);
-		$this->addApplyDefaultValues($script);
+    if ($this->hasDefaultValues()) {
+      $this->addApplyDefaultValues($script);
+      $this->addConstructor($script);
+    }
 
 		$this->addColumnAccessorMethods($script);
 		$this->addColumnMutatorMethods($script);
@@ -223,8 +227,14 @@ abstract class ".$this->getClassname()." extends ".ClassTools::classname($this->
 		$this->addHydrate($script);
 		$this->addEnsureConsistency($script);
 
-		$this->addManipulationMethods($script);
-		$this->addValidationMethods($script);
+		if (!$table->isReadOnly()) {
+			$this->addManipulationMethods($script);
+		}
+
+    if ($this->isAddValidateMethod())
+    {
+      $this->addValidationMethods($script);
+    }
 
 		if ($this->isAddGenericAccessors()) {
 			$this->addGetByName($script);
@@ -252,6 +262,11 @@ abstract class ".$this->getClassname()." extends ".ClassTools::classname($this->
 		$this->addFKMethods($script);
 		$this->addRefFKMethods($script);
 		$this->addClearAllReferences($script);
+		
+		// apply behaviors
+    $this->applyBehaviorModifier('objectMethods', $script, "	");
+		
+		$this->addPrimaryString($script);
 	}
 
 	/**
@@ -263,6 +278,7 @@ abstract class ".$this->getClassname()." extends ".ClassTools::classname($this->
 		$script .= "
 } // " . $this->getClassname() . "
 ";
+    $this->applyBehaviorModifier('objectFilter', $script, "");
 	}
 
 	/**
@@ -308,6 +324,9 @@ abstract class ".$this->getClassname()." extends ".ClassTools::classname($this->
 
 		$this->addAlreadyInSaveAttribute($script);
 		$this->addAlreadyInValidationAttribute($script);
+		
+		// apply behaviors
+    $this->applyBehaviorModifier('objectAttributes', $script, "	");
 	}
 
 	/**
@@ -1170,7 +1189,7 @@ abstract class ".$this->getClassname()." extends ".ClassTools::classname($this->
 		// Because BLOB columns are streams in PDO we have to assume that they are
 		// always modified when a new value is passed in.  For example, the contents
 		// of the stream itself may have changed externally.
-		if (!is_resource(\$v)) {
+		if (!is_resource(\$v) && \$v !== null) {
 			\$this->$clo = fopen('php://memory', 'r+');
 			fwrite(\$this->$clo, \$v);
 			rewind(\$this->$clo);
@@ -1283,7 +1302,7 @@ abstract class ".$this->getClassname()." extends ".ClassTools::classname($this->
 		$this->addMutatorOpen($script, $col);
 
 		// Perform type-casting to ensure that we can use type-sensitive
-		// checking in muators.
+		// checking in mutators.
 		if ($col->isPhpPrimitiveType()) {
 			$script .= "
 		if (\$v !== null) {
@@ -1295,8 +1314,7 @@ abstract class ".$this->getClassname()." extends ".ClassTools::classname($this->
 		$script .= "
 		if (\$this->$clo !== \$v";
 		if (($def = $col->getDefaultValue()) !== null && !$def->isExpression()) {
-			$defaultValue = $this->getDefaultValueString($col);
-			$script .= " || \$v === $defaultValue";
+			$script .= " || \$this->isNew()";
 		}
 		$script .= ") {
 			\$this->$clo = \$v;
@@ -1361,17 +1379,6 @@ abstract class ".$this->getClassname()." extends ".ClassTools::classname($this->
 			}
 		}
 
-		$colconsts = array();
-		foreach ($colsWithDefaults as $col) {
-			$colconsts[] = $this->getColumnConstant($col);
-		}
-
-		$script .= "
-			// First, ensure that we don't have any columns that have been modified which aren't default columns.
-			if (array_diff(\$this->modifiedColumns, array(".implode(",", $colconsts)."))) {
-				return false;
-			}
-";
 		foreach ($colsWithDefaults as $col) {
 
 			$clo = strtolower($col->getName());
@@ -1500,7 +1507,7 @@ abstract class ".$this->getClassname()." extends ".ClassTools::classname($this->
 			return \$startcol + $n; // $n = ".$this->getPeerClassname()."::NUM_COLUMNS - ".$this->getPeerClassname()."::NUM_LAZY_LOAD_COLUMNS).
 
 		} catch (Exception \$e) {
-			throw new PropelException(\"Error populating ".$table->getPhpName()." object\", \$e);
+			throw new PropelException(\"Error populating ".$this->getStubObjectBuilder()->getClassname()." object\", \$e);
 		}";
 	}
 
@@ -2014,10 +2021,37 @@ abstract class ".$this->getClassname()." extends ".ClassTools::classname($this->
 		}
 		
 		\$con->beginTransaction();
-		try {
-			".$this->getPeerClassname()."::doDelete(\$this, \$con);
+		try {";
+		if($this->getGeneratorConfig()->getBuildProperty('addHooks')) {
+			$script .= "
+			\$ret = \$this->preDelete(\$con);";
+			// apply behaviors
+			$this->applyBehaviorModifier('preDelete', $script, "			");
+			$script .= "
+			if (\$ret) {
+				".$this->getPeerClassname()."::doDelete(\$this, \$con);
+				\$this->postDelete(\$con);";
+			// apply behaviors
+			$this->applyBehaviorModifier('postDelete', $script, "				");
+			$script .= "
+				\$this->setDeleted(true);
+				\$con->commit();
+			} else {
+				\$con->commit();
+			}";
+		} else {
+			// apply behaviors
+			$this->applyBehaviorModifier('preDelete', $script, "			");
+			$script .= "
+			".$this->getPeerClassname()."::doDelete(\$this, \$con);";
+			// apply behaviors
+			$this->applyBehaviorModifier('postDelete', $script, "			");
+			$script .= "
 			\$this->setDeleted(true);
-			\$con->commit();
+			\$con->commit();";
+		}
+
+		$script .= "
 		} catch (PropelException \$e) {
 			\$con->rollBack();
 			throw \$e;
@@ -2376,116 +2410,6 @@ abstract class ".$this->getClassname()." extends ".ClassTools::classname($this->
 	// --------------------------------------------------------------------
 
 	/**
-	 * Convenience method to get the foreign Table object for an fkey.
-	 * @return     Table
-	 */
-	protected function getForeignTable(ForeignKey $fk)
-	{
-		return $this->getTable()->getDatabase()->getTable($fk->getForeignTableName());
-	}
-
-	/**
-	 * Gets the PHP method name affix to be used for fkeys for the current table (not referrers to this table).
-	 *
-	 * The difference between this method and the getRefFKPhpNameAffix() method is that in this method the
-	 * classname in the affix is the foreign table classname.
-	 *
-	 * @param      ForeignKey $fk The local FK that we need a name for.
-	 * @param      boolean $plural Whether the php name should be plural (e.g. initRelatedObjs() vs. addRelatedObj()
-	 * @return     string
-	 */
-	public function getFKPhpNameAffix(ForeignKey $fk, $plural = false)
-	{
-		if ($fk->getPhpName()) {
-			if ($plural) {
-				return $this->getPluralizer()->getPluralForm($fk->getPhpName());
-			} else {
-				return $fk->getPhpName();
-			}
-		} else {
-			$className = $this->getForeignTable($fk)->getPhpName();
-			if ($plural) {
-				$className = $this->getPluralizer()->getPluralForm($className);
-			}
-			return $className . $this->getRelatedBySuffix($fk, true);
-		}
-	}
-
-	/**
-	 * Gets the PHP method name affix to be used for referencing foreign key methods and variable names (e.g. set????(), $coll???).
-	 *
-	 * The difference between this method and the getFKPhpNameAffix() method is that in this method the
-	 * classname in the affix is the classname of the local fkey table.
-	 *
-	 * @param      ForeignKey $fk The referrer FK that we need a name for.
-	 * @param      boolean $plural Whether the php name should be plural (e.g. initRelatedObjs() vs. addRelatedObj()
-	 * @return     string
-	 */
-	public function getRefFKPhpNameAffix(ForeignKey $fk, $plural = false)
-	{
-		if ($fk->getRefPhpName()) {
-			if ($plural) {
-				return $this->getPluralizer()->getPluralForm($fk->getRefPhpName());
-			} else {
-				return $fk->getRefPhpName();
-			}
-		} else {
-			$className = $fk->getTable()->getPhpName();
-			if ($plural) {
-				$className = $this->getPluralizer()->getPluralForm($className);
-			}
-			return $className . $this->getRelatedBySuffix($fk);
-		}
-	}
-
-	/**
-	 * Gets the "RelatedBy*" suffix (if needed) that is attached to method and variable names.
-	 *
-	 * The related by suffix is based on the local columns of the foreign key.  If there is more than
-	 * one column in a table that points to the same foreign table, then a 'RelatedByLocalColName' suffix
-	 * will be appended.
-	 *
-	 * @return     string
-	 */
-	protected function getRelatedBySuffix(ForeignKey $fk, $columnCheck = false)
-	{
-		$relCol = "";
-		foreach ($fk->getLocalColumns() as $columnName) {
-			$column = $fk->getTable()->getColumn($columnName);
-			if (!$column) {
-				throw new Exception("Could not fetch column: $columnName in table " . $fk->getTable()->getName());
-			}
-
-			if ( count($column->getTable()->getForeignKeysReferencingTable($fk->getForeignTableName())) > 1
-			|| $fk->getForeignTableName() == $fk->getTable()->getName()) {
-				// if there are seeral foreign keys that point to the same table
-				// then we need to generate methods like getAuthorRelatedByColName()
-				// instead of just getAuthor().  Currently we are doing the same
-				// for self-referential foreign keys, to avoid confusion.
-				$relCol .= $column->getPhpName();
-			}
-		}
-
-		#var_dump($fk->getForeignTableName() . ' - ' .$fk->getTableName() . ' - ' . $this->getTable()->getName());
-
-		#$fk->getForeignTableName() != $this->getTable()->getName() &&
-		// @todo comment on it
-		if ($columnCheck && !$relCol && $fk->getTable()->getColumn($fk->getForeignTableName())) {
-			foreach ($fk->getLocalColumns() as $columnName) {
-				$column = $fk->getTable()->getColumn($columnName);
-				$relCol .= $column->getPhpName();
-			}
-		}
-
-
-		if ($relCol != "") {
-			$relCol = "RelatedBy" . $relCol;
-		}
-
-		return $relCol;
-	}
-
-	/**
 	 * Constructs variable name for fkey-related objects.
 	 * @param      ForeignKey $fk
 	 * @return     string
@@ -2677,6 +2601,9 @@ abstract class ".$this->getClassname()." extends ".ClassTools::classname($this->
 			$argsize = $argsize + 1;
 		}
 		
+		// If the related column is a primary kay and if it's a simple association,
+		// The use retrieveByPk() instead of doSelect() to take advantage of instance pooling
+		$useRetrieveByPk = count($argmap) == 1 && $argmap[0]['foreign']->isPrimaryKey();
 
 		$script .= "
 
@@ -2691,17 +2618,22 @@ abstract class ".$this->getClassname()." extends ".ClassTools::classname($this->
 	{";
 		$script .= "
 		if (\$this->$varName === null && ($conditional)) {";
-		$script .= "
-			\$c = new Criteria(".$fkPeerBuilder->getPeerClassname()."::DATABASE_NAME);";
-		foreach ($argmap as $el) {
-			$fcol = $el['foreign'];
-			$lcol = $el['local'];
-			$clo = strtolower($lcol->getName());
+		if ($useRetrieveByPk) {
 			$script .= "
+			\$this->$varName = ".$fkPeerBuilder->getPeerClassname()."::retrieveByPk(\$this->$clo);";
+		} else {
+			$script .= "
+			\$c = new Criteria(".$fkPeerBuilder->getPeerClassname()."::DATABASE_NAME);";
+			foreach ($argmap as $el) {
+				$fcol = $el['foreign'];
+				$lcol = $el['local'];
+				$clo = strtolower($lcol->getName());
+				$script .= "
 			\$c->add(".$fkPeerBuilder->getColumnConstant($fcol).", \$this->".$clo.");";
-		}
+			}
 			$script .= "
 			\$this->$varName = ".$fkPeerBuilder->getPeerClassname()."::doSelectOne(\$c, \$con);";
+		}
 		if ($fk->isLocalPrimaryKey()) {
 			$script .= "
 			// Because this foreign key represents a one-to-one relationship, we will create a bi-directional association.
@@ -3110,7 +3042,7 @@ abstract class ".$this->getClassname()." extends ".ClassTools::classname($this->
 		} // end foreach ($fk->getForeignColumns()
 
 		$script .= "
-				\$count = ".$fkPeerBuilder->getPeerClassname()."::doCount(\$criteria, \$con);
+				\$count = ".$fkPeerBuilder->getPeerClassname()."::doCount(\$criteria, false, \$con);
 			}
 		} else {
 			// criteria has no effect for a new object
@@ -3132,7 +3064,7 @@ abstract class ".$this->getClassname()." extends ".ClassTools::classname($this->
 		} // foreach ($fk->getForeignColumns()
 		$script .= "
 				if (!isset(\$this->$lastCriteriaName) || !\$this->".$lastCriteriaName."->equals(\$criteria)) {
-					\$count = ".$fkPeerBuilder->getPeerClassname()."::doCount(\$criteria, \$con);
+					\$count = ".$fkPeerBuilder->getPeerClassname()."::doCount(\$criteria, false, \$con);
 				} else {
 					\$count = count(\$this->$collName);
 				}
@@ -3627,11 +3559,89 @@ abstract class ".$this->getClassname()." extends ".ClassTools::classname($this->
 		}
 		
 		\$con->beginTransaction();
-		try {
-			\$affectedRows = \$this->doSave(\$con".($reloadOnUpdate || $reloadOnInsert ? ", \$skipReload" : "").");
+		\$isInsert = \$this->isNew();
+		try {";
+		
+		if($this->getGeneratorConfig()->getBuildProperty('addHooks')) {
+			// save with runtime hools
+			$script .= "
+			\$ret = \$this->preSave(\$con);";
+			$this->applyBehaviorModifier('preSave', $script, "			");
+			$script .= "
+			if (\$isInsert) {
+				\$ret = \$ret && \$this->preInsert(\$con);";
+			$this->applyBehaviorModifier('preInsert', $script, "				");
+			$script .= "
+			} else {
+				\$ret = \$ret && \$this->preUpdate(\$con);";
+			$this->applyBehaviorModifier('preUpdate', $script, "				");
+			$script .= "
+			}
+			if (\$ret) {
+				\$affectedRows = \$this->doSave(\$con".($reloadOnUpdate || $reloadOnInsert ? ", \$skipReload" : "").");
+				if (\$isInsert) {
+					\$this->postInsert(\$con);";
+			$this->applyBehaviorModifier('postInsert', $script, "					");
+			$script .= "
+				} else {
+					\$this->postUpdate(\$con);";
+			$this->applyBehaviorModifier('postUpdate', $script, "					");
+			$script .= "
+				}
+				\$this->postSave(\$con);";
+				$this->applyBehaviorModifier('postSave', $script, "				");
+				$script .= "
+				".$this->getPeerClassname()."::addInstanceToPool(\$this);
+			} else {
+				\$affectedRows = 0;
+			}
+			\$con->commit();
+			return \$affectedRows;";
+		} else {
+			// save without runtime hooks
+	    $this->applyBehaviorModifier('preSave', $script, "			");
+			if ($this->hasBehaviorModifier('preUpdate'))
+			{
+			  $script .= "
+			if(!\$isInsert) {";
+	      $this->applyBehaviorModifier('preUpdate', $script, "				");
+	      $script .= "
+			}";
+			}
+			if ($this->hasBehaviorModifier('preInsert'))
+			{
+			  $script .= "
+			if(\$isInsert) {";
+	    	$this->applyBehaviorModifier('preInsert', $script, "				");
+	      $script .= "
+			}";
+			}
+			$script .= "
+			\$affectedRows = \$this->doSave(\$con".($reloadOnUpdate || $reloadOnInsert ? ", \$skipReload" : "").");";
+	    $this->applyBehaviorModifier('postSave', $script, "			");
+			if ($this->hasBehaviorModifier('postUpdate'))
+			{
+			  $script .= "
+			if(!\$isInsert) {";
+	      $this->applyBehaviorModifier('postUpdate', $script, "				");
+	      $script .= "
+			}";
+			}
+			if ($this->hasBehaviorModifier('postInsert'))
+			{
+			  $script .= "
+			if(\$isInsert) {";
+	      $this->applyBehaviorModifier('postInsert', $script, "				");
+	      $script .= "
+			}";
+			}
+			$script .= "
 			\$con->commit();
 			".$this->getPeerClassname()."::addInstanceToPool(\$this);
-			return \$affectedRows;
+			return \$affectedRows;";
+		}
+		
+		$script .= "
 		} catch (PropelException \$e) {
 			\$con->rollBack();
 			throw \$e;
@@ -4035,4 +4045,27 @@ abstract class ".$this->getClassname()." extends ".ClassTools::classname($this->
 ";
 	}
 
+  /**
+   * Adds a magic __toString() method if a string column was defined as primary string
+	 * @param      string &$script The script will be modified in this method.
+   */
+  protected function addPrimaryString(&$script)
+  {
+    foreach ($this->getTable()->getColumns() as $column) {
+      if ($column->isPrimaryString()) {
+        $script .= "
+	/**
+	 * Return the string representation of this object
+	 *
+	 * @return string The value of the '{$column->getName()}' column
+	 */
+  public function __toString()
+  {
+    return (string) \$this->get{$column->getPhpName()}();
+  }
+";
+        break;
+      }
+    }
+  }
 } // PHP5ObjectBuilder

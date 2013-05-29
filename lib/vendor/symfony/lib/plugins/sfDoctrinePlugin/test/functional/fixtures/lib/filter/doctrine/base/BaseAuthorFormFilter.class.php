@@ -1,29 +1,32 @@
 <?php
 
-require_once(sfConfig::get('sf_lib_dir').'/filter/doctrine/BaseFormFilterDoctrine.class.php');
-
 /**
  * Author filter form base class.
  *
- * @package    filters
- * @subpackage Author *
- * @version    SVN: $Id: sfDoctrineFormFilterGeneratedTemplate.php 11675 2008-09-19 15:21:38Z fabien $
+ * @package    symfony12
+ * @subpackage filter
+ * @author     Your name here
+ * @version    SVN: $Id: sfDoctrineFormFilterGeneratedTemplate.php 29570 2010-05-21 14:49:47Z Kris.Wallsmith $
  */
-class BaseAuthorFormFilter extends BaseFormFilterDoctrine
+abstract class BaseAuthorFormFilter extends BaseFormFilterDoctrine
 {
   public function setup()
   {
     $this->setWidgets(array(
       'name' => new sfWidgetFormFilterInput(),
+      'type' => new sfWidgetFormFilterInput(),
     ));
 
     $this->setValidators(array(
       'name' => new sfValidatorPass(array('required' => false)),
+      'type' => new sfValidatorPass(array('required' => false)),
     ));
 
     $this->widgetSchema->setNameFormat('author_filters[%s]');
 
     $this->errorSchema = new sfValidatorErrorSchema($this->validatorSchema);
+
+    $this->setupInheritance();
 
     parent::setup();
   }
@@ -38,6 +41,7 @@ class BaseAuthorFormFilter extends BaseFormFilterDoctrine
     return array(
       'id'   => 'Number',
       'name' => 'Text',
+      'type' => 'Text',
     );
   }
 }

@@ -15,7 +15,7 @@
 
   protected function getSort()
   {
-    if (!is_null($sort = $this->getUser()->getAttribute('<?php echo $this->getModuleName() ?>.sort', null, 'admin_module')))
+    if (null !== $sort = $this->getUser()->getAttribute('<?php echo $this->getModuleName() ?>.sort', null, 'admin_module'))
     {
       return $sort;
     }
@@ -27,7 +27,7 @@
 
   protected function setSort(array $sort)
   {
-    if (!is_null($sort[0]) && is_null($sort[1]))
+    if (null !== $sort[0] && null === $sort[1])
     {
       $sort[1] = 'asc';
     }
@@ -37,5 +37,5 @@
 
   protected function isValidSortColumn($column)
   {
-    return Doctrine::getTable('<?php echo $this->getModelClass() ?>')->hasColumn($column);
+    return Doctrine_Core::getTable('<?php echo $this->getModelClass() ?>')->hasColumn($column);
   }

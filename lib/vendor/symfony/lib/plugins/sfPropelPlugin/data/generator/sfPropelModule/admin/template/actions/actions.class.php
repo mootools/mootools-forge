@@ -10,7 +10,7 @@ require_once(dirname(__FILE__).'/../lib/Base<?php echo ucfirst($this->moduleName
  * @subpackage <?php echo $this->getModuleName()."\n" ?>
  * @author     ##AUTHOR_NAME##
  */
-class <?php echo $this->getGeneratedModuleName() ?>Actions extends sfActions
+abstract class <?php echo $this->getGeneratedModuleName() ?>Actions extends <?php echo $this->getActionsBaseClass()."\n" ?>
 {
   public function preExecute()
   {
@@ -24,6 +24,8 @@ class <?php echo $this->getGeneratedModuleName() ?>Actions extends sfActions
     $this->dispatcher->notify(new sfEvent($this, 'admin.pre_execute', array('configuration' => $this->configuration)));
 
     $this->helper = new <?php echo $this->getModuleName() ?>GeneratorHelper();
+
+    parent::preExecute();
   }
 
 <?php include dirname(__FILE__).'/../../parts/indexAction.php' ?>

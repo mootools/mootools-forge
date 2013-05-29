@@ -15,7 +15,7 @@
  * @package    symfony
  * @subpackage addon
  * @author     Fabien Potencier <fabien.potencier@symfony-project.com>
- * @version    SVN: $Id: sfMail.class.php 5106 2007-09-15 09:25:00Z fabien $
+ * @version    SVN: $Id: sfMail.class.php 23810 2009-11-12 11:07:44Z Kris.Wallsmith $
  */
 class sfMail
 {

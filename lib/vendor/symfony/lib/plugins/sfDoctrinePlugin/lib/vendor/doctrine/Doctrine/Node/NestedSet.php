@@ -1,6 +1,6 @@
 <?php
 /*
- *    $Id: NestedSet.php 6614 2009-11-02 22:48:22Z jwage $
+ *    $Id: NestedSet.php 7490 2010-03-29 19:53:27Z jwage $
  *
  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
  * "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT
@@ -16,7 +16,7 @@
  *
  * This software consists of voluntary contributions made by many individuals
  * and is licensed under the LGPL. For more information, see
- * <http://www.phpdoctrine.org>.
+ * <http://www.doctrine-project.org>.
  */
 
 /**
@@ -25,9 +25,9 @@
  * @package    Doctrine
  * @subpackage Node
  * @license    http://www.opensource.org/licenses/lgpl-license.php LGPL
- * @link       www.phpdoctrine.org
+ * @link       www.doctrine-project.org
  * @since      1.0
- * @version    $Revision: 6614 $
+ * @version    $Revision: 7490 $
  * @author     Joe Simms <joe.simms@websites4.com>
  * @author     Roman Borschel <roman@code-factory.org>     
  */
@@ -60,7 +60,7 @@ class Doctrine_Node_NestedSet extends Doctrine_Node implements Doctrine_Node_Int
      */
     public function hasChildren()
     {
-        return (($this->getRightValue() - $this->getLeftValue() ) >1 );        
+        return (($this->getRightValue() - $this->getLeftValue()) > 1);        
     }
 
     /**
@@ -70,13 +70,13 @@ class Doctrine_Node_NestedSet extends Doctrine_Node implements Doctrine_Node_Int
      */
     public function hasParent()
     {
-        return !$this->isRoot();
+        return $this->isValidNode($this->getRecord()) && ! $this->isRoot();
     }
 
     /**
      * gets record of prev sibling or empty record
      *
-     * @return object     Doctrine_Record            
+     * @return Doctrine_Record            
      */
     public function getPrevSibling()
     {
@@ -102,7 +102,7 @@ class Doctrine_Node_NestedSet extends Doctrine_Node implements Doctrine_Node_Int
     /**
      * gets record of next sibling or empty record
      *
-     * @return object     Doctrine_Record            
+     * @return Doctrine_Record            
      */
     public function getNextSibling()
     {
@@ -148,7 +148,7 @@ class Doctrine_Node_NestedSet extends Doctrine_Node implements Doctrine_Node_Int
     /**
      * gets record of first child or empty record
      *
-     * @return object     Doctrine_Record            
+     * @return Doctrine_Record            
      */
     public function getFirstChild()
     {
@@ -174,7 +174,7 @@ class Doctrine_Node_NestedSet extends Doctrine_Node implements Doctrine_Node_Int
     /**
      * gets record of last child or empty record
      *
-     * @return object     Doctrine_Record            
+     * @return Doctrine_Record            
      */
     public function getLastChild()
     {
@@ -200,7 +200,7 @@ class Doctrine_Node_NestedSet extends Doctrine_Node implements Doctrine_Node_Int
     /**
      * gets children for node (direct descendants only)
      *
-     * @return mixed The children of the node or FALSE if the node has no children.               
+     * @return mixed  The children of the node or FALSE if the node has no children.               
      */
     public function getChildren()
     { 
@@ -210,7 +210,7 @@ class Doctrine_Node_NestedSet extends Doctrine_Node implements Doctrine_Node_Int
     /**
      * gets descendants for node (direct descendants only)
      *
-     * @return mixed  The descendants of the node or FALSE if the node has no descendants.  
+     * @return mixed  The descendants of the node or FALSE if the node has no descendants.
      */
     public function getDescendants($depth = null, $includeNode = false)
     {
@@ -241,7 +241,7 @@ class Doctrine_Node_NestedSet extends Doctrine_Node implements Doctrine_Node_Int
     /**
      * gets record of parent or empty record
      *
-     * @return object     Doctrine_Record            
+     * @return Doctrine_Record            
      */
     public function getParent()
     {
@@ -375,8 +375,9 @@ class Doctrine_Node_NestedSet extends Doctrine_Node implements Doctrine_Node_Int
 
             // Slide child nodes over one and down one to allow new parent to wrap them
     		$componentName = $this->_tree->getBaseComponent();		
-            $q = new Doctrine_Query();
-            $q->update($componentName);
+            $q = Doctrine_Core::getTable($componentName)
+                ->createQuery()
+                ->update();
             $q->set("$componentName.lft", "$componentName.lft + 1");
             $q->set("$componentName.rgt", "$componentName.rgt + 1");
             $q->set("$componentName.level", "$componentName.level + 1");
@@ -609,11 +610,6 @@ class Doctrine_Node_NestedSet extends Doctrine_Node implements Doctrine_Node_Int
             $this->setRootValue($newRoot);
             $this->record->save();
 
-            // Close gap in old tree
-            $first = $oldRgt + 1;
-            $delta = $oldLft - $oldRgt - 1;
-            $this->shiftRLValues($first, $delta, $oldRoot);
-
             // Insert this node as a new node
             $this->setRightValue(0);
             $this->setLeftValue(0);
@@ -632,7 +628,7 @@ class Doctrine_Node_NestedSet extends Doctrine_Node implements Doctrine_Node_Int
                     $this->insertAsLastChildOf($dest);
                 break;
                 default:
-                    throw new Exception("Unknown move operation: $moveType.");
+                    throw new Doctrine_Node_Exception("Unknown move operation: $moveType.");
             }
 
             $diff = $oldRgt - $oldLft;
@@ -648,16 +644,21 @@ class Doctrine_Node_NestedSet extends Doctrine_Node implements Doctrine_Node_Int
             $rootColName = $this->_tree->getAttribute('rootColumnName');
 
             // Update lft/rgt/root/level for all descendants
-            $q = new Doctrine_Query($conn);
-            $q = $q->update($componentName)
-                    ->set($componentName . '.lft', $componentName.'.lft + ?', $diff)
-                    ->set($componentName . '.rgt', $componentName.'.rgt + ?', $diff)
-                    ->set($componentName . '.level', $componentName.'.level + ?', $levelDiff)
-                    ->set($componentName . '.' . $rootColName, '?', $newRoot)
-                    ->where($componentName . '.lft > ? AND ' . $componentName . '.rgt < ?',
-                    array($oldLft, $oldRgt));
+            $q = Doctrine_Core::getTable($componentName)
+                ->createQuery()
+                ->update()
+                ->set($componentName . '.lft', $componentName.'.lft + ?', $diff)
+                ->set($componentName . '.rgt', $componentName.'.rgt + ?', $diff)
+                ->set($componentName . '.level', $componentName.'.level + ?', $levelDiff)
+                ->set($componentName . '.' . $rootColName, '?', $newRoot)
+                ->where($componentName . '.lft > ? AND ' . $componentName . '.rgt < ?', array($oldLft, $oldRgt));
             $q = $this->_tree->returnQueryWithRootId($q, $oldRoot);
             $q->execute();
+
+            // Close gap in old tree
+            $first = $oldRgt + 1;
+            $delta = $oldLft - $oldRgt - 1;
+            $this->shiftRLValues($first, $delta, $oldRoot);
 
             $conn->commit();
      
@@ -733,10 +734,10 @@ class Doctrine_Node_NestedSet extends Doctrine_Node implements Doctrine_Node_Int
     public function moveAsFirstChildOf(Doctrine_Record $dest)
     {
         if (
-		    $dest === $this->record ||
+		    $dest === $this->record || $this->isAncestorOf($dest) ||
 			($dest->exists() && $this->record->exists() && $dest->identifier() === $this->record->identifier())
 		) {
-            throw new Doctrine_Tree_Exception("Cannot move node as first child of itself");
+            throw new Doctrine_Tree_Exception("Cannot move node as first child of itself or into a descendant");
 
 			return false;
 		}
@@ -761,10 +762,10 @@ class Doctrine_Node_NestedSet extends Doctrine_Node implements Doctrine_Node_Int
     public function moveAsLastChildOf(Doctrine_Record $dest)
     {
         if (
-		    $dest === $this->record ||
+		    $dest === $this->record || $this->isAncestorOf($dest) ||
 			($dest->exists() && $this->record->exists() && $dest->identifier() === $this->record->identifier())
 		) {
-            throw new Doctrine_Tree_Exception("Cannot move node as last child of itself");
+            throw new Doctrine_Tree_Exception("Cannot move node as last child of itself or into a descendant");
 
 			return false;
 		}
@@ -808,13 +809,14 @@ class Doctrine_Node_NestedSet extends Doctrine_Node implements Doctrine_Node_Int
             $newRoot = $newRootId;
             $componentName = $this->_tree->getBaseComponent();
             $rootColName = $this->_tree->getAttribute('rootColumnName');
-            $q = new Doctrine_Query($conn);
-            $q = $q->update($componentName)
-                    ->set($componentName . '.lft', $componentName.'.lft + ?', array($diff))
-                    ->set($componentName . '.rgt', $componentName.'.rgt + ?', array($diff))
-                    ->set($componentName . '.level', $componentName.'.level - ?', array($oldLevel))
-                    ->set($componentName . '.' . $rootColName, '?', array($newRoot))
-                    ->where($componentName . '.lft > ? AND ' . $componentName . '.rgt < ?', array($oldLft, $oldRgt));
+            $q = Doctrine_Core::getTable($componentName)
+                ->createQuery()
+                ->update()
+                ->set($componentName . '.lft', $componentName.'.lft + ?', array($diff))
+                ->set($componentName . '.rgt', $componentName.'.rgt + ?', array($diff))
+                ->set($componentName . '.level', $componentName.'.level - ?', array($oldLevel))
+                ->set($componentName . '.' . $rootColName, '?', array($newRoot))
+                ->where($componentName . '.lft > ? AND ' . $componentName . '.rgt < ?', array($oldLft, $oldRgt));
             $q = $this->_tree->returnQueryWithRootId($q, $oldRoot);
             $q->execute();
             
@@ -906,6 +908,18 @@ class Doctrine_Node_NestedSet extends Doctrine_Node implements Doctrine_Node_Int
         return (($this->getLeftValue() >= $subj->getNode()->getLeftValue()) &&
                 ($this->getRightValue() <= $subj->getNode()->getRightValue()) &&
                 ($this->getRootValue() == $subj->getNode()->getRootValue()));
+    }
+
+    /**
+     * determines if node is ancestor of subject node
+     *
+     * @return bool            
+     */
+    public function isAncestorOf(Doctrine_Record $subj)
+    {
+        return (($subj->getNode()->getLeftValue() > $this->getLeftValue()) &&
+                ($subj->getNode()->getRightValue() < $this->getRightValue()) &&
+                ($subj->getNode()->getRootValue() == $this->getRootValue()));
     }
 
     /**
@@ -1014,11 +1028,11 @@ class Doctrine_Node_NestedSet extends Doctrine_Node implements Doctrine_Node_Int
             }
 
             // update level for descendants
-            $q = new Doctrine_Query();
-            $q = $q->update($componentName)
-                    ->set($componentName . '.level', $componentName.'.level + ?', array($levelDiff))
-                    ->where($componentName . '.lft > ? AND ' . $componentName . '.rgt < ?',
-                            array($left, $right));
+            $q = Doctrine_Core::getTable($componentName)
+                ->createQuery()
+                ->update()
+                ->set($componentName . '.level', $componentName.'.level + ?', array($levelDiff))
+                ->where($componentName . '.lft > ? AND ' . $componentName . '.rgt < ?', array($left, $right));
             $q = $this->_tree->returnQueryWithRootId($q, $rootId);
             $q->execute();
 
@@ -1051,23 +1065,26 @@ class Doctrine_Node_NestedSet extends Doctrine_Node implements Doctrine_Node_Int
      */    
     private function shiftRlValues($first, $delta, $rootId = 1)
     {
-        $qLeft  = new Doctrine_Query();
-        $qRight = new Doctrine_Query();
-
         // shift left columns
         $componentName = $this->_tree->getBaseComponent();
-        $qLeft = $qLeft->update($componentName)
-                ->set($componentName . '.lft', $componentName.'.lft + ?', $delta)
-                ->where($componentName . '.lft >= ?', $first);
-        
+
+        $qLeft  = Doctrine_Core::getTable($componentName)
+            ->createQuery()
+            ->update($componentName);
+
+        $qRight = Doctrine_Core::getTable($componentName)
+            ->createQuery()
+            ->update($componentName);
+
+        $qLeft = $qLeft->set($componentName . '.lft', $componentName.'.lft + ?', $delta)
+                       ->where($componentName . '.lft >= ?', $first);
         $qLeft = $this->_tree->returnQueryWithRootId($qLeft, $rootId);
-        
+
         $resultLeft = $qLeft->execute();
-        
+
         // shift right columns
-        $qRight = $qRight->update($componentName)
-                ->set($componentName . '.rgt', $componentName.'.rgt + ?', $delta)
-                ->where($componentName . '.rgt >= ?', $first);
+        $qRight = $qRight->set($componentName . '.rgt', $componentName.'.rgt + ?', $delta)
+                         ->where($componentName . '.rgt >= ?', $first);
 
         $qRight = $this->_tree->returnQueryWithRootId($qRight, $rootId);
 
@@ -1087,23 +1104,27 @@ class Doctrine_Node_NestedSet extends Doctrine_Node implements Doctrine_Node_Int
      */ 
     private function shiftRlRange($first, $last, $delta, $rootId = 1)
     {
-        $qLeft  = new Doctrine_Query();
-        $qRight = new Doctrine_Query();
+        $componentName = $this->_tree->getBaseComponent();
+
+        $qLeft  = Doctrine_Core::getTable($componentName)
+            ->createQuery()
+            ->update();
+
+        $qRight = Doctrine_Core::getTable($componentName)
+            ->createQuery()
+            ->update();
 
         // shift left column values
-        $componentName = $this->_tree->getBaseComponent();
-        $qLeft = $qLeft->update($componentName)
-                ->set($componentName . '.lft', $componentName.'.lft + ?', $delta)
-                ->where($componentName . '.lft >= ? AND ' . $componentName . '.lft <= ?', array($first, $last));
+        $qLeft = $qLeft->set($componentName . '.lft', $componentName.'.lft + ?', $delta)
+                       ->where($componentName . '.lft >= ? AND ' . $componentName . '.lft <= ?', array($first, $last));
         
         $qLeft = $this->_tree->returnQueryWithRootId($qLeft, $rootId);
 
         $resultLeft = $qLeft->execute();
         
         // shift right column values
-        $qRight = $qRight->update($componentName)
-                ->set($componentName . '.rgt', $componentName.'.rgt + ?', $delta)
-                ->where($componentName . '.rgt >= ? AND ' . $componentName . '.rgt <= ?', array($first, $last));
+        $qRight = $qRight->set($componentName . '.rgt', $componentName.'.rgt + ?', $delta)
+                        ->where($componentName . '.rgt >= ? AND ' . $componentName . '.rgt <= ?', array($first, $last));
 
         $qRight = $this->_tree->returnQueryWithRootId($qRight, $rootId);
 

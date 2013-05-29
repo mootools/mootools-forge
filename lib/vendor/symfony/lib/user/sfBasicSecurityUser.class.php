@@ -16,7 +16,7 @@
  * @subpackage user
  * @author     Fabien Potencier <fabien.potencier@symfony-project.com>
  * @author     Sean Kerr <sean@code-box.org>
- * @version    SVN: $Id: sfBasicSecurityUser.class.php 21875 2009-09-11 05:54:39Z fabien $
+ * @version    SVN: $Id: sfBasicSecurityUser.class.php 29528 2010-05-19 13:12:27Z fabien $
  */
 class sfBasicSecurityUser extends sfUser implements sfSecurityUser
 {
@@ -37,14 +37,23 @@ class sfBasicSecurityUser extends sfUser implements sfSecurityUser
    */
   public function clearCredentials()
   {
-    $this->credentials = null;
     $this->credentials = array();
   }
 
   /**
-   * returns an array containing the credentials
+   * @deprecated Use getCredentials() instead
    */
   public function listCredentials()
+  {
+    return $this->getCredentials();
+  }
+
+  /**
+   * Returns the current user's credentials.
+   * 
+   * @return array
+   */
+  public function getCredentials()
   {
     return $this->credentials;
   }
@@ -131,6 +140,11 @@ class sfBasicSecurityUser extends sfUser implements sfSecurityUser
    */
   public function hasCredential($credentials, $useAnd = true)
   {
+    if (null === $this->credentials)
+    {
+      return false;
+    }
+
     if (!is_array($credentials))
     {
       return in_array($credentials, $this->credentials);
@@ -256,7 +270,7 @@ class sfBasicSecurityUser extends sfUser implements sfSecurityUser
     $this->credentials   = $storage->read(self::CREDENTIAL_NAMESPACE);
     $this->lastRequest   = $storage->read(self::LAST_REQUEST_NAMESPACE);
 
-    if (is_null($this->authenticated))
+    if (null === $this->authenticated)
     {
       $this->authenticated = false;
       $this->credentials   = array();
@@ -265,7 +279,7 @@ class sfBasicSecurityUser extends sfUser implements sfSecurityUser
     {
       // Automatic logout logged in user if no request within timeout parameter seconds
       $timeout = $this->options['timeout'];
-      if (false !== $timeout && !is_null($this->lastRequest) && time() - $this->lastRequest >= $timeout)
+      if (false !== $timeout && null !== $this->lastRequest && time() - $this->lastRequest >= $timeout)
       {
         if ($this->options['logging'])
         {

@@ -16,7 +16,7 @@
  *
  * This software consists of voluntary contributions made by many individuals
  * and is licensed under the LGPL. For more information, see
- * <http://www.phpdoctrine.org>.
+ * <http://www.doctrine-project.org>.
  */
 
 /**
@@ -25,7 +25,7 @@
  * @package     Doctrine
  * @subpackage  Parser
  * @license     http://www.opensource.org/licenses/lgpl-license.php LGPL
- * @link        www.phpdoctrine.org
+ * @link        www.doctrine-project.org
  * @since       1.0
  * @version     $Revision: 1080 $
  * @author      Jonathan H. Wage <jwage@mac.com>
@@ -39,9 +39,10 @@ class Doctrine_Parser_Serialize extends Doctrine_Parser
      * 
      * @param string $array 
      * @param string $path 
+     * @param string $charset The charset of the data being dumped
      * @return void
      */
-    public function dumpData($array, $path = null)
+    public function dumpData($array, $path = null, $charset = null)
     {
         $data = serialize($array);
         

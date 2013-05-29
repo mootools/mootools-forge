@@ -1,6 +1,6 @@
 <?php
 /*
- *  $Id: Sqlite.php 5801 2009-06-02 17:30:27Z piccoloprincipe $
+ *  $Id: Sqlite.php 7490 2010-03-29 19:53:27Z jwage $
  *
  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
  * "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT
@@ -16,7 +16,7 @@
  *
  * This software consists of voluntary contributions made by many individuals
  * and is licensed under the LGPL. For more information, see
- * <http://www.phpdoctrine.org>.
+ * <http://www.doctrine-project.org>.
  */
 
 /**
@@ -26,9 +26,9 @@
  * @subpackage  Sequence
  * @author      Konsta Vesterinen <kvesteri@cc.hut.fi>
  * @license     http://www.opensource.org/licenses/lgpl-license.php LGPL
- * @link        www.phpdoctrine.org
+ * @link        www.doctrine-project.org
  * @since       1.0
- * @version     $Revision: 5801 $
+ * @version     $Revision: 7490 $
  */
 class Doctrine_Sequence_Sqlite extends Doctrine_Sequence
 {
@@ -43,20 +43,16 @@ class Doctrine_Sequence_Sqlite extends Doctrine_Sequence
     public function nextId($seqName, $onDemand = true)
     {
         $sequenceName = $this->conn->quoteIdentifier($this->conn->formatter->getSequenceName($seqName), true);
-        $seqcolName   = $this->conn->quoteIdentifier($this->conn->getAttribute(Doctrine::ATTR_SEQCOL_NAME), true);
-
+        $seqcolName   = $this->conn->quoteIdentifier($this->conn->getAttribute(Doctrine_Core::ATTR_SEQCOL_NAME), true);
         $query        = 'INSERT INTO ' . $sequenceName . ' (' . $seqcolName . ') VALUES (NULL)';
 
         try {
-
             $this->conn->exec($query);
-
         } catch(Doctrine_Connection_Exception $e) {
-            if ($onDemand && $e->getPortableCode() == Doctrine::ERR_NOSUCHTABLE) {
+            if ($onDemand && $e->getPortableCode() == Doctrine_Core::ERR_NOSUCHTABLE) {
                 // Since we are creating the sequence on demand
                 // we know the first id = 1 so initialize the
                 // sequence at 2
-
                 try {
                     $result = $this->conn->export->createSequence($seqName, 2);
                 } catch(Doctrine_Exception $e) {
@@ -64,21 +60,18 @@ class Doctrine_Sequence_Sqlite extends Doctrine_Sequence
                 }
                 // First ID of a newly created sequence is 1
                 return 1;
+            } else {
+                throw new Doctrine_Sequence_Exception('sequence ' .$seqName . ' does not exist');
             }
-            throw $e;
         }
 
         $value = $this->conn->getDbh()->lastInsertId();
 
         if (is_numeric($value)) {
-            $query = 'DELETE FROM ' . $sequenceName . ' WHERE ' . $seqcolName . ' < ' . $value;
-            
+            $query = 'DELETE FROM ' . $sequenceName . ' WHERE ' . $seqcolName . ' < ' . $value;            
             $this->conn->exec($query);
-            /**
-            TODO: is the following needed ?
-            $this->warnings[] = 'nextID: could not delete previous sequence table values from '.$seq_name;
-            */
         }
+        
         return $value;
     }
 
@@ -105,7 +98,7 @@ class Doctrine_Sequence_Sqlite extends Doctrine_Sequence
     public function currId($seqName)
     {
         $sequenceName = $this->conn->quoteIdentifier($this->conn->formatter->getSequenceName($seqName), true);
-        $seqcolName   = $this->conn->quoteIdentifier($this->conn->getAttribute(Doctrine::ATTR_SEQCOL_NAME), true);
+        $seqcolName   = $this->conn->quoteIdentifier($this->conn->getAttribute(Doctrine_Core::ATTR_SEQCOL_NAME), true);
 
         $query        = 'SELECT MAX(' . $seqcolName . ') FROM ' . $sequenceName;
 

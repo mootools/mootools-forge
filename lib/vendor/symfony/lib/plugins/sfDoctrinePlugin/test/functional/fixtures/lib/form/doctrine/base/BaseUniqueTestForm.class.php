@@ -3,24 +3,27 @@
 /**
  * UniqueTest form base class.
  *
- * @package    form
- * @subpackage unique_test
- * @version    SVN: $Id: sfDoctrineFormGeneratedTemplate.php 8508 2008-04-17 17:39:15Z fabien $
+ * @method UniqueTest getObject() Returns the current form's model object
+ *
+ * @package    symfony12
+ * @subpackage form
+ * @author     Your name here
+ * @version    SVN: $Id: sfDoctrineFormGeneratedTemplate.php 29553 2010-05-20 14:33:00Z Kris.Wallsmith $
  */
-class BaseUniqueTestForm extends BaseFormDoctrine
+abstract class BaseUniqueTestForm extends BaseFormDoctrine
 {
   public function setup()
   {
     $this->setWidgets(array(
       'id'           => new sfWidgetFormInputHidden(),
-      'unique_test1' => new sfWidgetFormInput(),
-      'unique_test2' => new sfWidgetFormInput(),
-      'unique_test3' => new sfWidgetFormInput(),
-      'unique_test4' => new sfWidgetFormInput(),
+      'unique_test1' => new sfWidgetFormInputText(),
+      'unique_test2' => new sfWidgetFormInputText(),
+      'unique_test3' => new sfWidgetFormInputText(),
+      'unique_test4' => new sfWidgetFormInputText(),
     ));
 
     $this->setValidators(array(
-      'id'           => new sfValidatorDoctrineChoice(array('model' => 'UniqueTest', 'column' => 'id', 'required' => false)),
+      'id'           => new sfValidatorChoice(array('choices' => array($this->getObject()->get('id')), 'empty_value' => $this->getObject()->get('id'), 'required' => false)),
       'unique_test1' => new sfValidatorString(array('max_length' => 255, 'required' => false)),
       'unique_test2' => new sfValidatorString(array('max_length' => 255, 'required' => false)),
       'unique_test3' => new sfValidatorString(array('max_length' => 255, 'required' => false)),
@@ -38,6 +41,8 @@ class BaseUniqueTestForm extends BaseFormDoctrine
     $this->widgetSchema->setNameFormat('unique_test[%s]');
 
     $this->errorSchema = new sfValidatorErrorSchema($this->validatorSchema);
+
+    $this->setupInheritance();
 
     parent::setup();
   }

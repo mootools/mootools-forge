@@ -27,7 +27,7 @@
  * @subpackage doctrine
  * @author     Fabien Potencier <fabien.potencier@symfony-project.com>
  * @author     Jonathan H. Wage <jonwage@gmail.com>
- * @version    SVN: $Id: sfDoctrineUniqueValidator.class.php 11629 2008-09-17 22:22:25Z Jonathan.Wage $
+ * @version    SVN: $Id: sfDoctrineUniqueValidator.class.php 24575 2009-11-30 12:15:42Z fabien $
  */
 class sfDoctrineUniqueValidator extends sfValidator
 {
@@ -43,7 +43,7 @@ class sfDoctrineUniqueValidator extends sfValidator
     $className  = $this->getParameter('class');
     $columnName = $className.'.'.$this->getParameter('column');
 
-    $primaryKeys = Doctrine::getTable($className)->getIdentifier();
+    $primaryKeys = Doctrine_Core::getTable($className)->getIdentifier();
     if (!is_array($primaryKeys))
     {
       $primaryKeys = array($primaryKeys);
@@ -52,7 +52,7 @@ class sfDoctrineUniqueValidator extends sfValidator
     // implied assumption: the is at least one primary key
     foreach ($primaryKeys as $primaryKey)
     {
-      if (is_null($primaryKeyValue = $this->getContext()->getRequest()->getParameter($primaryKey)))
+      if (null === $primaryKeyValue = $this->getContext()->getRequest()->getParameter($primaryKey))
       {
         break;
       }

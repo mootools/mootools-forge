@@ -14,7 +14,7 @@
  * @package    symfony
  * @subpackage i18n
  * @author     Fabien Potencier <fabien.potencier@symfony-project.com>
- * @version    SVN: $Id: sfI18N.class.php 17749 2009-04-29 11:54:22Z fabien $
+ * @version    SVN: $Id: sfI18N.class.php 29520 2010-05-19 11:47:08Z fabien $
  */
 class sfI18N
 {
@@ -61,7 +61,7 @@ class sfI18N
 
     if (isset($options['culture']))
     {
-      $this->culture = $options['culture'];
+      $this->setCulture($options['culture']);
       unset($options['culture']);
     }
 
@@ -109,7 +109,7 @@ class sfI18N
    */
   public function setMessageSource($dirs, $culture = null)
   {
-    if (is_null($dirs))
+    if (null === $dirs)
     {
       $this->messageSource = $this->createMessageSource();
     }
@@ -118,12 +118,12 @@ class sfI18N
       $this->messageSource = sfMessageSource::factory('Aggregate', array_map(array($this, 'createMessageSource'), $dirs));
     }
 
-    if (!is_null($this->cache))
+    if (null !== $this->cache)
     {
       $this->messageSource->setCache($this->cache);
     }
 
-    if (!is_null($culture))
+    if (null !== $culture)
     {
       $this->setCulture($culture);
     }
@@ -240,7 +240,7 @@ class sfI18N
    */
   public function getCountry($iso, $culture = null)
   {
-    $c = sfCultureInfo::getInstance(is_null($culture) ? $this->culture : $culture);
+    $c = sfCultureInfo::getInstance(null === $culture ? $this->culture : $culture);
     $countries = $c->getCountries();
 
     return (array_key_exists($iso, $countries)) ? $countries[$iso] : '';
@@ -268,10 +268,10 @@ class sfI18N
    */
   public function getTimestampForCulture($dateTime, $culture = null)
   {
-    list($day, $month, $year) = $this->getDateForCulture($dateTime, is_null($culture) ? $this->culture : $culture);
-    list($hour, $minute) = $this->getTimeForCulture($dateTime, is_null($culture) ? $this->culture : $culture);
+    list($day, $month, $year) = $this->getDateForCulture($dateTime, null === $culture ? $this->culture : $culture);
+    list($hour, $minute) = $this->getTimeForCulture($dateTime, null === $culture ? $this->culture : $culture);
 
-    return is_null($day) ? null : mktime($hour, $minute, 0, $month, $day, $year);
+    return null === $day ? null : mktime($hour, $minute, 0, $month, $day, $year);
   }
 
   /**
@@ -289,11 +289,11 @@ class sfI18N
       return null;
     }
 
-    $dateFormatInfo = @sfDateTimeFormatInfo::getInstance(is_null($culture) ? $this->culture : $culture);
+    $dateFormatInfo = @sfDateTimeFormatInfo::getInstance(null === $culture ? $this->culture : $culture);
     $dateFormat = $dateFormatInfo->getShortDatePattern();
 
     // We construct the regexp based on date format
-    $dateRegexp = preg_replace('/[dmy]+/i', '(\d+)', $dateFormat);
+    $dateRegexp = preg_replace('/[dmy]+/i', '(\d+)', preg_quote($dateFormat));
 
     // We parse date format to see where things are (m, d, y)
     $a = array(
@@ -328,35 +328,65 @@ class sfI18N
    *
    * @return array   An array with the hour and minute
    */
-  public function getTimeForCulture($time, $culture)
+  public function getTimeForCulture($time, $culture = null)
   {
     if (!$time) return 0;
 
-    $culture = is_null($culture) ? $this->culture : $culture;
+    $culture = null === $culture ? $this->culture : $culture;
 
     $timeFormatInfo = @sfDateTimeFormatInfo::getInstance($culture);
     $timeFormat = $timeFormatInfo->getShortTimePattern();
 
     // We construct the regexp based on time format
-    $timeRegexp = preg_replace(array('/[^hm:]+/i', '/[hm]+/i'), array('', '(\d+)'), $timeFormat);
+    $timeRegexp = preg_replace(array('/[hm]+/i', '/a/'), array('(\d+)', '(\w+)'), preg_quote($timeFormat));
 
     // We parse time format to see where things are (h, m)
-    $a = array(
+    $timePositions = array(
       'h' => strpos($timeFormat, 'H') !== false ? strpos($timeFormat, 'H') : strpos($timeFormat, 'h'),
-      'm' => strpos($timeFormat, 'm')
+      'm' => strpos($timeFormat, 'm'),
+      'a' => strpos($timeFormat, 'a')
     );
-    $tmp = array_flip($a);
-    ksort($tmp);
+    asort($timePositions);
     $i = 0;
-    $c = array();
-    foreach ($tmp as $value) $c[++$i] = $value;
-    $timePositions = array_flip($c);
+
+    // normalize positions to 0, 1, ...
+    // positions that don't exist in the pattern remain false
+    foreach ($timePositions as $key => $value)
+    {
+      if ($value !== false)
+      {
+        $timePositions[$key] = ++$i;
+      }
+    }
 
     // We find all elements
     if (preg_match("~$timeRegexp~", $time, $matches))
     {
+      // repect am/pm setting if present
+      if ($timePositions['a'] !== false)
+      {
+        if (strcasecmp($matches[$timePositions['a']], $timeFormatInfo->getAMDesignator()) == 0)
+        {
+          $hour = $matches[$timePositions['h']];
+        }
+        else if (strcasecmp($matches[$timePositions['a']], $timeFormatInfo->getPMDesignator()) == 0)
+        {
+          $hour = $matches[$timePositions['h']] + 12;
+        }
+        else
+        {
+          // am/pm marker is invalid
+          // return null; would be the preferred solution but this might break a lot of code
+          $hour = $matches[$timePositions['h']];
+        }
+      }
+      else
+      {
+        $hour = $matches[$timePositions['h']];
+      }
+
       // We get matching timestamp
-      return array($matches[$timePositions['h']], $matches[$timePositions['m']]);
+      return array($hour, $matches[$timePositions['m']]);
     }
     else
     {

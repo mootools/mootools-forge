@@ -1,6 +1,6 @@
 <?php
 /*
- *  $Id: Hook.php 5801 2009-06-02 17:30:27Z piccoloprincipe $
+ *  $Id: Hook.php 7490 2010-03-29 19:53:27Z jwage $
  *
  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
  * "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT
@@ -16,7 +16,7 @@
  *
  * This software consists of voluntary contributions made by many individuals
  * and is licensed under the LGPL. For more information, see
- * <http://www.phpdoctrine.org>.
+ * <http://www.doctrine-project.org>.
  */
 
 /**
@@ -25,9 +25,9 @@
  * @package     Doctrine
  * @subpackage  Hook
  * @license     http://www.opensource.org/licenses/lgpl-license.php LGPL
- * @link        www.phpdoctrine.org
+ * @link        www.doctrine-project.org
  * @since       1.0
- * @version     $Revision: 5801 $
+ * @version     $Revision: 7490 $
  * @author      Konsta Vesterinen <kvesteri@cc.hut.fi>
  */
 class Doctrine_Hook
@@ -79,15 +79,15 @@ class Doctrine_Hook
     public function __construct($query)
     {
         if (is_string($query)) {
-            $this->query = new Doctrine_Query();
-            $this->query->parseQuery($query);
+            $this->query = Doctrine_Query::create();
+            $this->query->parseDqlQuery($query);
         } elseif ($query instanceof Doctrine_Query) {
             $this->query = $query;
         } else {
             throw new Doctrine_Exception('Constructor argument should be either Doctrine_Query object or valid DQL query');          
         }
         
-        $this->query->getQuery();
+        $this->query->getSqlQuery();
     }
 
     /**
@@ -144,7 +144,7 @@ class Doctrine_Hook
             if (count($e) == 2) {
                 list($alias, $column) = $e;
 
-                $map   = $this->query->getAliasDeclaration($alias);
+                $map   = $this->query->getQueryComponent($alias);
                 $table = $map['table'];
 
                 if ( ! $table) {
@@ -196,7 +196,7 @@ class Doctrine_Hook
             if (count($e) == 2) {
                 list($alias, $column) = $e;
 
-                $map   = $this->query->getAliasDeclaration($alias);
+                $map   = $this->query->getQueryComponent($alias);
                 $table = $map['table'];
 
                 if ($def = $table->getDefinitionOf($column)) {   

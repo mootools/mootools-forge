@@ -18,7 +18,7 @@
  * @author     John Christopher <john.christopher@symfony-project.com>
  * @author     David Heinemeier Hansson
  * @author     Fabian Lange <fabian.lange@symfony-project.com>
- * @version    SVN: $Id: JavascriptHelper.php 10078 2008-07-02 20:16:31Z FabianLange $
+ * @version    SVN: $Id: JavascriptBaseHelper.php 24499 2009-11-28 14:12:02Z FabianLange $
  */
 
 /*
@@ -77,7 +77,7 @@ function button_to_function($name, $function, $html_options = array())
  */
 function javascript_tag($content = null)
 {
-  if (!is_null($content))
+  if (null !== $content)
   {
     return content_tag('script', javascript_cdata_section($content), array('type' => 'text/javascript'));
   }

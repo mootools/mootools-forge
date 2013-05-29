@@ -1,6 +1,6 @@
 <?php
 /*
- *  $Id: Transaction.php 5801 2009-06-02 17:30:27Z piccoloprincipe $
+ *  $Id: Transaction.php 7651 2010-06-08 15:47:06Z jwage $
  *
  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
  * "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT
@@ -16,7 +16,7 @@
  *
  * This software consists of voluntary contributions made by many individuals
  * and is licensed under the LGPL. For more information, see
- * <http://www.phpdoctrine.org>.
+ * <http://www.doctrine-project.org>.
  */
 
 /**
@@ -28,9 +28,9 @@
  * @license     http://www.opensource.org/licenses/lgpl-license.php LGPL
  * @package     Doctrine
  * @subpackage  Transaction
- * @link        www.phpdoctrine.org
+ * @link        www.doctrine-project.org
  * @since       1.0
- * @version     $Revision: 5801 $
+ * @version     $Revision: 7651 $
  */
 class Doctrine_Transaction extends Doctrine_Connection_Module
 {
@@ -185,7 +185,7 @@ class Doctrine_Transaction extends Doctrine_Connection_Module
     {
         $this->conn->connect();
         
-        $listener = $this->conn->getAttribute(Doctrine::ATTR_LISTENER);
+        $listener = $this->conn->getAttribute(Doctrine_Core::ATTR_LISTENER);
 
         if ( ! is_null($savepoint)) {
             $this->savePoints[] = $savepoint;
@@ -241,7 +241,7 @@ class Doctrine_Transaction extends Doctrine_Connection_Module
         
         $this->conn->connect();
 
-        $listener = $this->conn->getAttribute(Doctrine::ATTR_LISTENER);
+        $listener = $this->conn->getAttribute(Doctrine_Core::ATTR_LISTENER);
 
         if ( ! is_null($savepoint)) {
             $this->_nestingLevel -= $this->removeSavePoints($savepoint);
@@ -330,7 +330,7 @@ class Doctrine_Transaction extends Doctrine_Connection_Module
             return false;
         }
 
-        $listener = $this->conn->getAttribute(Doctrine::ATTR_LISTENER);
+        $listener = $this->conn->getAttribute(Doctrine_Core::ATTR_LISTENER);
 
         if ( ! is_null($savepoint)) {
             $this->_nestingLevel -= $this->removeSavePoints($savepoint);

@@ -13,7 +13,7 @@
  * @package    symfony
  * @subpackage view
  * @author     Fabien Potencier <fabien.potencier@symfony-project.com>
- * @version    SVN: $Id: sfMailView.class.php 7691 2008-02-29 16:56:22Z fabien $
+ * @version    SVN: $Id: sfMailView.class.php 23810 2009-11-12 11:07:44Z Kris.Wallsmith $
  */
 class sfMailView extends sfPHPView
 {

@@ -17,7 +17,7 @@
  * @author     Olivier Verdier <Olivier.Verdier@gmail.com>
  * @author     Jonathan H. Wage <jonwage@gmail.com>
  * @author     Fabien Potencier <fabien.potencier@symfony-project.com>
- * @version    SVN: $Id: ObjectDoctrineAdminHelper.php 12089 2008-10-08 20:23:25Z Jonathan.Wage $
+ * @version    SVN: $Id: ObjectDoctrineAdminHelper.php 23810 2009-11-12 11:07:44Z Kris.Wallsmith $
  */
 
 sfLoader::loadHelpers(array('ObjectAdmin'));

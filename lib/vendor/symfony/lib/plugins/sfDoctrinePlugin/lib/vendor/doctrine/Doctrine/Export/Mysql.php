@@ -1,6 +1,6 @@
 <?php
 /*
- *  $Id: Mysql.php 6624 2009-11-03 01:21:08Z jwage $
+ *  $Id: Mysql.php 7653 2010-06-08 15:54:31Z jwage $
  *
  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
  * "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT
@@ -16,7 +16,7 @@
  *
  * This software consists of voluntary contributions made by many individuals
  * and is licensed under the LGPL. For more information, see
- * <http://www.phpdoctrine.org>.
+ * <http://www.doctrine-project.org>.
  */
 
 /**
@@ -27,9 +27,9 @@
  * @author      Konsta Vesterinen <kvesteri@cc.hut.fi>
  * @author      Lukas Smith <smith@pooteeweet.org> (PEAR MDB2 library)
  * @license     http://www.opensource.org/licenses/lgpl-license.php LGPL
- * @link        www.phpdoctrine.org
+ * @link        www.doctrine-project.org
  * @since       1.0
- * @version     $Revision: 6624 $
+ * @version     $Revision: 7653 $
  */
 class Doctrine_Export_Mysql extends Doctrine_Export
 {
@@ -73,7 +73,11 @@ class Doctrine_Export_Mysql extends Doctrine_Export
      */
     public function dropDatabaseSql($name)
     {
-        return 'DROP DATABASE ' . $this->conn->quoteIdentifier($name);
+        return array(
+            'SET FOREIGN_KEY_CHECKS = 0',
+            'DROP DATABASE ' . $this->conn->quoteIdentifier($name),
+            'SET FOREIGN_KEY_CHECKS = 1'
+        );
     }
 
     /**
@@ -129,7 +133,7 @@ class Doctrine_Export_Mysql extends Doctrine_Export
                     foreach ($options['indexes'] as $definition) {
                         if (is_string($definition['fields'])) {
                             // Check if index already exists on the column                            
-                            $found = ($local == $definition['fields']);                        
+                            $found = $found || ($local == $definition['fields']);                    
                         } else if (in_array($local, $definition['fields']) && count($definition['fields']) === 1) {
                             // Index already exists on the column
                             $found = true;
@@ -156,6 +160,17 @@ class Doctrine_Export_Mysql extends Doctrine_Export
 
         // add all indexes
         if (isset($options['indexes']) && ! empty($options['indexes'])) {
+            // Case Insensitive checking for duplicate indexes...
+            $dupes = array();
+            foreach ($options['indexes'] as $key => $index) {
+                if (in_array(strtolower($key), $dupes)) {
+                    unset($options['indexes'][$key]);
+                } else {
+                    $dupes[] = strtolower($key);
+                }
+            }
+            unset($dupes);
+
             foreach($options['indexes'] as $index => $definition) {
                 $queryFields .= ', ' . $this->getIndexDeclaration($index, $definition);
             }
@@ -188,7 +203,7 @@ class Doctrine_Export_Mysql extends Doctrine_Export
         if (isset($options['type'])) {
             $type = $options['type'];
         } else {
-            $type = $this->conn->getAttribute(Doctrine::ATTR_DEFAULT_TABLE_TYPE);
+            $type = $this->conn->getAttribute(Doctrine_Core::ATTR_DEFAULT_TABLE_TYPE);
         }
 
         if ($type) {
@@ -263,7 +278,7 @@ class Doctrine_Export_Mysql extends Doctrine_Export
                     ' ' . $field['check'] : '';
 
         $comment   = (isset($field['comment']) && $field['comment']) ?
-                    " COMMENT '" . $field['comment'] . "'" : '';
+                    " COMMENT " . $this->conn->quote($field['comment'], 'text') : '';
 
         $method = 'get' . $field['type'] . 'Declaration';
 
@@ -277,7 +292,7 @@ class Doctrine_Export_Mysql extends Doctrine_Export
             return $this->conn->quoteIdentifier($name, true) 
                  . ' ' . $dec . $charset . $default . $notnull . $comment . $unique . $check . $collation;
         } catch (Exception $e) {
-            throw new Doctrine_Exception('Around field ' . $name . ': ' . $e->getMessage());
+            throw new Doctrine_Exception('Around field ' . $name . ': ' . $e->getMessage() . "\n\n" . $e->getTraceAsString() . "\n\n");
         }
     }
 
@@ -478,7 +493,7 @@ class Doctrine_Export_Mysql extends Doctrine_Export
     public function createSequence($sequenceName, $start = 1, array $options = array())
     {
         $sequenceName   = $this->conn->quoteIdentifier($sequenceName, true);
-        $seqcolName     = $this->conn->quoteIdentifier($this->conn->getAttribute(Doctrine::ATTR_SEQCOL_NAME), true);
+        $seqcolName     = $this->conn->quoteIdentifier($this->conn->getAttribute(Doctrine_Core::ATTR_SEQCOL_NAME), true);
 
         $optionsStrings = array();
 
@@ -499,7 +514,7 @@ class Doctrine_Export_Mysql extends Doctrine_Export
         if (isset($options['type'])) {
             $type = $options['type'];
         } else {
-            $type = $this->conn->getAttribute(Doctrine::ATTR_DEFAULT_TABLE_TYPE);
+            $type = $this->conn->getAttribute(Doctrine_Core::ATTR_DEFAULT_TABLE_TYPE);
         }
         if ($type) {
             $optionsStrings[] = 'ENGINE = ' . $type;
@@ -614,14 +629,14 @@ class Doctrine_Export_Mysql extends Doctrine_Export
                     ? null : $this->valid_default_values[$field['type']];
 
                 if ($field['default'] === ''
-                    && ($this->conn->getAttribute(Doctrine::ATTR_PORTABILITY) & Doctrine::PORTABILITY_EMPTY_TO_NULL)
+                    && ($this->conn->getAttribute(Doctrine_Core::ATTR_PORTABILITY) & Doctrine_Core::PORTABILITY_EMPTY_TO_NULL)
                 ) {
                     $field['default'] = ' ';
                 }
             }
     
             // Proposed patch:
-            if ($field['type'] == 'enum' && $this->conn->getAttribute(Doctrine::ATTR_USE_NATIVE_ENUM)) {
+            if ($field['type'] == 'enum' && $this->conn->getAttribute(Doctrine_Core::ATTR_USE_NATIVE_ENUM)) {
                 $fieldType = 'varchar';
             } else {
                 $fieldType = $field['type'];
@@ -714,6 +729,30 @@ class Doctrine_Export_Mysql extends Doctrine_Export
     }
 
     /**
+     * Returns a character set declaration.
+     *
+     * @param string $charset A character set
+     *
+     * @return string A character set declaration
+     */
+    public function getCharsetFieldDeclaration($charset)
+    {
+        return $this->conn->dataDict->getCharsetFieldDeclaration($charset);
+    }
+
+    /**
+     * Returns a collation declaration.
+     *
+     * @param string $collation A collation
+     *
+     * @return string A collation declaration
+     */
+    public function getCollationFieldDeclaration($collation)
+    {
+        return $this->conn->dataDict->getCollationFieldDeclaration($collation);
+    }
+
+    /**
      * getAdvancedForeignKeyOptions
      * Return the FOREIGN KEY query section dealing with non-standard options
      * as MATCH, INITIALLY DEFERRED, ON UPDATE, ...
@@ -773,7 +812,7 @@ class Doctrine_Export_Mysql extends Doctrine_Export
     public function dropForeignKey($table, $name)
     {
         $table = $this->conn->quoteIdentifier($table);
-        $name  = $this->conn->quoteIdentifier($name);
+        $name  = $this->conn->quoteIdentifier($this->conn->formatter->getForeignKeyName($name));
 
         return $this->conn->exec('ALTER TABLE ' . $table . ' DROP FOREIGN KEY ' . $name);
     }

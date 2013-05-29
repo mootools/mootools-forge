@@ -16,7 +16,7 @@
  * @subpackage helper
  * @author     Fabien Potencier <fabien.potencier@symfony-project.com>
  * @author     David Heinemeier Hansson
- * @version    SVN: $Id: FormHelper.php 17858 2009-05-01 21:22:50Z FabianLange $
+ * @version    SVN: $Id: FormHelper.php 28849 2010-03-29 09:53:43Z fabien $
  */
 
 /**
@@ -96,50 +96,6 @@ function options_for_select($options = array(), $selected = '', $html_options = 
   }
 
   return $html;
-}
-
-/**
- * Returns an HTML <form> tag that points to a valid action, route or URL as defined by <i>$url_for_options</i>.
- *
- * By default, the form tag is generated in POST format, but can easily be configured along with any additional
- * HTML parameters via the optional <i>$options</i> parameter. If you are using file uploads, be sure to set the 
- * <i>multipart</i> option to true.
- *
- * <b>Options:</b>
- * - multipart - When set to true, enctype is set to "multipart/form-data".
- *
- * <b>Examples:</b>
- *   <code><?php echo form_tag('@myroute'); ?></code>
- *   <code><?php echo form_tag('/module/action', array('name' => 'myformname', 'multipart' => true)); ?></code>
- *
- * @param  string $url_for_options  valid action, route or URL
- * @param  array  $options          optional HTML parameters for the <form> tag
- *
- * @return string opening HTML <form> tag with options
- */
-function form_tag($url_for_options = '', $options = array())
-{
-  $options = _parse_attributes($options);
-
-  $html_options = $options;
-
-  $html_options['method'] = isset($html_options['method']) ? strtolower($html_options['method']) : 'post';
-
-  if (_get_option($html_options, 'multipart'))
-  {
-    $html_options['enctype'] = 'multipart/form-data';
-  }
-
-  $html_options['action'] = url_for($url_for_options);
-
-  $html = '';
-  if (!in_array($html_options['method'], array('get', 'post')))
-  {
-    $html = tag('input', array('type' => 'hidden', 'name' => 'sf_method', 'value' => $html_options['method']));
-    $html_options['method'] = 'post';
-  }
-
-  return tag('form', $html_options, true).$html;
 }
 
 /**
@@ -229,7 +185,7 @@ function select_country_tag($name, $selected = null, $options = array())
     $countries = array_intersect_key($countries, array_flip($country_option)); 
   }
 
-  asort($countries);
+  $c->sortArray($countries);
 
   $option_tags = options_for_select($countries, $selected, $options);
   unset($options['include_blank'], $options['include_custom']);
@@ -275,7 +231,7 @@ function select_language_tag($name, $selected = null, $options = array())
     $languages = array_intersect_key($languages, array_flip($language_option)); 
   }
 
-  asort($languages);
+  $c->sortArray($languages);
 
   $option_tags = options_for_select($languages, $selected, $options);
   unset($options['include_blank'], $options['include_custom']);
@@ -334,7 +290,7 @@ function select_currency_tag($name, $selected = null, $options = array())
     }
   }
 
-  asort($currencies);
+  $c->sortArray($currencies);
 
   $option_tags = options_for_select($currencies, $selected, $options);
   unset($options['include_blank'], $options['include_custom']);
@@ -510,7 +466,11 @@ function textarea_tag($name, $content = null, $options = array())
 
     $editorClass = 'sfRichTextEditor'.$rich;
 
-    if (!class_exists($editorClass))
+    if (!class_exists($editorClass, false) && file_exists($file = dirname(__FILE__).'/'.$editorClass.'.class.php'))
+    {
+      require_once $file;
+    }
+    else if (!class_exists($editorClass))
     {
       throw new sfConfigurationException(sprintf('The rich text editor "%s" does not exist.', $editorClass));
     }

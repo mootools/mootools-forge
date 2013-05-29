@@ -16,7 +16,7 @@
  * @subpackage controller
  * @author     Fabien Potencier <fabien.potencier@symfony-project.com>
  * @author     Sean Kerr <sean@code-box.org>
- * @version    SVN: $Id: sfWebController.class.php 17858 2009-05-01 21:22:50Z FabianLange $
+ * @version    SVN: $Id: sfWebController.class.php 30563 2010-08-06 11:22:44Z fabien $
  */
 abstract class sfWebController extends sfController
 {
@@ -30,28 +30,28 @@ abstract class sfWebController extends sfController
    */
   public function genUrl($parameters = array(), $absolute = false)
   {
-    // absolute URL or symfony URL?
-    if (is_string($parameters) && preg_match('#^[a-z][a-z0-9\+.\-]*\://#i', $parameters))
-    {
-      return $parameters;
-    }
-
-    // relative URL?
-    if (is_string($parameters) && 0 === strpos($parameters, '/'))
-    {
-      return $parameters;
-    }
-
-    if (is_string($parameters) && $parameters == '#')
-    {
-      return $parameters;
-    }
-
     $route = '';
     $fragment = '';
 
     if (is_string($parameters))
     {
+      // absolute URL or symfony URL?
+      if (preg_match('#^[a-z][a-z0-9\+.\-]*\://#i', $parameters))
+      {
+        return $parameters;
+      }
+
+      // relative URL?
+      if (0 === strpos($parameters, '/'))
+      {
+        return $parameters;
+      }
+
+      if ($parameters == '#')
+      {
+        return $parameters;
+      }
+  
       // strip fragment
       if (false !== ($pos = strpos($parameters, '#')))
       {
@@ -119,7 +119,6 @@ abstract class sfWebController extends sfController
       $url = substr($url, 1);
     }
 
-
     // routeName?
     if ($url[0] == '@')
     {
@@ -167,14 +166,23 @@ abstract class sfWebController extends sfController
   /**
    * Redirects the request to another URL.
    *
-   * @param string $url        An existing URL
+   * @param string $url        An associative array of URL parameters or an internal URI as a string
    * @param int    $delay      A delay in seconds before redirecting. This is only needed on
    *                           browsers that do not support HTTP headers
    * @param int    $statusCode The status code
+   *
+   * @throws InvalidArgumentException If the url argument is null or an empty string
    */
   public function redirect($url, $delay = 0, $statusCode = 302)
   {
+    if (empty($url))
+    {
+      throw new InvalidArgumentException('Cannot redirect to an empty URL.'); 
+    }
+
     $url = $this->genUrl($url, true);
+    // see #8083
+    $url = str_replace('&amp;', '&', $url);
 
     if (sfConfig::get('sf_logging_enabled'))
     {
@@ -185,7 +193,14 @@ abstract class sfWebController extends sfController
     $response = $this->context->getResponse();
     $response->clearHttpHeaders();
     $response->setStatusCode($statusCode);
-    $response->setHttpHeader('Location', $url);
+
+    // The Location header should only be used for status codes 201 and 3..
+    // For other code, only the refresh meta tag is used
+    if ($statusCode == 201 || ($statusCode >= 300 && $statusCode < 400))
+    {
+      $response->setHttpHeader('Location', $url);
+    }
+
     $response->setContent(sprintf('<html><head><meta http-equiv="refresh" content="%d;url=%s"/></head></html>', $delay, htmlspecialchars($url, ENT_QUOTES, sfConfig::get('sf_charset'))));
     $response->send();
   }

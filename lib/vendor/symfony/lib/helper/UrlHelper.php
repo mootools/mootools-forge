@@ -14,9 +14,12 @@
  * @package    symfony
  * @subpackage helper
  * @author     Fabien Potencier <fabien.potencier@symfony-project.com>
- * @version    SVN: $Id: UrlHelper.php 27597 2010-02-05 16:37:22Z FabianLange $
+ * @version    SVN: $Id: UrlHelper.php 31397 2010-11-15 16:10:28Z fabien $
  */
 
+/**
+ * @ignore
+ */
 function link_to2($name, $routeName, $params, $options = array())
 {
   $params = array_merge(array('sf_route' => $routeName), is_object($params) ? array('sf_subject' => $params) : $params);
@@ -24,6 +27,9 @@ function link_to2($name, $routeName, $params, $options = array())
   return link_to1($name, $params, $options);
 }
 
+/**
+ * @ignore
+ */
 function link_to1($name, $internal_uri, $options = array())
 {
   $html_options = _parse_attributes($options);
@@ -76,6 +82,9 @@ function link_to1($name, $internal_uri, $options = array())
   return content_tag('a', $name, $html_options);
 }
 
+/**
+ * @ignore
+ */
 function url_for2($routeName, $params = array(), $absolute = false)
 {
   $params = array_merge(array('sf_route' => $routeName), is_object($params) ? array('sf_subject' => $params) : $params);
@@ -83,6 +92,9 @@ function url_for2($routeName, $params = array(), $absolute = false)
   return url_for1($params, $absolute);
 }
 
+/**
+ * @ignore
+ */
 function url_for1($internal_uri, $absolute = false)
 {
   return sfContext::getInstance()->getController()->genUrl($internal_uri, $absolute);
@@ -177,7 +189,7 @@ function link_to()
   }
 }
 
-function url_for_form(sfForm $form, $routePrefix)
+function url_for_form(sfFormObject $form, $routePrefix)
 {
   $format = '%s/%s';
   if ('@' == $routePrefix[0])
@@ -223,16 +235,29 @@ function form_tag_for(sfForm $form, $routePrefix, $attributes = array())
  * @param  string $name          name of the link, i.e. string to appear between the <a> tags
  * @param  string $internal_uri  'module/action' or '@rule' of the action
  * @param  array  $options       additional HTML compliant <a> tag parameters
+ *
  * @return string XHTML compliant <a href> tag or name
+ *
  * @see    link_to
  */
-function link_to_if($condition, $name = '', $internal_uri = '', $options = array())
+function link_to_if()
 {
+  $arguments = func_get_args();
+  if (empty($arguments[2]) || '@' == substr($arguments[2], 0, 1) || false !== strpos($arguments[2], '/'))
+  {
+    list($condition, $name, $params, $options) = array_pad($arguments, 4, null);
+  }
+  else
+  {
+    list($condition, $name, $routeName, $params, $options) = array_pad($arguments, 5, null);
+    $params = array_merge(array('sf_route' => $routeName), is_object($params) ? array('sf_subject' => $params) : (array) $params);
+  }
+
   $html_options = _parse_attributes($options);
   if ($condition)
   {
     unset($html_options['tag']);
-    return link_to($name, $internal_uri, $html_options);
+    return link_to1($name, $params, $html_options);
   }
   else
   {
@@ -273,12 +298,16 @@ function link_to_if($condition, $name = '', $internal_uri = '', $options = array
  * @param  string $name          name of the link, i.e. string to appear between the <a> tags
  * @param  string $internal_uri  'module/action' or '@rule' of the action
  * @param  array  $options       additional HTML compliant <a> tag parameters
+ *
  * @return string XHTML compliant <a href> tag or name
+ *
  * @see    link_to
  */
-function link_to_unless($condition, $name = '', $internal_uri = '', $options = array())
+function link_to_unless()
 {
-  return link_to_if(!$condition, $name, $internal_uri, $options);
+  $arguments = func_get_args();
+  $arguments[0] = !$arguments[0];
+  return call_user_func_array('link_to_if', $arguments);
 }
 
 /**
@@ -384,6 +413,50 @@ function button_to($name, $internal_uri, $options = array())
   }
 
   return tag('input', $html_options);
+}
+
+/**
+ * Returns an HTML <form> tag that points to a valid action, route or URL as defined by <i>$url_for_options</i>.
+ *
+ * By default, the form tag is generated in POST format, but can easily be configured along with any additional
+ * HTML parameters via the optional <i>$options</i> parameter. If you are using file uploads, be sure to set the 
+ * <i>multipart</i> option to true.
+ *
+ * <b>Options:</b>
+ * - multipart - When set to true, enctype is set to "multipart/form-data".
+ *
+ * <b>Examples:</b>
+ *   <code><?php echo form_tag('@myroute'); ?></code>
+ *   <code><?php echo form_tag('/module/action', array('name' => 'myformname', 'multipart' => true)); ?></code>
+ *
+ * @param  string $url_for_options  valid action, route or URL
+ * @param  array  $options          optional HTML parameters for the <form> tag
+ *
+ * @return string opening HTML <form> tag with options
+ */
+function form_tag($url_for_options = '', $options = array())
+{
+  $options = _parse_attributes($options);
+
+  $html_options = $options;
+
+  $html_options['method'] = isset($html_options['method']) ? strtolower($html_options['method']) : 'post';
+
+  if (_get_option($html_options, 'multipart'))
+  {
+    $html_options['enctype'] = 'multipart/form-data';
+  }
+
+  $html_options['action'] = url_for($url_for_options);
+
+  $html = '';
+  if (!in_array($html_options['method'], array('get', 'post')))
+  {
+    $html = tag('input', array('type' => 'hidden', 'name' => 'sf_method', 'value' => $html_options['method']));
+    $html_options['method'] = 'post';
+  }
+
+  return tag('form', $html_options, true).$html;
 }
 
 /**
@@ -541,7 +614,7 @@ function _method_javascript_function($method)
   }
 
   // CSRF protection
-  $form = new sfForm();
+  $form = new BaseForm();
   if ($form->isCSRFProtected())
   {
     $function .= "var m = document.createElement('input'); m.setAttribute('type', 'hidden'); ";

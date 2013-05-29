@@ -1,6 +1,6 @@
 <?php
 /*
- *  $Id: Offset.php 5801 2009-06-02 17:30:27Z piccoloprincipe $
+ *  $Id: Offset.php 7490 2010-03-29 19:53:27Z jwage $
  *
  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
  * "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT
@@ -16,7 +16,7 @@
  *
  * This software consists of voluntary contributions made by many individuals
  * and is licensed under the LGPL. For more information, see
- * <http://www.phpdoctrine.org>.
+ * <http://www.doctrine-project.org>.
  */
 
 /**
@@ -26,9 +26,9 @@
  * @package     Doctrine
  * @subpackage  Collection
  * @license     http://www.opensource.org/licenses/lgpl-license.php LGPL
- * @link        www.phpdoctrine.org
+ * @link        www.doctrine-project.org
  * @since       1.0
- * @version     $Revision: 5801 $
+ * @version     $Revision: 7490 $
  * @author      Konsta Vesterinen <kvesteri@cc.hut.fi>
  */
 class Doctrine_Collection_Offset extends Doctrine_Collection
@@ -44,7 +44,7 @@ class Doctrine_Collection_Offset extends Doctrine_Collection
     public function __construct(Doctrine_Table $table)
     {
         parent::__construct($table);
-        $this->limit = $table->getAttribute(Doctrine::ATTR_COLL_LIMIT);
+        $this->limit = $table->getAttribute(Doctrine_Core::ATTR_COLL_LIMIT);
     }
 
     /**

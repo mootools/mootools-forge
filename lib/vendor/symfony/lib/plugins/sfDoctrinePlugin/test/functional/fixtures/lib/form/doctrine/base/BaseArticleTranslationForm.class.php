@@ -3,39 +3,47 @@
 /**
  * ArticleTranslation form base class.
  *
- * @package    form
- * @subpackage article_translation
- * @version    SVN: $Id: sfDoctrineFormGeneratedTemplate.php 8508 2008-04-17 17:39:15Z fabien $
+ * @method ArticleTranslation getObject() Returns the current form's model object
+ *
+ * @package    symfony12
+ * @subpackage form
+ * @author     Your name here
+ * @version    SVN: $Id: sfDoctrineFormGeneratedTemplate.php 29553 2010-05-20 14:33:00Z Kris.Wallsmith $
  */
-class BaseArticleTranslationForm extends BaseFormDoctrine
+abstract class BaseArticleTranslationForm extends BaseFormDoctrine
 {
   public function setup()
   {
     $this->setWidgets(array(
       'id'          => new sfWidgetFormInputHidden(),
-      'title'       => new sfWidgetFormInput(),
-      'body'        => new sfWidgetFormInput(),
-      'test_column' => new sfWidgetFormInput(),
+      'title'       => new sfWidgetFormInputText(),
+      'body'        => new sfWidgetFormInputText(),
+      'test_column' => new sfWidgetFormInputText(),
       'lang'        => new sfWidgetFormInputHidden(),
-      'slug'        => new sfWidgetFormInput(),
+      'slug'        => new sfWidgetFormInputText(),
     ));
 
     $this->setValidators(array(
-      'id'          => new sfValidatorDoctrineChoice(array('model' => 'ArticleTranslation', 'column' => 'id', 'required' => false)),
+      'id'          => new sfValidatorChoice(array('choices' => array($this->getObject()->get('id')), 'empty_value' => $this->getObject()->get('id'), 'required' => false)),
       'title'       => new sfValidatorString(array('max_length' => 255, 'required' => false)),
       'body'        => new sfValidatorString(array('max_length' => 255, 'required' => false)),
       'test_column' => new sfValidatorString(array('max_length' => 255, 'required' => false)),
-      'lang'        => new sfValidatorDoctrineChoice(array('model' => 'ArticleTranslation', 'column' => 'lang', 'required' => false)),
+      'lang'        => new sfValidatorChoice(array('choices' => array($this->getObject()->get('lang')), 'empty_value' => $this->getObject()->get('lang'), 'required' => false)),
       'slug'        => new sfValidatorString(array('max_length' => 255, 'required' => false)),
     ));
 
     $this->validatorSchema->setPostValidator(
-      new sfValidatorDoctrineUnique(array('model' => 'ArticleTranslation', 'column' => array('slug', 'lang', 'title')))
+      new sfValidatorAnd(array(
+        new sfValidatorDoctrineUnique(array('model' => 'ArticleTranslation', 'column' => array('title'))),
+        new sfValidatorDoctrineUnique(array('model' => 'ArticleTranslation', 'column' => array('slug', 'lang', 'title'))),
+      ))
     );
 
     $this->widgetSchema->setNameFormat('article_translation[%s]');
 
     $this->errorSchema = new sfValidatorErrorSchema($this->validatorSchema);
+
+    $this->setupInheritance();
 
     parent::setup();
   }

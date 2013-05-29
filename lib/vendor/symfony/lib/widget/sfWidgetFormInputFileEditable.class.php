@@ -3,7 +3,7 @@
 /*
  * This file is part of the symfony package.
  * (c) Fabien Potencier <fabien.potencier@symfony-project.com>
- * 
+ *
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
  */
@@ -15,7 +15,7 @@
  * @package    symfony
  * @subpackage widget
  * @author     Fabien Potencier <fabien.potencier@symfony-project.com>
- * @version    SVN: $Id: sfWidgetFormInputFileEditable.class.php 22869 2009-10-08 12:31:07Z fabien $
+ * @version    SVN: $Id: sfWidgetFormInputFileEditable.class.php 30762 2010-08-25 12:33:33Z fabien $
  */
 class sfWidgetFormInputFileEditable extends sfWidgetFormInputFile
 {
@@ -29,12 +29,12 @@ class sfWidgetFormInputFileEditable extends sfWidgetFormInputFile
    *  * is_image:     Whether the file is a displayable image
    *  * with_delete:  Whether to add a delete checkbox or not
    *  * delete_label: The delete label used by the template
-   *  * template:     The HTML template to use to render this widget
+   *  * template:     The HTML template to use to render this widget when in edit mode
    *                  The available placeholders are:
-   *                    * input (the image upload widget)
-   *                    * delete (the delete checkbox)
-   *                    * delete_label (the delete label text)
-   *                    * file (the file tag)
+   *                    * %input% (the image upload widget)
+   *                    * %delete% (the delete checkbox)
+   *                    * %delete_label% (the delete label text)
+   *                    * %file% (the file tag)
    *
    * In edit mode, this widget renders an additional widget named after the
    * file upload widget with a "_delete" suffix. So, when creating a form,
@@ -61,6 +61,8 @@ class sfWidgetFormInputFileEditable extends sfWidgetFormInputFile
   }
 
   /**
+   * Renders the widget.
+   *
    * @param  string $name        The element name
    * @param  string $value       The value displayed in this widget
    * @param  array  $attributes  An array of HTML attributes to be merged with the default HTML attributes
@@ -84,7 +86,8 @@ class sfWidgetFormInputFileEditable extends sfWidgetFormInputFile
       $deleteName = ']' == substr($name, -1) ? substr($name, 0, -1).'_delete]' : $name.'_delete';
 
       $delete = $this->renderTag('input', array_merge(array('type' => 'checkbox', 'name' => $deleteName), $attributes));
-      $deleteLabel = $this->renderContentTag('label', $this->getOption('delete_label'), array_merge(array('for' => $this->generateId($deleteName))));
+      $deleteLabel = $this->translate($this->getOption('delete_label'));
+      $deleteLabel = $this->renderContentTag('label', $deleteLabel, array_merge(array('for' => $this->generateId($deleteName))));
     }
     else
     {

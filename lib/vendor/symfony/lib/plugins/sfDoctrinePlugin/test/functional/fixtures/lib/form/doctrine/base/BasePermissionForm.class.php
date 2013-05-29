@@ -3,31 +3,36 @@
 /**
  * Permission form base class.
  *
- * @package    form
- * @subpackage permission
- * @version    SVN: $Id: sfDoctrineFormGeneratedTemplate.php 8508 2008-04-17 17:39:15Z fabien $
+ * @method Permission getObject() Returns the current form's model object
+ *
+ * @package    symfony12
+ * @subpackage form
+ * @author     Your name here
+ * @version    SVN: $Id: sfDoctrineFormGeneratedTemplate.php 29553 2010-05-20 14:33:00Z Kris.Wallsmith $
  */
-class BasePermissionForm extends BaseFormDoctrine
+abstract class BasePermissionForm extends BaseFormDoctrine
 {
   public function setup()
   {
     $this->setWidgets(array(
       'id'          => new sfWidgetFormInputHidden(),
-      'name'        => new sfWidgetFormInput(),
-      'users_list'  => new sfWidgetFormDoctrineChoiceMany(array('model' => 'User')),
-      'groups_list' => new sfWidgetFormDoctrineChoiceMany(array('model' => 'Group')),
+      'name'        => new sfWidgetFormInputText(),
+      'users_list'  => new sfWidgetFormDoctrineChoice(array('multiple' => true, 'model' => 'User')),
+      'groups_list' => new sfWidgetFormDoctrineChoice(array('multiple' => true, 'model' => 'Group')),
     ));
 
     $this->setValidators(array(
-      'id'          => new sfValidatorDoctrineChoice(array('model' => 'Permission', 'column' => 'id', 'required' => false)),
+      'id'          => new sfValidatorChoice(array('choices' => array($this->getObject()->get('id')), 'empty_value' => $this->getObject()->get('id'), 'required' => false)),
       'name'        => new sfValidatorString(array('max_length' => 255, 'required' => false)),
-      'users_list'  => new sfValidatorDoctrineChoiceMany(array('model' => 'User', 'required' => false)),
-      'groups_list' => new sfValidatorDoctrineChoiceMany(array('model' => 'Group', 'required' => false)),
+      'users_list'  => new sfValidatorDoctrineChoice(array('multiple' => true, 'model' => 'User', 'required' => false)),
+      'groups_list' => new sfValidatorDoctrineChoice(array('multiple' => true, 'model' => 'Group', 'required' => false)),
     ));
 
     $this->widgetSchema->setNameFormat('permission[%s]');
 
     $this->errorSchema = new sfValidatorErrorSchema($this->validatorSchema);
+
+    $this->setupInheritance();
 
     parent::setup();
   }
@@ -55,10 +60,10 @@ class BasePermissionForm extends BaseFormDoctrine
 
   protected function doSave($con = null)
   {
-    parent::doSave($con);
-
     $this->saveUsersList($con);
     $this->saveGroupsList($con);
+
+    parent::doSave($con);
   }
 
   public function saveUsersList($con = null)
@@ -74,7 +79,7 @@ class BasePermissionForm extends BaseFormDoctrine
       return;
     }
 
-    if (is_null($con))
+    if (null === $con)
     {
       $con = $this->getConnection();
     }
@@ -112,7 +117,7 @@ class BasePermissionForm extends BaseFormDoctrine
       return;
     }
 
-    if (is_null($con))
+    if (null === $con)
     {
       $con = $this->getConnection();
     }

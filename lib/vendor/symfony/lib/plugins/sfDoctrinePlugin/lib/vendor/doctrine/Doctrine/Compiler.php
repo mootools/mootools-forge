@@ -1,6 +1,6 @@
 <?php
 /*
- *  $Id: Compiler.php 5801 2009-06-02 17:30:27Z piccoloprincipe $
+ *  $Id: Compiler.php 7677 2010-07-28 03:37:42Z kriswallsmith $
  *
  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
  * "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT
@@ -16,7 +16,7 @@
  *
  * This software consists of voluntary contributions made by many individuals
  * and is licensed under the LGPL. For more information, see
- * <http://www.phpdoctrine.org>.
+ * <http://www.doctrine-project.org>.
  */
 
 /**
@@ -29,7 +29,7 @@
  * @license     http://www.opensource.org/licenses/lgpllicense.php LGPL
  * @link        www.phpdoctrine.
  * @since       1.0
- * @version     $Revision: 5801 $
+ * @version     $Revision: 7677 $
  */
 class Doctrine_Compiler
 {
@@ -52,8 +52,6 @@ class Doctrine_Compiler
         // If we have an array of specified drivers then lets determine which drivers we should exclude
         if ( ! empty($includedDrivers)) {
             $drivers = array('db2',
-                             'firebird',
-                             'informix',
                              'mssql',
                              'mysql',
                              'oracle',
@@ -63,8 +61,8 @@ class Doctrine_Compiler
             $excludedDrivers = array_diff($drivers, $includedDrivers);
         }
         
-        $path = Doctrine::getPath();
-        $it = new RecursiveIteratorIterator(new RecursiveDirectoryIterator($path), RecursiveIteratorIterator::LEAVES_ONLY);
+        $path = Doctrine_Core::getPath();
+        $it = new RecursiveIteratorIterator(new RecursiveDirectoryIterator($path . '/Doctrine'), RecursiveIteratorIterator::LEAVES_ONLY);
 
         foreach ($it as $file) {
             $e = explode('.', $file->getFileName());
@@ -72,7 +70,8 @@ class Doctrine_Compiler
             //@todo what is a versioning file? do we have these anymore? None 
             //exists in my version of doctrine from svn.
             // we don't want to require versioning files
-            if (end($e) === 'php' && strpos($file->getFileName(), '.inc') === false) {
+            if (end($e) === 'php' && strpos($file->getFileName(), '.inc') === false
+                && strpos($file->getFileName(), 'sfYaml') === false) {
                 require_once $file->getPathName();
             }
         }

@@ -13,7 +13,7 @@
  * {@link http://prado.sourceforge.net/}
  *
  * @author     Wei Zhuo <weizhuo[at]gmail[dot]com>
- * @version    $Id: sfNumberFormat.class.php 26681 2010-01-15 15:28:37Z fabien $
+ * @version    $Id: sfNumberFormat.class.php 28723 2010-03-23 16:37:43Z FabianLange $
  * @package    symfony
  * @subpackage i18n
  */
@@ -80,7 +80,7 @@ class sfNumberFormat
    */
   function __construct($formatInfo = null)
   {
-    if (is_null($formatInfo))
+    if (null === $formatInfo)
     {
       $this->formatInfo = sfNumberFormatInfo::getInvariantInfo();
     }
@@ -141,17 +141,13 @@ class sfNumberFormat
     {
       $suffix = $this->formatInfo->NegativePattern;
     }
-    else
-    {
-      $suffix = array('', '');
-    }
 
     // append and prepend suffix
     $result = $suffix[0].$result.$suffix[1];
 
     // replace currency sign
     $symbol = @$this->formatInfo->getCurrencySymbol($currency);
-    if (is_null($symbol))
+    if (null === $symbol)
     {
       $symbol = $currency;
     }

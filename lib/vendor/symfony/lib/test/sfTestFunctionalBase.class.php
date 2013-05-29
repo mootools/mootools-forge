@@ -16,7 +16,7 @@ require_once(dirname(__FILE__).'/../vendor/lime/lime.php');
  * @package    symfony
  * @subpackage test
  * @author     Fabien Potencier <fabien.potencier@symfony-project.com>
- * @version    SVN: $Id: sfTestFunctionalBase.class.php 21875 2009-09-11 05:54:39Z fabien $
+ * @version    SVN: $Id: sfTestFunctionalBase.class.php 28641 2010-03-21 10:20:44Z fabien $
  */
 abstract class sfTestFunctionalBase
 {
@@ -39,15 +39,16 @@ abstract class sfTestFunctionalBase
   {
     $this->browser = $browser;
 
-    if (is_null(self::$test))
+    if (null === self::$test)
     {
-      self::$test = !is_null($lime) ? $lime : new lime_test(null, new lime_output_color());
+      self::$test = null !== $lime ? $lime : new lime_test();
     }
 
     $this->setTesters(array_merge(array(
       'request'  => 'sfTesterRequest',
       'response' => 'sfTesterResponse',
       'user'     => 'sfTesterUser',
+      'mailer'   => 'sfTesterMailer',
     ), $testers));
 
     // register our shutdown function
@@ -105,9 +106,9 @@ abstract class sfTestFunctionalBase
    */
   public function end()
   {
-    if (is_null($this->blockTester))
+    if (null === $this->blockTester)
     {
-      throw new LogicException(sprintf('There is not current tester block to end.'));
+      throw new LogicException(sprintf('There is no current tester block to end.'));
     }
 
     $this->blockTester = null;
@@ -224,7 +225,7 @@ abstract class sfTestFunctionalBase
    *
    * @param  string $uri          URI to be invoked
    * @param  string $method       HTTP method used
-   * @param  array  $parameters   Additional paramaters
+   * @param  array  $parameters   Additional parameters
    * @param  bool   $changeStack  If set to false ActionStack is not changed
    *
    * @return sfTestFunctionalBase The current sfTestFunctionalBase instance
@@ -286,7 +287,21 @@ abstract class sfTestFunctionalBase
    */
   public function click($name, $arguments = array(), $options = array())
   {
-    list($uri, $method, $parameters) = $this->browser->doClick($name, $arguments, $options);
+    if ($name instanceof DOMElement)
+    {
+      list($uri, $method, $parameters) = $this->doClickElement($name, $arguments, $options);
+    }
+    else
+    {
+      try
+      {
+        list($uri, $method, $parameters) = $this->doClick($name, $arguments, $options);
+      }
+      catch (InvalidArgumentException $e)
+      {
+        list($uri, $method, $parameters) = $this->doClickCssSelector($name, $arguments, $options);
+      }
+    }
 
     return $this->call($uri, $method, $parameters);
   }

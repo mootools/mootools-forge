@@ -14,7 +14,7 @@
  * @package    symfony
  * @subpackage generator
  * @author     Fabien Potencier <fabien.potencier@symfony-project.com>
- * @version    SVN: $Id: sfGeneratorManager.class.php 17858 2009-05-01 21:22:50Z FabianLange $
+ * @version    SVN: $Id: sfGeneratorManager.class.php 23810 2009-11-12 11:07:44Z Kris.Wallsmith $
  */
 class sfGeneratorManager
 {
@@ -64,7 +64,7 @@ class sfGeneratorManager
    */
   public function getBasePath()
   {
-    if (is_null($this->basePath))
+    if (null === $this->basePath)
     {
       // for BC
       $this->basePath = sfConfig::get('sf_module_cache_dir');

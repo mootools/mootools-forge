@@ -16,7 +16,7 @@
  * @subpackage doctrine
  * @author     Fabien Potencier <fabien.potencier@symfony-project.com>
  * @author     Jonathan H. Wage <jonwage@gmail.com>
- * @version    SVN: $Id: sfWidgetFormDoctrineSelectMany.class.php 7147 2008-01-22 11:11:01Z fabien $
+ * @version    SVN: $Id: sfWidgetFormDoctrineSelectMany.class.php 23810 2009-11-12 11:07:44Z Kris.Wallsmith $
  */
 class sfWidgetFormDoctrineSelectMany extends sfWidgetFormDoctrineSelect
 {

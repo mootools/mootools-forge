@@ -1,7 +1,5 @@
 [?php
 
-require_once(sfConfig::get('sf_lib_dir').'/filter/base/BaseFormFilterPropel.class.php');
-
 /**
  * <?php echo $this->table->getClassname() ?> filter form base class.
  *
@@ -9,7 +7,7 @@ require_once(sfConfig::get('sf_lib_dir').'/filter/base/BaseFormFilterPropel.clas
  * @subpackage filter
  * @author     ##AUTHOR_NAME##
  */
-class Base<?php echo $this->table->getClassname() ?>FormFilter extends BaseFormFilterPropel
+abstract class Base<?php echo $this->table->getClassname() ?>FormFilter extends BaseFormFilterPropel
 {
   public function setup()
   {

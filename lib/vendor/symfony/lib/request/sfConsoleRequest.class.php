@@ -15,7 +15,7 @@
  * @subpackage request
  * @author     Fabien Potencier <fabien.potencier@symfony-project.com>
  * @author     Sean Kerr <sean@code-box.org>
- * @version    SVN: $Id: sfConsoleRequest.class.php 11313 2008-09-03 17:28:33Z fabien $
+ * @version    SVN: $Id: sfConsoleRequest.class.php 23810 2009-11-12 11:07:44Z Kris.Wallsmith $
  */
 class sfConsoleRequest extends sfRequest
 {

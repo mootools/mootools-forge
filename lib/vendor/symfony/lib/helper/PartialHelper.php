@@ -2,7 +2,7 @@
 
 /*
  * This file is part of the symfony package.
- * (c) Fabien Potencier <fabien.potencier@symfony-project.com>
+ * (c) 2004-2006 Fabien Potencier <fabien.potencier@symfony-project.com>
  *
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
@@ -14,7 +14,7 @@
  * @package    symfony
  * @subpackage helper
  * @author     Fabien Potencier <fabien.potencier@symfony-project.com>
- * @version    SVN: $Id: PartialHelper.php 23376 2009-10-27 07:53:11Z nicolas $
+ * @version    SVN: $Id: PartialHelper.php 27755 2010-02-08 20:51:02Z Kris.Wallsmith $
  */
 
 /**
@@ -138,7 +138,7 @@ function get_component($moduleName, $componentName, $vars = array())
 
   $class = sfConfig::get('mod_'.strtolower($moduleName).'_partial_view_class', 'sf').'PartialView';
   $view = new $class($context, $moduleName, $actionName, '');
-  $view->setPartialVars($vars);
+  $view->setPartialVars(true === sfConfig::get('sf_escaping_strategy') ? sfOutputEscaper::unescape($vars) : $vars);
 
   if ($retval = $view->getCache())
   {
@@ -147,7 +147,7 @@ function get_component($moduleName, $componentName, $vars = array())
 
   $allVars = _call_component($moduleName, $componentName, $vars);
 
-  if (!is_null($allVars))
+  if (null !== $allVars)
   {
     // render
     $view->getAttributeHolder()->add($allVars);
@@ -213,7 +213,7 @@ function get_partial($templateName, $vars = array())
 
   $class = sfConfig::get('mod_'.strtolower($moduleName).'_partial_view_class', 'sf').'PartialView';
   $view = new $class($context, $moduleName, $actionName, '');
-  $view->setPartialVars($vars);
+  $view->setPartialVars(true === sfConfig::get('sf_escaping_strategy') ? sfOutputEscaper::unescape($vars) : $vars);
 
   return $view->render();
 }
@@ -242,7 +242,7 @@ function slot($name, $value = null)
     $context->getEventDispatcher()->notify(new sfEvent(null, 'application.log', array(sprintf('Set slot "%s"', $name))));
   }
 
-  if (!is_null($value))
+  if (null !== $value)
   {
     $response->setSlot($name, $value);
 
@@ -301,13 +301,14 @@ function has_slot($name)
  *  include_slot('navigation');
  * </code>
  *
- * @param  string $name  slot name
+ * @param  string $name     slot name
+ * @param  string $default  default content to return if slot is unexistent
  *
  * @see    has_slot, get_slot
  */
-function include_slot($name)
+function include_slot($name, $default = '')
 {
-  return ($v = get_slot($name)) ? print $v : false;
+  return ($v = get_slot($name, $default)) ? print $v : false;
 }
 
 /**
@@ -318,12 +319,13 @@ function include_slot($name)
  *  echo get_slot('navigation');
  * </code>
  *
- * @param  string $name  slot name
+ * @param  string $name     slot name
+ * @param  string $default  default content to return if slot is unexistent
  *
  * @return string content of the slot
  * @see    has_slot, include_slot
  */
-function get_slot($name)
+function get_slot($name, $default = '')
 {
   $context = sfContext::getInstance();
   $slots = $context->getResponse()->getSlots();
@@ -333,7 +335,7 @@ function get_slot($name)
     $context->getEventDispatcher()->notify(new sfEvent(null, 'application.log', array(sprintf('Get slot "%s"', $name))));
   }
 
-  return isset($slots[$name]) ? $slots[$name] : '';
+  return isset($slots[$name]) ? $slots[$name] : $default;
 }
 
 function _call_component($moduleName, $componentName, $vars)

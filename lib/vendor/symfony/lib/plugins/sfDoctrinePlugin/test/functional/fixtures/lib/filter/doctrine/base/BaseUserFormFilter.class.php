@@ -1,15 +1,14 @@
 <?php
 
-require_once(sfConfig::get('sf_lib_dir').'/filter/doctrine/BaseFormFilterDoctrine.class.php');
-
 /**
  * User filter form base class.
  *
- * @package    filters
- * @subpackage User *
- * @version    SVN: $Id: sfDoctrineFormFilterGeneratedTemplate.php 11675 2008-09-19 15:21:38Z fabien $
+ * @package    symfony12
+ * @subpackage filter
+ * @author     Your name here
+ * @version    SVN: $Id: sfDoctrineFormFilterGeneratedTemplate.php 29570 2010-05-21 14:49:47Z Kris.Wallsmith $
  */
-class BaseUserFormFilter extends BaseFormFilterDoctrine
+abstract class BaseUserFormFilter extends BaseFormFilterDoctrine
 {
   public function setup()
   {
@@ -17,21 +16,23 @@ class BaseUserFormFilter extends BaseFormFilterDoctrine
       'username'         => new sfWidgetFormFilterInput(),
       'password'         => new sfWidgetFormFilterInput(),
       'test'             => new sfWidgetFormFilterInput(),
-      'groups_list'      => new sfWidgetFormDoctrineChoiceMany(array('model' => 'Group')),
-      'permissions_list' => new sfWidgetFormDoctrineChoiceMany(array('model' => 'Permission')),
+      'groups_list'      => new sfWidgetFormDoctrineChoice(array('multiple' => true, 'model' => 'Group')),
+      'permissions_list' => new sfWidgetFormDoctrineChoice(array('multiple' => true, 'model' => 'Permission')),
     ));
 
     $this->setValidators(array(
       'username'         => new sfValidatorPass(array('required' => false)),
       'password'         => new sfValidatorPass(array('required' => false)),
       'test'             => new sfValidatorPass(array('required' => false)),
-      'groups_list'      => new sfValidatorDoctrineChoiceMany(array('model' => 'Group', 'required' => false)),
-      'permissions_list' => new sfValidatorDoctrineChoiceMany(array('model' => 'Permission', 'required' => false)),
+      'groups_list'      => new sfValidatorDoctrineChoice(array('multiple' => true, 'model' => 'Group', 'required' => false)),
+      'permissions_list' => new sfValidatorDoctrineChoice(array('multiple' => true, 'model' => 'Permission', 'required' => false)),
     ));
 
     $this->widgetSchema->setNameFormat('user_filters[%s]');
 
     $this->errorSchema = new sfValidatorErrorSchema($this->validatorSchema);
+
+    $this->setupInheritance();
 
     parent::setup();
   }
@@ -48,8 +49,10 @@ class BaseUserFormFilter extends BaseFormFilterDoctrine
       return;
     }
 
-    $query->leftJoin('r.UserGroup UserGroup')
-          ->andWhereIn('UserGroup.group_id', $values);
+    $query
+      ->leftJoin($query->getRootAlias().'.UserGroup UserGroup')
+      ->andWhereIn('UserGroup.group_id', $values)
+    ;
   }
 
   public function addPermissionsListColumnQuery(Doctrine_Query $query, $field, $values)
@@ -64,8 +67,10 @@ class BaseUserFormFilter extends BaseFormFilterDoctrine
       return;
     }
 
-    $query->leftJoin('r.UserPermission UserPermission')
-          ->andWhereIn('UserPermission.permission_id', $values);
+    $query
+      ->leftJoin($query->getRootAlias().'.UserPermission UserPermission')
+      ->andWhereIn('UserPermission.permission_id', $values)
+    ;
   }
 
   public function getModelName()

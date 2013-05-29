@@ -14,7 +14,7 @@
  * @package    symfony
  * @subpackage task
  * @author     Fabien Potencier <fabien.potencier@symfony-project.com>
- * @version    SVN: $Id: sfProjectValidateTask.class.php 23810 2009-11-12 11:07:44Z Kris.Wallsmith $
+ * @version    SVN: $Id: sfProjectValidateTask.class.php 24610 2009-11-30 22:07:34Z FabianLange $
  */
 class sfValidateTask extends sfBaseTask
 {
@@ -33,8 +33,7 @@ The [project:validate|INFO] task detects deprecated usage in your project.
   [./symfony project:validate|INFO]
 
 The task lists all the files you need to change before switching to
-symfony 1.4 after upgrading to 1.3. This task exists in 1.2 only to
-ease migration by checking upfront for deprecations.
+symfony 1.4.
 EOF;
   }
 
@@ -47,9 +46,10 @@ EOF;
     {
       $v = new $class($this->dispatcher, $this->formatter);
 
-      $this->logBlock(($i + 1).'. '.$v->getHeader(), '1.2' == substr(SYMFONY_VERSION, 0, 3) ? 'QUESTION' : 'QUESTION_LARGE');
+      $this->logBlock(($i + 1).'. '.$v->getHeader(), 'QUESTION_LARGE');
 
       $v->setCommandApplication($this->commandApplication);
+      $v->setConfiguration($this->configuration);
       $files = $v->validate();
 
       if (!$files)

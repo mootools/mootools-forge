@@ -4,7 +4,7 @@ require_once dirname(__FILE__).'/../../../../helper/JavascriptBaseHelper.php';
 
 /*
  * This file is part of the symfony package.
- * (c) 2004-2006 Fabien Potencier <fabien.potencier@symfony-project.com>
+ * (c) 2004-2009 Fabien Potencier <fabien.potencier@symfony-project.com>
  * (c) 2004 David Heinemeier Hansson
  *
  * For the full copyright and license information, please view the LICENSE
@@ -20,7 +20,7 @@ require_once dirname(__FILE__).'/../../../../helper/JavascriptBaseHelper.php';
  * @author     John Christopher <john.christopher@symfony-project.com>
  * @author     David Heinemeier Hansson
  * @author     Fabian Lange <fabian.lange@symfony-project.com>
- * @version    SVN: $Id: JavascriptHelper.php 19310 2009-06-16 12:41:07Z FabianLange $
+ * @version    SVN: $Id: JavascriptHelper.php 23810 2009-11-12 11:07:44Z Kris.Wallsmith $
  */
 
 /*

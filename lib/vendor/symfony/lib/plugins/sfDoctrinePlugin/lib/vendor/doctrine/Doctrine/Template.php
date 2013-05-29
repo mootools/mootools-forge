@@ -16,7 +16,7 @@
  *
  * This software consists of voluntary contributions made by many individuals
  * and is licensed under the LGPL. For more information, see
- * <http://www.phpdoctrine.org>.
+ * <http://www.doctrine-project.org>.
  */
 
 /**
@@ -26,7 +26,7 @@
  * @package     Doctrine
  * @subpackage  Template
  * @license     http://www.opensource.org/licenses/lgpl-license.php LGPL
- * @link        www.phpdoctrine.org
+ * @link        www.doctrine-project.org
  * @since       1.0
  * @version     $Revision$
  * @author      Konsta Vesterinen <kvesteri@cc.hut.fi>
@@ -42,6 +42,22 @@ abstract class Doctrine_Template extends Doctrine_Record_Abstract
      * @var Doctrine_Record_Generator $_plugin
      */
     protected $_plugin;
+
+    /**
+     * @var array $_options Template options
+     */
+    protected $_options = array();
+
+    /**
+     * __construct
+     *
+     * @param string $array 
+     * @return void
+     */
+    public function __construct(array $options = array())
+    {
+        $this->_options = Doctrine_Lib::arrayDeepMerge($this->_options, $options);
+    }
 
     /**
      * Set the table object that this Template belongs to
@@ -105,6 +121,43 @@ abstract class Doctrine_Template extends Doctrine_Record_Abstract
     public function getPlugin()
     {
         return $this->_plugin;
+    }
+
+    /**
+     * Check if this template has a generator plugin
+     *
+     * @return boolean
+     */
+    public function hasPlugin()
+    {
+        return isset($this->_plugin) ? true : false;
+    }
+
+    /**
+     * getOptions
+     * returns all options of this template and the associated values
+     *
+     * @return array    all options and their values
+     */
+    public function getOptions()
+    {
+        return $this->_options;
+    }
+
+    /**
+     * getOption
+     * returns the value of given option
+     *
+     * @param string $name   the name of the option
+     * @param mixed $default default value if option is not found
+     * @return mixed         the value of given option
+     */
+    public function getOption($name, $default = null)
+    {
+        if (isset($this->_options[$name])) {
+            return $this->_options[$name];
+        }
+        return $default;
     }
 
     /**

@@ -31,7 +31,7 @@
  * @subpackage validator
  * @author     Fabien Potencier <fabien.potencier@symfony-project.com>
  * @author     Sean Kerr <sean@code-box.org>
- * @version    SVN: $Id: sfNumberValidator.class.php 8053 2008-03-23 02:34:55Z Carl.Vondrick $
+ * @version    SVN: $Id: sfNumberValidator.class.php 23810 2009-11-12 11:07:44Z Kris.Wallsmith $
  */
 class sfNumberValidator extends sfValidator
 {

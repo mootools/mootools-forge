@@ -16,7 +16,7 @@ require_once dirname(__FILE__).'/FormHelper.php';
  * @package    symfony
  * @subpackage helper
  * @author     Fabien Potencier <fabien.potencier@symfony-project.com>
- * @version    SVN: $Id: ObjectHelper.php 12595 2008-11-03 08:28:49Z dwhittle $
+ * @version    SVN: $Id: ObjectHelper.php 23810 2009-11-12 11:07:44Z Kris.Wallsmith $
  */
 
 /**

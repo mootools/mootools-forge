@@ -1,6 +1,6 @@
 <?php
 /*
- *  $Id: Pgsql.php 5801 2009-06-02 17:30:27Z piccoloprincipe $
+ *  $Id: Pgsql.php 7490 2010-03-29 19:53:27Z jwage $
  *
  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
  * "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT
@@ -16,7 +16,7 @@
  *
  * This software consists of voluntary contributions made by many individuals
  * and is licensed under the LGPL. For more information, see
- * <http://www.phpdoctrine.org>.
+ * <http://www.doctrine-project.org>.
  */
 
 /**
@@ -27,8 +27,8 @@
  * @license     http://www.opensource.org/licenses/lgpl-license.php LGPL
  * @author      Konsta Vesterinen <kvesteri@cc.hut.fi>
  * @author      Lukas Smith <smith@pooteeweet.org> (PEAR MDB2 library)
- * @version     $Revision: 5801 $
- * @link        www.phpdoctrine.org
+ * @version     $Revision: 7490 $
+ * @link        www.doctrine-project.org
  * @since       1.0
  */
 class Doctrine_Connection_Pgsql extends Doctrine_Connection_Common
@@ -90,6 +90,7 @@ class Doctrine_Connection_Pgsql extends Doctrine_Connection_Common
     {
         $query = 'SET NAMES '.$this->quote($charset);
         $this->exec($query);
+        parent::setCharset($charset);
     }
 
     /**
@@ -141,14 +142,14 @@ class Doctrine_Connection_Pgsql extends Doctrine_Connection_Common
                 $from  = $match[2];
                 $where = $match[3];
                 $query = $manip . ' ' . $from . ' WHERE ctid=(SELECT ctid FROM '
-                       . $from . ' ' . $where . ' LIMIT ' . $limit . ')';
+                       . $from . ' ' . $where . ' LIMIT ' . (int)$limit . ')';
 
             } else {
                 if ( ! empty($limit)) {
-                  $query .= ' LIMIT ' . $limit;
+                  $query .= ' LIMIT ' . (int)$limit;
                 }
                 if ( ! empty($offset)) {
-                  $query .= ' OFFSET ' . $offset;
+                  $query .= ' OFFSET ' . (int)$offset;
                 }
             }
         }
@@ -192,4 +193,54 @@ class Doctrine_Connection_Pgsql extends Doctrine_Connection_Common
         }
         return $serverInfo;
     }
+
+    /**
+     * Inserts a table row with specified data.
+     *
+     * @param Doctrine_Table $table     The table to insert data into.
+     * @param array $values             An associative array containing column-value pairs.
+     *                                  Values can be strings or Doctrine_Expression instances.
+     * @return integer                  the number of affected rows. Boolean false if empty value array was given,
+     */
+    public function insert(Doctrine_Table $table, array $fields)
+    {
+        $tableName = $table->getTableName();
+
+        // column names are specified as array keys
+        $cols = array();
+        // the query VALUES will contain either expresions (eg 'NOW()') or ?
+        $a = array();
+        
+        foreach ($fields as $fieldName => $value) {
+        	if ($table->isIdentifier($fieldName) 
+        	           && $table->isIdentifierAutoincrement()
+        	           && $value == null) {
+        		// Autoincrement fields should not be added to the insert statement
+        		// if their value is null
+        		unset($fields[$fieldName]);
+        		continue;
+        	}
+            $cols[] = $this->quoteIdentifier($table->getColumnName($fieldName));
+            if ($value instanceof Doctrine_Expression) {
+                $a[] = $value->getSql();
+                unset($fields[$fieldName]);
+            } else {
+                $a[] = '?';
+            }
+        }
+        
+        if (count($fields) == 0) {
+        	// Real fix #1786 and #2327 (default values when table is just 'id' as PK)        	
+            return $this->exec('INSERT INTO ' . $this->quoteIdentifier($tableName)
+                              . ' '
+                              . ' VALUES (DEFAULT)');        	
+        }
+
+        // build the statement
+        $query = 'INSERT INTO ' . $this->quoteIdentifier($tableName)
+                . ' (' . implode(', ', $cols) . ')'
+                . ' VALUES (' . implode(', ', $a) . ')';
+
+        return $this->exec($query, array_values($fields));
+    }    
 }

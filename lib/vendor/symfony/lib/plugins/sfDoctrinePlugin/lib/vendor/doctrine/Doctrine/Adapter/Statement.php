@@ -1,6 +1,6 @@
 <?php
 /*
- *  $Id: Statement.php 5801 2009-06-02 17:30:27Z piccoloprincipe $
+ *  $Id: Statement.php 7490 2010-03-29 19:53:27Z jwage $
  *
  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
  * "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT
@@ -16,7 +16,7 @@
  *
  * This software consists of voluntary contributions made by many individuals
  * and is licensed under the LGPL. For more information, see
- * <http://www.phpdoctrine.org>.
+ * <http://www.doctrine-project.org>.
  */
 
 /**
@@ -26,9 +26,9 @@
  * @license     http://www.opensource.org/licenses/lgpl-license.php LGPL
  * @package     Doctrine
  * @subpackage  Adapter
- * @link        www.phpdoctrine.org
+ * @link        www.doctrine-project.org
  * @since       1.0
- * @version     $Revision: 5801 $
+ * @version     $Revision: 7490 $
  */
 abstract class Doctrine_Adapter_Statement
 {
@@ -45,25 +45,25 @@ abstract class Doctrine_Adapter_Statement
     /**
      * fetch
      *
-     * @see Doctrine::FETCH_* constants
+     * @see Doctrine_Core::FETCH_* constants
      * @param integer $fetchStyle           Controls how the next row will be returned to the caller.
-     *                                      This value must be one of the Doctrine::FETCH_* constants,
-     *                                      defaulting to Doctrine::FETCH_BOTH
+     *                                      This value must be one of the Doctrine_Core::FETCH_* constants,
+     *                                      defaulting to Doctrine_Core::FETCH_BOTH
      *
      * @param integer $cursorOrientation    For a PDOStatement object representing a scrollable cursor, 
      *                                      this value determines which row will be returned to the caller. 
-     *                                      This value must be one of the Doctrine::FETCH_ORI_* constants, defaulting to
-     *                                      Doctrine::FETCH_ORI_NEXT. To request a scrollable cursor for your 
+     *                                      This value must be one of the Doctrine_Core::FETCH_ORI_* constants, defaulting to
+     *                                      Doctrine_Core::FETCH_ORI_NEXT. To request a scrollable cursor for your 
      *                                      Doctrine_Adapter_Statement_Interface object,
-     *                                      you must set the Doctrine::ATTR_CURSOR attribute to Doctrine::CURSOR_SCROLL when you
+     *                                      you must set the Doctrine_Core::ATTR_CURSOR attribute to Doctrine_Core::CURSOR_SCROLL when you
      *                                      prepare the SQL statement with Doctrine_Adapter_Interface->prepare().
      *
      * @param integer $cursorOffset         For a Doctrine_Adapter_Statement_Interface object representing a scrollable cursor for which the
-     *                                      $cursorOrientation parameter is set to Doctrine::FETCH_ORI_ABS, this value specifies
+     *                                      $cursorOrientation parameter is set to Doctrine_Core::FETCH_ORI_ABS, this value specifies
      *                                      the absolute number of the row in the result set that shall be fetched.
      *                                      
      *                                      For a Doctrine_Adapter_Statement_Interface object representing a scrollable cursor for 
-     *                                      which the $cursorOrientation parameter is set to Doctrine::FETCH_ORI_REL, this value 
+     *                                      which the $cursorOrientation parameter is set to Doctrine_Core::FETCH_ORI_REL, this value 
      *                                      specifies the row to fetch relative to the cursor position before 
      *                                      Doctrine_Adapter_Statement_Interface->fetch() was called.
      *

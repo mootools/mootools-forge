@@ -16,7 +16,7 @@
  *
  * This software consists of voluntary contributions made by many individuals
  * and is licensed under the LGPL. For more information, see
- * <http://www.phpdoctrine.org>.
+ * <http://www.doctrine-project.org>.
  */
 
 /**
@@ -26,7 +26,7 @@
  * @subpackage  Query
  * @author      Konsta Vesterinen <kvesteri@cc.hut.fi>
  * @license     http://www.opensource.org/licenses/lgpl-license.php LGPL
- * @link        www.phpdoctrine.org
+ * @link        www.doctrine-project.org
  * @since       1.0
  * @version     $Revision$
  */
@@ -66,7 +66,8 @@ class Doctrine_Query_Registry
         }
         
         if ( ! ($query instanceof Doctrine_Query)) {
-            $query = Doctrine_Query::create()->parseQuery($query);
+            $query = Doctrine_Query::create()
+                ->parseDqlQuery($query);
         }
         
         return clone $query;

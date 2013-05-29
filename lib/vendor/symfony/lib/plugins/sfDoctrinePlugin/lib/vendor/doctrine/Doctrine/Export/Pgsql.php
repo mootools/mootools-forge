@@ -1,6 +1,6 @@
 <?php
 /*
- *  $Id: Pgsql.php 6393 2009-09-21 21:04:43Z guilhermeblanco $
+ *  $Id: Pgsql.php 7680 2010-08-19 14:08:28Z lsmith $
  *
  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
  * "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT
@@ -16,7 +16,7 @@
  *
  * This software consists of voluntary contributions made by many individuals
  * and is licensed under the LGPL. For more information, see
- * <http://www.phpdoctrine.org>.
+ * <http://www.doctrine-project.org>.
  */
 
 /**
@@ -27,9 +27,9 @@
  * @author      Konsta Vesterinen <kvesteri@cc.hut.fi>
  * @author      Lukas Smith <smith@pooteeweet.org> (PEAR MDB2 library)
  * @license     http://www.opensource.org/licenses/lgpl-license.php LGPL
- * @link        www.phpdoctrine.org
+ * @link        www.doctrine-project.org
  * @since       1.0
- * @version     $Revision: 6393 $
+ * @version     $Revision: 7680 $
  */
 class Doctrine_Export_Pgsql extends Doctrine_Export
 {
@@ -131,7 +131,7 @@ class Doctrine_Export_Pgsql extends Doctrine_Export
         if (isset($changes['add']) && is_array($changes['add'])) {
             foreach ($changes['add'] as $fieldName => $field) {
                 $query = 'ADD ' . $this->getDeclaration($fieldName, $field);
-                $sql[] = 'ALTER TABLE ' . $name . ' ' . $query;
+                $sql[] = 'ALTER TABLE ' . $this->conn->quoteIdentifier($name, true) . ' ' . $query;
             }
         }
 
@@ -139,29 +139,29 @@ class Doctrine_Export_Pgsql extends Doctrine_Export
             foreach ($changes['remove'] as $fieldName => $field) {
                 $fieldName = $this->conn->quoteIdentifier($fieldName, true);
                 $query = 'DROP ' . $fieldName;
-                $sql[] = 'ALTER TABLE ' . $name . ' ' . $query;
+                $sql[] = 'ALTER TABLE ' . $this->conn->quoteIdentifier($name, true) . ' ' . $query;
             }
         }
 
         if (isset($changes['change']) && is_array($changes['change'])) {
             foreach ($changes['change'] as $fieldName => $field) {
                 $fieldName = $this->conn->quoteIdentifier($fieldName, true);
-                if (isset($field['type'])) {
+                if (isset($field['definition']['type'])) {
                     $serverInfo = $this->conn->getServerVersion();
 
                     if (is_array($serverInfo) && $serverInfo['major'] < 8) {
                         throw new Doctrine_Export_Exception('changing column type for "'.$field['type'].'\" requires PostgreSQL 8.0 or above');
                     }
-                    $query = 'ALTER ' . $fieldName . ' TYPE ' . $this->conn->datatype->getTypeDeclaration($field['definition']);
-                    $sql[] = 'ALTER TABLE ' . $name . ' ' . $query;
+                    $query = 'ALTER ' . $fieldName . ' TYPE ' . $this->conn->dataDict->getNativeDeclaration($field['definition']);
+                    $sql[] = 'ALTER TABLE ' . $this->conn->quoteIdentifier($name, true) . ' ' . $query;
                 }
-                if (array_key_exists('default', $field)) {
+                if (array_key_exists('default', $field['definition'])) {
                     $query = 'ALTER ' . $fieldName . ' SET DEFAULT ' . $this->conn->quote($field['definition']['default'], $field['definition']['type']);
-                    $sql[] = 'ALTER TABLE ' . $name . ' ' . $query;
+                    $sql[] = 'ALTER TABLE ' . $this->conn->quoteIdentifier($name, true) . ' ' . $query;
                 }
-                if ( ! empty($field['notnull'])) {
+                if ( isset($field['definition']['notnull'])) {
                     $query = 'ALTER ' . $fieldName . ' ' . ($field['definition']['notnull'] ? 'SET' : 'DROP') . ' NOT NULL';
-                    $sql[] = 'ALTER TABLE ' . $name . ' ' . $query;
+                    $sql[] = 'ALTER TABLE ' . $this->conn->quoteIdentifier($name, true) . ' ' . $query;
                 }
             }
         }
@@ -169,14 +169,14 @@ class Doctrine_Export_Pgsql extends Doctrine_Export
         if (isset($changes['rename']) && is_array($changes['rename'])) {
             foreach ($changes['rename'] as $fieldName => $field) {
                 $fieldName = $this->conn->quoteIdentifier($fieldName, true);
-                $sql[] = 'ALTER TABLE ' . $name . ' RENAME COLUMN ' . $fieldName . ' TO ' . $this->conn->quoteIdentifier($field['name'], true);
+                $sql[] = 'ALTER TABLE ' . $this->conn->quoteIdentifier($name, true) . ' RENAME COLUMN ' . $fieldName . ' TO ' . $this->conn->quoteIdentifier($field['name'], true);
             }
         }
 
         $name = $this->conn->quoteIdentifier($name, true);
         if (isset($changes['name'])) {
             $changeName = $this->conn->quoteIdentifier($changes['name'], true);
-            $sql[] = 'ALTER TABLE ' . $name . ' RENAME TO ' . $changeName;
+            $sql[] = 'ALTER TABLE ' . $this->conn->quoteIdentifier($name, true) . ' RENAME TO ' . $changeName;
         }
         
         return $sql;
@@ -367,8 +367,27 @@ class Doctrine_Export_Pgsql extends Doctrine_Export
                 }
             }
         }
-        
+        if (isset($options['sequenceName'])) {
+            $sql[] = $this->createSequenceSql($options['sequenceName']);
+        }
         return $sql;
     }
 
+     /**
+     * Get the stucture of a field into an array.
+     * 
+     * @param string    $table         name of the table on which the index is to be created
+     * @param string    $name          name of the index to be created
+     * @param array     $definition    associative array that defines properties of the index to be created.
+     * @see Doctrine_Export::createIndex()
+     * @return string
+     */
+    public function createIndexSql($table, $name, array $definition)
+    {
+		$query = parent::createIndexSql($table, $name, $definition);
+		if (isset($definition['where'])) {
+			return $query . ' WHERE ' . $definition['where'];
+		}
+        return $query;
+    }
 }

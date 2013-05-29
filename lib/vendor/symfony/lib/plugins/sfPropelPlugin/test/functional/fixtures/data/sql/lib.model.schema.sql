@@ -12,7 +12,7 @@ CREATE TABLE [article]
 	[title] VARCHAR(255)  NOT NULL,
 	[body] MEDIUMTEXT,
 	[Online] INTEGER,
-	[excerpt] VARCHAR,
+	[excerpt] VARCHAR(255),
 	[category_id] INTEGER  NOT NULL,
 	[created_at] TIMESTAMP,
 	[end_date] TIMESTAMP,
@@ -77,7 +77,8 @@ DROP TABLE [author_article];
 CREATE TABLE [author_article]
 (
 	[author_id] INTEGER  NOT NULL,
-	[article_id] INTEGER  NOT NULL
+	[article_id] INTEGER  NOT NULL,
+	PRIMARY KEY ([author_id],[article_id])
 );
 
 -- SQLite does not support foreign keys; this is just for reference
@@ -96,7 +97,8 @@ DROP TABLE [product];
 CREATE TABLE [product]
 (
 	[id] INTEGER  NOT NULL PRIMARY KEY,
-	[price] FLOAT
+	[price] FLOAT,
+	[a_primary_string] VARCHAR(64)
 );
 
 -----------------------------------------------------------------------------
@@ -110,7 +112,8 @@ CREATE TABLE [product_i18n]
 (
 	[id] INTEGER  NOT NULL,
 	[culture] VARCHAR(7)  NOT NULL,
-	[name] VARCHAR(50)
+	[name] VARCHAR(50),
+	PRIMARY KEY ([id],[culture])
 );
 
 -- SQLite does not support foreign keys; this is just for reference
@@ -140,7 +143,9 @@ CREATE TABLE [movie_i18n]
 (
 	[id] INTEGER  NOT NULL,
 	[culture] VARCHAR(7)  NOT NULL,
-	[title] VARCHAR
+	[title] VARCHAR(255),
+	PRIMARY KEY ([id],[culture]),
+	UNIQUE ([title])
 );
 
 -- SQLite does not support foreign keys; this is just for reference

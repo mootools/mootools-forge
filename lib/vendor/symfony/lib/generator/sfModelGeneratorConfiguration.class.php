@@ -6,12 +6,64 @@
  * @package    symfony
  * @subpackage generator
  * @author     Fabien Potencier <fabien.potencier@symfony-project.com>
- * @version    SVN: $Id: sfModelGeneratorConfiguration.class.php 23899 2009-11-14 13:14:06Z bschussek $
+ * @version    SVN: $Id: sfModelGeneratorConfiguration.class.php 29656 2010-05-28 13:09:33Z Kris.Wallsmith $
  */
-class sfModelGeneratorConfiguration
+abstract class sfModelGeneratorConfiguration
 {
   protected
     $configuration = array();
+
+  abstract public function getActionsDefault();
+
+  abstract public function getFormActions();
+
+  abstract public function getNewActions();
+
+  abstract public function getEditActions();
+
+  abstract public function getListObjectActions();
+
+  abstract public function getListActions();
+
+  abstract public function getListBatchActions();
+
+  abstract public function getListParams();
+
+  abstract public function getListLayout();
+
+  abstract public function getListTitle();
+
+  abstract public function getEditTitle();
+
+  abstract public function getNewTitle();
+
+  abstract public function getFilterDisplay();
+
+  abstract public function getFormDisplay();
+
+  abstract public function getNewDisplay();
+
+  abstract public function getEditDisplay();
+
+  abstract public function getListDisplay();
+
+  abstract public function getFieldsDefault();
+
+  abstract public function getFieldsList();
+
+  abstract public function getFieldsFilter();
+
+  abstract public function getFieldsForm();
+
+  abstract public function getFieldsEdit();
+
+  abstract public function getFieldsNew();
+
+  abstract public function getFormClass();
+
+  abstract public function hasFilterForm();
+
+  abstract public function getFilterFormClass();
 
   /**
    * Constructor.
@@ -186,7 +238,7 @@ class sfModelGeneratorConfiguration
       throw new InvalidArgumentException(sprintf('The context "%s" does not exist.', $context));
     }
 
-    if (is_null($fields))
+    if (null === $fields)
     {
       return $this->configuration[$context];
     }
@@ -400,6 +452,60 @@ class sfModelGeneratorConfiguration
     return $default;
   }
 
+  public function getCredentials($action)
+  {
+    if (0 === strpos($action, '_'))
+    {
+      $action = substr($action, 1);
+    }
+
+    return isset($this->configuration['credentials'][$action]) ? $this->configuration['credentials'][$action] : array();
+  }
+
+  public function getPager($model)
+  {
+    $class = $this->getPagerClass();
+
+    return new $class($model, $this->getPagerMaxPerPage());
+  }
+
+  /**
+   * Gets a new form object.
+   *
+   * @param  mixed $object
+   * @param  array $options An array of options to merge with the options returned by getFormOptions()
+   *
+   * @return sfForm
+   */
+  public function getForm($object = null, $options = array())
+  {
+    $class = $this->getFormClass();
+
+    return new $class($object, array_merge($this->getFormOptions(), $options));
+  }
+
+  public function getFormOptions()
+  {
+    return array();
+  }
+
+  public function getFilterForm($filters)
+  {
+    $class = $this->getFilterFormClass();
+
+    return new $class($filters, $this->getFilterFormOptions());
+  }
+
+  public function getFilterFormOptions()
+  {
+    return array();
+  }
+
+  public function getFilterDefaults()
+  {
+    return array();
+  }
+
   protected function mapFieldName(sfModelGeneratorConfigurationField $field)
   {
     return $field->getName();
@@ -407,7 +513,7 @@ class sfModelGeneratorConfiguration
 
   protected function fixActionParameters($action, $parameters)
   {
-    if (is_null($parameters))
+    if (null === $parameters)
     {
       $parameters = array();
     }
@@ -441,7 +547,7 @@ class sfModelGeneratorConfiguration
     }
     else
     {
-      $label = '_list' == $action ? 'Cancel' : substr($action, 1);
+      $label = '_list' == $action ? 'Back to list' : substr($action, 1);
     }
 
     $parameters['label'] = sfInflector::humanize($label);

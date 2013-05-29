@@ -1,6 +1,6 @@
 <?php
 /*
- *  $Id: DataDict.php 5801 2009-06-02 17:30:27Z piccoloprincipe $
+ *  $Id: DataDict.php 7490 2010-03-29 19:53:27Z jwage $
  *
  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
  * "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT
@@ -16,7 +16,7 @@
  *
  * This software consists of voluntary contributions made by many individuals
  * and is licensed under the LGPL. For more information, see
- * <http://www.phpdoctrine.org>.
+ * <http://www.doctrine-project.org>.
  */
 
 /**
@@ -25,56 +25,14 @@
  * @package     Doctrine
  * @subpackage  DataDict
  * @license     http://www.opensource.org/licenses/lgpl-license.php LGPL
- * @link        www.phpdoctrine.org
+ * @link        www.doctrine-project.org
  * @since       1.0
- * @version     $Revision: 5801 $
+ * @version     $Revision: 7490 $
  * @author      Konsta Vesterinen <kvesteri@cc.hut.fi>
  * @author      Lukas Smith <smith@pooteeweet.org> (PEAR MDB2 library)
  */
 class Doctrine_DataDict extends Doctrine_Connection_Module
 {
-    /**
-     * Obtain an array of changes that may need to applied
-     *
-     * @param array $current new definition
-     * @param array  $previous old definition
-     * @return array  containing all changes that will need to be applied
-     */
-    public function compareDefinition($current, $previous)
-    {
-        $type = !empty($current['type']) ? $current['type'] : null;
-
-        if ( ! method_exists($this, "_compare{$type}Definition")) {
-            throw new Doctrine_DataDict_Exception('type "'.$current['type'].'" is not yet supported');
-        }
-
-        if (empty($previous['type']) || $previous['type'] != $type) {
-            return $current;
-        }
-
-        $change = $this->{"_compare{$type}Definition"}($current, $previous);
-
-        if ($previous['type'] != $type) {
-            $change['type'] = true;
-        }
-
-        $previous_notnull = !empty($previous['notnull']) ? $previous['notnull'] : false;
-        $notnull = !empty($current['notnull']) ? $current['notnull'] : false;
-        if ($previous_notnull != $notnull) {
-            $change['notnull'] = true;
-        }
-
-        $previous_default = array_key_exists('default', $previous) ? $previous['default'] :
-            ($previous_notnull ? '' : null);
-        $default = array_key_exists('default', $current) ? $current['default'] :
-            ($notnull ? '' : null);
-        if ($previous_default !== $default) {
-            $change['default'] = true;
-        }
-
-        return $change;
-    }
-
     /**
      * parseBoolean
      * parses a literal boolean value and returns 

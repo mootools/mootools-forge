@@ -1,5 +1,5 @@
 <?php $listActions = $this->getParameterValue('list.batch_actions') ?>
-<?php if (!is_null($listActions)): ?>
+<?php if (null !== $listActions): ?>
 <div id="sf_admin_batch_action_choice">
   <select name="sf_admin_batch_action">
     <option value="">[?php echo __('Choose an action') ?]</option>

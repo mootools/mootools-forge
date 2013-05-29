@@ -17,7 +17,7 @@
  * @subpackage doctrine
  * @author     Fabien Potencier <fabien.potencier@symfony-project.com>
  * @author     Jonathan H. Wage <jonwage@gmail.com>
- * @version    SVN: $Id: sfDoctrineDataRetriever.class.php 12089 2008-10-08 20:23:25Z Jonathan.Wage $
+ * @version    SVN: $Id: sfDoctrineDataRetriever.class.php 23810 2009-11-12 11:07:44Z Kris.Wallsmith $
  */
 class sfDoctrineDataRetriever
 {
@@ -34,7 +34,7 @@ class sfDoctrineDataRetriever
       $peerMethod = 'findAll';
     }
 
-    $table = Doctrine::getTable($class);
+    $table = Doctrine_Core::getTable($class);
 
     return call_user_func(array($table, $peerMethod));
   }

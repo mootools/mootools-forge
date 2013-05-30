@@ -16,7 +16,7 @@ require_once(dirname(__FILE__).'/sfPropelBaseTask.class.php');
  * @package    symfony
  * @subpackage propel
  * @author     Fabien Potencier <fabien.potencier@symfony-project.com>
- * @version    SVN: $Id: sfPropelGenerateModuleTask.class.php 23930 2009-11-14 16:18:20Z FabianLange $
+ * @version    SVN: $Id: sfPropelGenerateModuleTask.class.php 23947 2009-11-14 20:02:28Z FabianLange $
  */
 class sfPropelGenerateModuleTask extends sfPropelBaseTask
 {
@@ -44,7 +44,6 @@ class sfPropelGenerateModuleTask extends sfPropelBaseTask
       new sfCommandOption('actions-base-class', null, sfCommandOption::PARAMETER_REQUIRED, 'The base class for the actions', 'sfActions'),
     ));
 
-    $this->aliases = array('propel-generate-crud', 'propel:generate-crud');
     $this->namespace = 'propel';
     $this->name = 'generate-module';
     $this->briefDescription = 'Generates a Propel module';

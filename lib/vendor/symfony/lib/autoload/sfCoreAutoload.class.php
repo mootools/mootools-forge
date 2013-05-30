@@ -11,7 +11,7 @@
 /**
  * The current symfony version.
  */
-define('SYMFONY_VERSION', '1.3.11');
+define('SYMFONY_VERSION', '1.4.20');
 
 /**
  * sfCoreAutoload class.
@@ -22,7 +22,7 @@ define('SYMFONY_VERSION', '1.3.11');
  * @package    symfony
  * @subpackage autoload
  * @author     Fabien Potencier <fabien.potencier@symfony-project.com>
- * @version    SVN: $Id: sfCoreAutoload.class.php 32413 2011-03-30 15:52:28Z Kris.Wallsmith
+ * @version    SVN: $Id: sfCoreAutoload.class.php 32415 2011-03-30 16:09:00Z Kris.Wallsmith
  $
  */
 class sfCoreAutoload
@@ -222,7 +222,6 @@ class sfCoreAutoload
     'sffactoryconfighandler' => 'config/sfFactoryConfigHandler.class.php',
     'sffilterconfighandler' => 'config/sfFilterConfigHandler.class.php',
     'sfgeneratorconfighandler' => 'config/sfGeneratorConfigHandler.class.php',
-    'sfloader' => 'config/sfLoader.class.php',
     'sfpluginconfiguration' => 'config/sfPluginConfiguration.class.php',
     'sfpluginconfigurationgeneric' => 'config/sfPluginConfigurationGeneric.class.php',
     'sfprojectconfiguration' => 'config/sfProjectConfiguration.class.php',
@@ -232,7 +231,6 @@ class sfCoreAutoload
     'sfsimpleyamlconfighandler' => 'config/sfSimpleYamlConfigHandler.class.php',
     'sfviewconfighandler' => 'config/sfViewConfigHandler.class.php',
     'sfyamlconfighandler' => 'config/sfYamlConfigHandler.class.php',
-    'sfconsolecontroller' => 'controller/sfConsoleController.class.php',
     'sfcontroller' => 'controller/sfController.class.php',
     'sffrontwebcontroller' => 'controller/sfFrontWebController.class.php',
     'sfwebcontroller' => 'controller/sfWebController.class.php',
@@ -293,8 +291,6 @@ class sfCoreAutoload
     'sfform' => 'form/sfForm.class.php',
     'sfformfield' => 'form/sfFormField.class.php',
     'sfformfieldschema' => 'form/sfFormFieldSchema.class.php',
-    'sfadmingenerator' => 'generator/sfAdminGenerator.class.php',
-    'sfcrudgenerator' => 'generator/sfCrudGenerator.class.php',
     'sfgenerator' => 'generator/sfGenerator.class.php',
     'sfgeneratormanager' => 'generator/sfGeneratorManager.class.php',
     'sfmodelgenerator' => 'generator/sfModelGenerator.class.php',
@@ -353,16 +349,12 @@ class sfCoreAutoload
     'sfpluginrecursivedependencyexception' => 'plugin/sfPluginRecursiveDependencyException.class.php',
     'sfpluginrestexception' => 'plugin/sfPluginRestException.class.php',
     'sfsymfonypluginmanager' => 'plugin/sfSymfonyPluginManager.class.php',
-    'sfconsolerequest' => 'request/sfConsoleRequest.class.php',
     'sfrequest' => 'request/sfRequest.class.php',
     'sfwebrequest' => 'request/sfWebRequest.class.php',
-    'sfconsoleresponse' => 'response/sfConsoleResponse.class.php',
     'sfresponse' => 'response/sfResponse.class.php',
     'sfwebresponse' => 'response/sfWebResponse.class.php',
-    'sfnorouting' => 'routing/sfNoRouting.class.php',
     'sfobjectroute' => 'routing/sfObjectRoute.class.php',
     'sfobjectroutecollection' => 'routing/sfObjectRouteCollection.class.php',
-    'sfpathinforouting' => 'routing/sfPathInfoRouting.class.php',
     'sfpatternrouting' => 'routing/sfPatternRouting.class.php',
     'sfrequestroute' => 'routing/sfRequestRoute.class.php',
     'sfroute' => 'routing/sfRoute.class.php',
@@ -406,14 +398,6 @@ class sfCoreAutoload
     'sfprojectoptimizetask' => 'task/project/sfProjectOptimizeTask.class.php',
     'sfprojectpermissionstask' => 'task/project/sfProjectPermissionsTask.class.php',
     'sfprojectsendemailstask' => 'task/project/sfProjectSendEmailsTask.class.php',
-    'sfupgradeto13task' => 'task/project/sfUpgradeTo13Task.class.php',
-    'sfassetsupgrade' => 'task/project/upgrade1.3/sfAssetsUpgrade.class.php',
-    'sfformsupgrade' => 'task/project/upgrade1.3/sfFormsUpgrade.class.php',
-    'sfpropelupgrade' => 'task/project/upgrade1.3/sfPropelUpgrade.class.php',
-    'sftasksupgrade' => 'task/project/upgrade1.3/sfTasksUpgrade.class.php',
-    'sftestsupgrade' => 'task/project/upgrade1.3/sfTestsUpgrade.class.php',
-    'sfupgrade' => 'task/project/upgrade1.3/sfUpgrade.class.php',
-    'sfyamlupgrade' => 'task/project/upgrade1.3/sfYamlUpgrade.class.php',
     'sfdeprecatedclassesvalidation' => 'task/project/validation/sfDeprecatedClassesValidation.class.php',
     'sfdeprecatedconfigurationfilesvalidation' => 'task/project/validation/sfDeprecatedConfigurationFilesValidation.class.php',
     'sfdeprecatedhelpersvalidation' => 'task/project/validation/sfDeprecatedHelpersValidation.class.php',
@@ -468,7 +452,6 @@ class sfCoreAutoload
     'sfvalidatorcsrftoken' => 'validator/sfValidatorCSRFToken.class.php',
     'sfvalidatorcallback' => 'validator/sfValidatorCallback.class.php',
     'sfvalidatorchoice' => 'validator/sfValidatorChoice.class.php',
-    'sfvalidatorchoicemany' => 'validator/sfValidatorChoiceMany.class.php',
     'sfvalidatordate' => 'validator/sfValidatorDate.class.php',
     'sfvalidatordaterange' => 'validator/sfValidatorDateRange.class.php',
     'sfvalidatordatetime' => 'validator/sfValidatorDateTime.class.php',
@@ -501,15 +484,11 @@ class sfCoreAutoload
     'sfwidgetformi18nchoicetimezone' => 'widget/i18n/sfWidgetFormI18nChoiceTimezone.class.php',
     'sfwidgetformi18ndate' => 'widget/i18n/sfWidgetFormI18nDate.class.php',
     'sfwidgetformi18ndatetime' => 'widget/i18n/sfWidgetFormI18nDateTime.class.php',
-    'sfwidgetformi18nselectcountry' => 'widget/i18n/sfWidgetFormI18nSelectCountry.class.php',
-    'sfwidgetformi18nselectcurrency' => 'widget/i18n/sfWidgetFormI18nSelectCurrency.class.php',
-    'sfwidgetformi18nselectlanguage' => 'widget/i18n/sfWidgetFormI18nSelectLanguage.class.php',
     'sfwidgetformi18ntime' => 'widget/i18n/sfWidgetFormI18nTime.class.php',
     'sfwidget' => 'widget/sfWidget.class.php',
     'sfwidgetform' => 'widget/sfWidgetForm.class.php',
     'sfwidgetformchoice' => 'widget/sfWidgetFormChoice.class.php',
     'sfwidgetformchoicebase' => 'widget/sfWidgetFormChoiceBase.class.php',
-    'sfwidgetformchoicemany' => 'widget/sfWidgetFormChoiceMany.class.php',
     'sfwidgetformdate' => 'widget/sfWidgetFormDate.class.php',
     'sfwidgetformdaterange' => 'widget/sfWidgetFormDateRange.class.php',
     'sfwidgetformdatetime' => 'widget/sfWidgetFormDateTime.class.php',

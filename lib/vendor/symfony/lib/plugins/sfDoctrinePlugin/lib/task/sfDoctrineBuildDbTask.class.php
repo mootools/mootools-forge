@@ -36,7 +36,7 @@ class sfDoctrineBuildDbTask extends sfDoctrineBaseTask
       new sfCommandOption('env', null, sfCommandOption::PARAMETER_REQUIRED, 'The environment', 'dev'),
     ));
 
-    $this->aliases = array('doctrine-build-db', 'doctrine:create-db');
+    $this->aliases = array('doctrine:create-db');
     $this->namespace = 'doctrine';
     $this->name = 'build-db';
     $this->briefDescription = 'Creates database for current model';

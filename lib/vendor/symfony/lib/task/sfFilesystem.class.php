@@ -274,30 +274,6 @@ class sfFilesystem
   }
 
   /**
-   * DEPRECATED: Executes a shell command.
-   *
-   * This method is deprecated. Use the more powerful execute() method instead.
-   *
-   * @param string $cmd  The command to execute on the shell
-   */
-  public function sh($cmd)
-  {
-    $this->logSection('exec ', $cmd);
-
-    ob_start();
-    passthru($cmd.' 2>&1', $return);
-    $content = ob_get_contents();
-    ob_end_clean();
-
-    if ($return > 0)
-    {
-      throw new sfException(sprintf('Problem executing command %s', "\n".$content));
-    }
-
-    return $content;
-  }
-
-  /**
    * Executes a shell command.
    *
    * @param string $cmd            The command to execute on the shell
@@ -326,7 +302,7 @@ class sfFilesystem
 
     $output = '';
     $err = '';
-    while (!feof($pipes[1]))
+    while (!feof($pipes[1]) || !feof($pipes[2]))
     {
       foreach ($pipes as $key => $pipe)
       {

@@ -106,10 +106,6 @@ class sfNamespacedParameterHolder extends sfParameterHolder
     {
       $value = & $this->parameters[$ns][$name];
     }
-    else if (isset($this->parameters[$ns]))
-    {
-      $value = sfToolkit::getArrayValueForPath($this->parameters[$ns], $name, $default);
-    }
     else
     {
       $value = $default;
@@ -194,16 +190,7 @@ class sfNamespacedParameterHolder extends sfParameterHolder
       $ns = $this->default_namespace;
     }
 
-    if (isset($this->parameters[$ns][$name]))
-    {
-      return true;
-    }
-    else if (isset($this->parameters[$ns]))
-    {
-      return sfToolkit::hasArrayValueForPath($this->parameters[$ns], $name);
-    }
-
-    return false;
+    return isset($this->parameters[$ns][$name]);
   }
 
   /**
@@ -240,10 +227,6 @@ class sfNamespacedParameterHolder extends sfParameterHolder
     {
       $retval = $this->parameters[$ns][$name];
       unset($this->parameters[$ns][$name]);
-    }
-    else
-    {
-      $retval = sfToolkit::removeArrayValueForPath($this->parameters[$ns], $name, $default);
     }
 
     return $retval;

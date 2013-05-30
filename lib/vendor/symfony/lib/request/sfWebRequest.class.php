@@ -18,7 +18,7 @@
  * @subpackage request
  * @author     Fabien Potencier <fabien.potencier@symfony-project.com>
  * @author     Sean Kerr <sean@code-box.org>
- * @version    SVN: $Id: sfWebRequest.class.php 30900 2010-09-13 17:31:37Z Kris.Wallsmith $
+ * @version    SVN: $Id: sfWebRequest.class.php 33544 2012-10-05 10:42:42Z fabien $
  */
 class sfWebRequest extends sfRequest
 {
@@ -355,7 +355,16 @@ class sfWebRequest extends sfRequest
   {
     $pathArray = $this->getPathInfoArray();
 
-    return isset($pathArray['HTTP_X_FORWARDED_HOST']) ? $pathArray['HTTP_X_FORWARDED_HOST'] : (isset($pathArray['HTTP_HOST']) ? $pathArray['HTTP_HOST'] : '');
+    if (isset($pathArray['HTTP_X_FORWARDED_HOST']))
+    {
+      $elements = explode(',', $pathArray['HTTP_X_FORWARDED_HOST']);
+
+      return trim($elements[count($elements) - 1]);
+    }
+    else
+    {
+      return isset($pathArray['HTTP_HOST']) ? $pathArray['HTTP_HOST'] : '';
+    }
   }
 
   /**
@@ -380,21 +389,6 @@ class sfWebRequest extends sfRequest
   public function isMethod($method)
   {
     return strtoupper($method) == $this->getMethod();
-  }
-
-  /**
-   * Returns request method.
-   *
-   * @return string
-   */
-  public function getMethodName()
-  {
-    if ($this->options['logging'])
-    {
-      $this->dispatcher->notify(new sfEvent($this, 'application.log', array('The "sfWebRequest::getMethodName()" method is deprecated, please use "getMethod()" instead.', 'priority' => sfLogger::WARNING)));
-    }
-
-    return $this->getMethod();
   }
 
   /**
@@ -639,12 +633,13 @@ class sfWebRequest extends sfRequest
   public function splitHttpAcceptHeader($header)
   {
     $values = array();
+    $groups = array();
     foreach (array_filter(explode(',', $header)) as $value)
     {
       // Cut off any q-value that might come after a semi-colon
       if ($pos = strpos($value, ';'))
       {
-        $q     = (float) trim(substr($value, strpos($value, '=') + 1));
+        $q     = trim(substr($value, strpos($value, '=') + 1));
         $value = substr($value, 0, $pos);
       }
       else
@@ -652,15 +647,20 @@ class sfWebRequest extends sfRequest
         $q = 1;
       }
 
-      if (0 < $q)
-      {
-        $values[trim($value)] = $q;
+      $groups[$q][] = $value;
+    }
+
+    krsort($groups);
+
+    foreach ($groups as $q => $items) {
+      if (0 < $q) {
+        foreach ($items as $value) {
+          $values[] = trim($value);
+        }
       }
     }
 
-    arsort($values);
-
-    return array_keys($values);
+    return $values;
   }
 
   /**

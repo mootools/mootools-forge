@@ -18,7 +18,7 @@
  * @subpackage exception
  * @author     Fabien Potencier <fabien.potencier@symfony-project.com>
  * @author     Sean Kerr <sean@code-box.org>
- * @version    SVN: $Id: sfException.class.php 23901 2009-11-14 13:33:03Z bschussek $
+ * @version    SVN: $Id: sfException.class.php 33539 2012-09-19 05:36:02Z fabien $
  */
 class sfException extends Exception
 {
@@ -100,7 +100,9 @@ class sfException extends Exception
         }
       }
 
-      ob_start(sfConfig::get('sf_compressed') ? 'ob_gzhandler' : '');
+      if (sfConfig::get('sf_compressed')) {
+          ob_start('ob_gzhandler');
+      }
 
       header('HTTP/1.0 500 Internal Server Error');
     }
@@ -193,8 +195,9 @@ class sfException extends Exception
       }
     }
 
-    // when using CLI, we force the format to be TXT
-    if (0 == strncasecmp(PHP_SAPI, 'cli', 3))
+    // when using CLI, we force the format to be TXT. Compare exactly to 
+    // the string 'cli' because the php 5.4 server is identified by 'cli-server'
+    if ('cli' == PHP_SAPI)
     {
       $format = 'txt';
     }
@@ -345,7 +348,7 @@ class sfException extends Exception
   {
     if (is_readable($file))
     {
-      $content = preg_split('#<br />#', highlight_file($file, true));
+      $content = preg_split('#<br />#', preg_replace('/^<code>(.*)<\/code>$/s', '$1', highlight_file($file, true)));
 
       $lines = array();
       for ($i = max($line - 3, 1), $max = min($line + 3, count($content)); $i <= $max; $i++)

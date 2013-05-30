@@ -14,7 +14,7 @@
  * @package    symfony
  * @subpackage cache
  * @author     Fabien Potencier <fabien.potencier@symfony-project.com>
- * @version    SVN: $Id: sfFunctionCache.class.php 23810 2009-11-12 11:07:44Z Kris.Wallsmith $
+ * @version    SVN: $Id: sfFunctionCache.class.php 23939 2009-11-14 17:46:14Z fabien $
  */
 class sfFunctionCache
 {
@@ -25,15 +25,8 @@ class sfFunctionCache
    *
    * @param sfCache $cache An sfCache object instance
    */
-  public function __construct($cache)
+  public function __construct(sfCache $cache)
   {
-    if (!is_object($cache))
-    {
-      $this->cache = new sfFileCache($cache);
-
-      throw new sfException('DEPRECATED: You must now pass a sfCache object when initializing a sfFunctionCache object. Be warned that the call() method signature has also changed.');
-    }
-
     $this->cache = $cache;
   }
 

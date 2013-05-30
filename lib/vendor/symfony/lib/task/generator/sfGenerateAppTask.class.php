@@ -16,7 +16,7 @@ require_once(dirname(__FILE__).'/sfGeneratorBaseTask.class.php');
  * @package    symfony
  * @subpackage task
  * @author     Fabien Potencier <fabien.potencier@symfony-project.com>
- * @version    SVN: $Id: sfGenerateAppTask.class.php 24018 2009-11-16 15:13:01Z Kris.Wallsmith $
+ * @version    SVN: $Id: sfGenerateAppTask.class.php 24039 2009-11-16 17:52:14Z Kris.Wallsmith $
  */
 class sfGenerateAppTask extends sfGeneratorBaseTask
 {
@@ -34,7 +34,6 @@ class sfGenerateAppTask extends sfGeneratorBaseTask
       new sfCommandOption('csrf-secret', null, sfCommandOption::PARAMETER_REQUIRED, 'Secret to use for CSRF protection', true),
     ));
 
-    $this->aliases = array('init-app');
     $this->namespace = 'generate';
     $this->name = 'app';
 

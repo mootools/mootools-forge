@@ -16,7 +16,7 @@
  * @package    symfony
  * @subpackage validator
  * @author     Fabien Potencier <fabien.potencier@symfony-project.com>
- * @version    SVN: $Id: sfValidatorBase.class.php 22446 2009-09-26 07:55:47Z fabien $
+ * @version    SVN: $Id: sfValidatorBase.class.php 32653 2011-06-15 18:32:02Z fabien $
  */
 abstract class sfValidatorBase
 {
@@ -168,7 +168,7 @@ abstract class sfValidatorBase
    */
   public function setMessages($values)
   {
-    $this->messages = $values;
+    $this->messages = array_merge(array('required' => self::$globalDefaultMessages['required'], 'invalid' => self::$globalDefaultMessages['invalid']), $values);
 
     return $this;
   }
@@ -251,7 +251,7 @@ abstract class sfValidatorBase
    */
   public function setOptions($values)
   {
-    $this->options = $values;
+    $this->options = array_merge(array('required' => true, 'trim' => false, 'empty_value' => null), $values);
 
     return $this;
   }
@@ -289,30 +289,6 @@ abstract class sfValidatorBase
   static public function setDefaultMessage($name, $message)
   {
     self::$globalDefaultMessages[$name] = $message;
-  }
-
-  /**
-   * Sets the default invalid message.
-   *
-   * DEPRECATED. Use setDefaultMessage instead.
-   *
-   * @param string $message
-   */
-  static public function setInvalidMessage($message)
-  {
-    self::setDefaultMessage('invalid', $message);
-  }
-
-  /**
-   * Sets the default required message.
-   *
-   * DEPRECATED. Use setDefaultMessage instead.
-   *
-   * @param string $message
-   */
-  static public function setRequiredMessage($message)
-  {
-    self::setDefaultMessage('required', $message);
   }
 
   /**

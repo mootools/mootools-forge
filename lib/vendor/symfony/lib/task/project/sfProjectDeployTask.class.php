@@ -14,7 +14,7 @@
  * @package    symfony
  * @subpackage task
  * @author     Fabien Potencier <fabien.potencier@symfony-project.com>
- * @version    SVN: $Id: sfProjectDeployTask.class.php 23718 2009-11-09 10:51:36Z fabien $
+ * @version    SVN: $Id: sfProjectDeployTask.class.php 33125 2011-10-08 21:02:31Z fabien $
  */
 class sfProjectDeployTask extends sfBaseTask
 {
@@ -37,7 +37,6 @@ class sfProjectDeployTask extends sfBaseTask
       new sfCommandOption('rsync-options', null, sfCommandOption::PARAMETER_OPTIONAL, 'To options to pass to the rsync executable', '-azC --force --delete --progress'),
     ));
 
-    $this->aliases = array('sync');
     $this->namespace = 'project';
     $this->name = 'deploy';
     $this->briefDescription = 'Deploys a project to another server';
@@ -143,14 +142,14 @@ EOF;
     else
     {
       $parameters = $options['rsync-options'];
-      if (file_exists($options['rsync-dir'].'/rsync_exclude.txt'))
-      {
-        $parameters .= sprintf(' --exclude-from=%s/rsync_exclude.txt', $options['rsync-dir']);
-      }
-
       if (file_exists($options['rsync-dir'].'/rsync_include.txt'))
       {
         $parameters .= sprintf(' --include-from=%s/rsync_include.txt', $options['rsync-dir']);
+      }
+
+      if (file_exists($options['rsync-dir'].'/rsync_exclude.txt'))
+      {
+        $parameters .= sprintf(' --exclude-from=%s/rsync_exclude.txt', $options['rsync-dir']);
       }
 
       if (file_exists($options['rsync-dir'].'/rsync.txt'))

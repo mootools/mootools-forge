@@ -14,7 +14,7 @@
  * @package    symfony
  * @subpackage generator
  * @author     Fabien Potencier <fabien.potencier@symfony-project.com>
- * @version    SVN: $Id: sfGeneratorManager.class.php 23810 2009-11-12 11:07:44Z Kris.Wallsmith $
+ * @version    SVN: $Id: sfGeneratorManager.class.php 23922 2009-11-14 14:58:38Z fabien $
  */
 class sfGeneratorManager
 {
@@ -27,24 +27,11 @@ class sfGeneratorManager
    *
    * @param sfProjectConfiguration $configuration A sfProjectConfiguration instance
    * @param string                 $basePath      The base path for file generation
-   *
-   * @see initialize()
    */
   public function __construct(sfProjectConfiguration $configuration, $basePath = null)
   {
     $this->configuration = $configuration;
     $this->basePath = $basePath;
-  }
-
-  /**
-   * Initializes the sfGeneratorManager instance.
-   *
-   * @param sfProjectConfiguration $configuration A sfProjectConfiguration instance
-   * @deprecated
-   */
-  public function initialize(sfProjectConfiguration $configuration)
-  {
-    // DEPRECATED
   }
 
   /**

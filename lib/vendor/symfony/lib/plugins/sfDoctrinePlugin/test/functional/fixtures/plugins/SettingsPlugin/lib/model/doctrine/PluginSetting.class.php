@@ -8,7 +8,7 @@
  * @package    ##PACKAGE##
  * @subpackage ##SUBPACKAGE##
  * @author     ##NAME## <##EMAIL##>
- * @version    SVN: $Id: PluginSetting.class.php 28975 2010-04-05 00:26:03Z Kris.Wallsmith $
+ * @version    SVN: $Id: PluginSetting.class.php 28974 2010-04-04 22:59:54Z Kris.Wallsmith $
  */
 abstract class PluginSetting extends BaseSetting
 {

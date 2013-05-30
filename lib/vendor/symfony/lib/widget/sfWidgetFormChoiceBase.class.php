@@ -14,7 +14,7 @@
  * @package    symfony
  * @subpackage widget
  * @author     Bernhard Schussek <bernhard.schussek@symfony-project.com>
- * @version    SVN: $Id: sfWidgetFormChoiceBase.class.php 29309 2010-04-29 07:41:57Z bschussek $
+ * @version    SVN: $Id$
  */
 abstract class sfWidgetFormChoiceBase extends sfWidgetForm
 {

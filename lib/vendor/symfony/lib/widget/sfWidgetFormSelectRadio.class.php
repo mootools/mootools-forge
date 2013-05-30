@@ -23,6 +23,7 @@ class sfWidgetFormSelectRadio extends sfWidgetFormChoiceBase
    *
    * Available options:
    *
+   *  * choices:         An array of possible choices (required)
    *  * label_separator: The separator to use between the input radio and the label
    *  * separator:       The separator to use between each input radio
    *  * class:           The class to use for the main <ul> tag

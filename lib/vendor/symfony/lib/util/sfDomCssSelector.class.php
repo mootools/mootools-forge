@@ -19,7 +19,7 @@
  * @package    symfony
  * @subpackage util
  * @author     Fabien Potencier <fabien.potencier@symfony-project.com>
- * @version    SVN: $Id: sfDomCssSelector.class.php 31890 2011-01-24 18:03:26Z fabien $
+ * @version    SVN: $Id: sfDomCssSelector.class.php 31893 2011-01-24 18:11:45Z fabien $
  */
 class sfDomCssSelector implements Countable, Iterator
 {
@@ -77,20 +77,7 @@ class sfDomCssSelector implements Countable, Iterator
     return $nodes ? new sfDomCssSelector($nodes) : new sfDomCssSelector(array());
   }
 
-  /* DEPRECATED */
-  public function getTexts($selector)
-  {
-    $texts = array();
-    foreach ($this->getElements($selector) as $element)
-    {
-      $texts[] = $element->nodeValue;
-    }
-
-    return $texts;
-  }
-
-  /* DEPRECATED */
-  public function getElements($selector)
+  protected function getElements($selector)
   {
     $nodes = array();
     foreach ($this->nodes as $node)

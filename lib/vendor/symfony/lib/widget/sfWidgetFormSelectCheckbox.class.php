@@ -14,7 +14,7 @@
  * @package    symfony
  * @subpackage widget
  * @author     Fabien Potencier <fabien.potencier@symfony-project.com>
- * @version    SVN: $Id: sfWidgetFormSelectCheckbox.class.php 30762 2010-08-25 12:33:33Z fabien $
+ * @version    SVN: $Id: sfWidgetFormSelectCheckbox.class.php 33362 2012-03-08 13:53:08Z fabien $
  */
 class sfWidgetFormSelectCheckbox extends sfWidgetFormChoiceBase
 {
@@ -23,6 +23,7 @@ class sfWidgetFormSelectCheckbox extends sfWidgetFormChoiceBase
    *
    * Available options:
    *
+   *  * choices:         An array of possible choices (required)
    *  * label_separator: The separator to use between the input checkbox and the label
    *  * class:           The class to use for the main <ul> tag
    *  * separator:       The separator to use between each input checkbox
@@ -101,7 +102,7 @@ class sfWidgetFormSelectCheckbox extends sfWidgetFormChoiceBase
         'id'    => $id = $this->generateId($name, self::escapeOnce($key)),
       );
 
-      if ((is_array($value) && in_array(strval($key), $value)) || strval($key) == strval($value))
+      if ((is_array($value) && in_array(strval($key), $value)) || (is_string($value) && strval($key) == strval($value)))
       {
         $baseAttributes['checked'] = 'checked';
       }

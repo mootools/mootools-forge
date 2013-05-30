@@ -18,7 +18,7 @@ require_once(dirname(__FILE__).'/sfDoctrineBaseTask.class.php');
  * @subpackage doctrine
  * @author     Fabien Potencier <fabien.potencier@symfony-project.com>
  * @author     Jonathan H. Wage <jonwage@gmail.com>
- * @version    SVN: $Id: sfDoctrineMigrateTask.class.php 23810 2009-11-12 11:07:44Z Kris.Wallsmith $
+ * @version    SVN: $Id: sfDoctrineMigrateTask.class.php 33338 2012-02-15 16:02:28Z fabien $
  */
 class sfDoctrineMigrateTask extends sfDoctrineBaseTask
 {
@@ -39,7 +39,6 @@ class sfDoctrineMigrateTask extends sfDoctrineBaseTask
       new sfCommandOption('dry-run', null, sfCommandOption::PARAMETER_NONE, 'Do not persist migrations'),
     ));
 
-    $this->aliases = array('doctrine-migrate');
     $this->namespace = 'doctrine';
     $this->name = 'migrate';
     $this->briefDescription = 'Migrates database to current/specified version';
@@ -101,7 +100,23 @@ EOF;
     $this->logSection('doctrine', sprintf('Migrating from version %s to %s%s', $from, $version, $options['dry-run'] ? ' (dry run)' : ''));
     try
     {
-      $migration->migrate($version, $options['dry-run']);
+      $migration_classes = $migration->getMigrationClasses();
+      if($version < $from)
+      {
+        for($i = (int)$from - 1; $i >= (int)$version; $i--)
+        {
+          $this->logSection('doctrine', 'executing migration : '.$i .', class: '.$migration_classes[$i]);
+          $migration->migrate($i, $options['dry-run']);
+        }
+      }
+      else
+      {
+        for($i = (int)$from + 1; $i <= (int)$version; $i++)
+        {
+          $this->logSection('doctrine', 'executing migration : '.$i.', class: '.$migration_classes[$i]);
+          $migration->migrate($i, $options['dry-run']);
+        }
+      }
     }
     catch (Exception $e)
     {

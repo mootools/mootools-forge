@@ -12,5 +12,5 @@ default:
 
   javascripts:    [mootools-1.2.2-core+more.js, lighter.js, passshark.js, pluginskit.js, fancyzoom.js, fancyzoom.html.js]
 
-  has_layout:     on
+  has_layout:     true
   layout:         layout

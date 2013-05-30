@@ -1,6 +1,6 @@
 <?php
 
-class BrowseDevelopersForm extends sfForm
+class BrowseDevelopersForm extends BaseForm
 {
 	protected static $active_choices = array('', '5 days', '10 days', '15 days', 'last month', 'last 2 months');
 	
@@ -13,7 +13,7 @@ class BrowseDevelopersForm extends sfForm
 	public function configure(){
 				
 		$this->setWidgets(array(
-			'search' => new sfWidgetFormInput(array()),
+			'search' => new sfWidgetFormInputText(array()),
 			'with_plugins' => new sfWidgetFormInputCheckbox
 		));
 		

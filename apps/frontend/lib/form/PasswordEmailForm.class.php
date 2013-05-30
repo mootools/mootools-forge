@@ -3,12 +3,12 @@
 /**
 * 
 */
-class PasswordEmailForm extends sfForm
+class PasswordEmailForm extends BaseForm
 {
 	
 	public function configure(){
 		$this->setWidgets(array(
-			'email' => new sfWidgetFormInput
+			'email' => new sfWidgetFormInputText
 		));
 		
 		$this->setValidators(array(

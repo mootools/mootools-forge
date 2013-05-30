@@ -14,8 +14,8 @@ class PluginAddStep4Form extends PluginAddStepForm
 
 	public function configure(){
 		$this->setWidgets(array(
-			'user' => new sfWidgetFormInput,
-			'repository' => new sfWidgetFormInput
+			'user' => new sfWidgetFormInputText,
+			'repository' => new sfWidgetFormInputText
 		));
 
 		$this->setValidators(array(

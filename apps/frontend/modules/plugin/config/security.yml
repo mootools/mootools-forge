@@ -1,8 +1,8 @@
 all:
-  is_secure:    on
+  is_secure:    true
   
 view:
-  is_secure:    off
+  is_secure:    false
   
 delete:
   credentials:  admin

@@ -1,6 +1,6 @@
 <?php
 
-class BrowseForm extends sfForm
+class BrowseForm extends BaseForm
 {
 	protected static $active_choices = array('', '5 days', '10 days', '15 days', 'last month', 'last 2 months');
 	
@@ -14,7 +14,7 @@ class BrowseForm extends sfForm
 				
 		$this->setWidgets(array(
 			'tag' => new sfWidgetFormInputHidden(),
-			'search' => new sfWidgetFormInput(),
+			'search' => new sfWidgetFormInputText(),
 			'active' => new sfWidgetFormChoice(array(
 			  'choices' => array_combine(self::$active_choices, self::$active_choices)
 			)),

@@ -15,7 +15,7 @@ class PluginAddStep1Form extends PluginAddStepForm
 
 	public function configure(){
 		$this->setWidgets(array(
-			'url' => new sfWidgetFormInput
+			'url' => new sfWidgetFormInputText
 		));
 
 		$this->setValidators(array(

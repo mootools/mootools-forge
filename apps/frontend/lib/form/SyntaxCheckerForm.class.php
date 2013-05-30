@@ -1,6 +1,6 @@
 <?php
 
-class SyntaxCheckerForm extends sfForm
+class SyntaxCheckerForm extends BaseForm
 {
 	
 	public function configure(){

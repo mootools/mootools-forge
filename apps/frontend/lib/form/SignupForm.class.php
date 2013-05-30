@@ -7,13 +7,13 @@ class SignupForm extends AuthorForm
 		
 		unset($this['id'], $this['avatar']);
 
-		$this->widgetSchema['phone'] = new sfWidgetFormInput();		
+		$this->widgetSchema['phone'] = new sfWidgetFormInputText();
 		$this->validatorSchema['phone'] = new sfValidatorCallback(array(
       'callback' => array($this, 'doValidate'),
       'required' => true
     ));
 		
-		$this->widgetSchema['password'] = new sfWidgetFormInputPassword();		
+		$this->widgetSchema['password'] = new sfWidgetFormInputPassword();
 		$this->validatorSchema['password'] = new sfValidatorString(array('min_length' => 5));
 		
     $this->widgetSchema->setNameFormat('signup[%s]');

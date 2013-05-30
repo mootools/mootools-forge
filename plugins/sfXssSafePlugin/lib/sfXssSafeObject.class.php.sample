@@ -1,7 +1,7 @@
 <?php
 
 /**
- * Sample to clean an element (here <object> and <embed>) overloading HTML Purifier 
+ * Sample to clean an element (here <object> and <embed>) overloading HTML Purifier
  *
  */
 
@@ -90,5 +90,3 @@ class HTMLPurifier_Injector_AddParam extends HTMLPurifier_Injector
     }
   }
 }
-
-?>

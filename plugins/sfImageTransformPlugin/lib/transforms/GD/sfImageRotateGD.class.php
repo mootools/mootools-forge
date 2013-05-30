@@ -9,7 +9,7 @@
 
 /**
  *
- * sfImageResizeTD class.
+ * sfImageResizeGD class.
  *
  * Rotates a GD image.
  *

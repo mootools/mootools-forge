@@ -183,7 +183,15 @@ class sfImageColorizeGD  extends sfImageTransformAbstract
     // Use GD's built in filter
     if (function_exists('imagefilter'))
     {
-      imagefilter($resource,IMG_FILTER_COLORIZE, $this->red_tint, $this->green_tint, $this->blue_tint, $this->alpha);
+      // we have to check for the php version as alpha support was added to imagefilter/IMG_FILTER_COLORIZE in 5.2.5
+      if (strnatcmp(phpversion(), '5.2.5') >= 0)
+      {
+        imagefilter($resource, IMG_FILTER_COLORIZE, $this->red_tint, $this->green_tint, $this->blue_tint, $this->alpha);
+      }
+      else
+      {
+        imagefilter($resource, IMG_FILTER_COLORIZE, $this->red_tint, $this->green_tint, $this->blue_tint);
+      }
 
     }
 

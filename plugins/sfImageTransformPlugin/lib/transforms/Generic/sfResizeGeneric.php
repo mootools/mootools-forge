@@ -11,22 +11,24 @@
  *
  * generic resize transform
  *
+ * @package sfImageTransform
+ * @subpackage transforms
  * @author Stuart Lowes <stuart.lowes@gmail.com>
  * @author Miloslav Kmet <miloslav.kmet@gmail.com>
  * @author Victor Berchet <vberchet-sf@yahoo.com>
- *
+ * @version SVN: $Id$
  */
 class sfImageResizeGeneric extends sfImageTransformAbstract
 {
   /**
    * width of the target
    */
-  protected $width = 0;
+  protected $width = null;
 
   /**
    * height of the target
    */
-  protected $height = 0;
+  protected $height = null;
 
   /**
    * do we want to inflate the source image ?
@@ -36,7 +38,7 @@ class sfImageResizeGeneric extends sfImageTransformAbstract
   /**
    * do we want to keep the aspect ratio of the source image ?
    */
-  protected $proportinal = false;
+  protected $proportional = false;
 
   /**
    * constructor
@@ -171,25 +173,38 @@ class sfImageResizeGeneric extends sfImageTransformAbstract
    */
   protected function transform(sfImage $image)
   {
-    $source_w = $image->getWidth();
-    $source_h = $image->getHeight();
-    $target_w = $this->width;
-    $target_h = $this->height;
+    list($target_w, $target_h) = $this->computeTargetSize($image->getWidth(), $image->getHeight());
+    
+    return $image->resizeSimple($target_w, $target_h);
+  }
 
-    if (is_numeric($this->width) && $this->width > 0 && $source_w > 0)
+  /**
+   * Compute target size
+   *
+   * @param integer $source_w
+   * @param integer $source_h
+   * @return array Target width and height
+   */
+  protected function computeTargetSize($source_w, $source_h)
+  {
+    $target_w = $source_w;
+    $target_h = $source_h;
+
+    if (null !== $this->width)
     {
+      $target_w = $this->width;
       if (!$this->inflate && $target_w > $source_w)
       {
         $target_w = $source_w;
       }
-      
-      if ($this->proportional)
+
+      if ($this->proportional && $source_w > 0)
       {
         // Compute the new height in order to keep the aspect ratio
         // and clamp it to the maximum height
         $target_h = round(($source_h / $source_w) * $target_w);
-        
-        if (is_numeric($this->height) && $this->height < $target_h && $source_h > 0)
+
+        if (null !== $this->height && $this->height < $target_h && $source_h > 0)
         {
           $target_h = $this->height;
           $target_w = round(($source_w / $source_h) * $target_h);
@@ -197,27 +212,28 @@ class sfImageResizeGeneric extends sfImageTransformAbstract
       }
     }
 
-    if (is_numeric($this->height) && $this->height > 0 && $source_h > 0)
+    if (null !== $this->height)
     {
+      $target_h = $this->height;
       if (!$this->inflate && $target_h > $source_h)
       {
         $target_h = $source_h;
       }
-      
-      if ($this->proportional)
+
+      if ($this->proportional && $source_h > 0)
       {
         // Compute the new width in order to keep the aspect ratio
         // and clamp it to the maximum width
         $target_w = round(($source_w / $source_h) * $target_h);
-        
-        if (is_numeric($this->width) && $this->width < $target_w && $source_w > 0)
+
+        if (null !== $this->width && $this->width < $target_w && $target_w > 0)
         {
           $target_w = $this->width;
           $target_h = round(($source_h / $source_w) * $target_w);
         }
       }
     }
-    
-    return $image->resizeSimple($target_w, $target_h);
+
+    return array($target_w, $target_h);
   }
 }

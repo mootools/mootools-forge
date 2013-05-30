@@ -14,10 +14,11 @@ or
 
     $ symfony plugin:install sfSphinxPlugin
 
+
 ## Usage
 
-First of all, you should setup **Sphinx** on your machine. [How-to](http://komunitasweb.com/2009/03/sphinx-search-introduction/)
-Please refer to [offical documentation](http://www.sphinxsearch.com/docs/manual-0.9.9.html).
+First of all, you should setup **Sphinx** on your machine.
+Please refer to [offical documentation](http://www.sphinxsearch.com/docs/manual-1.10.html).
 
 This is a very basic configuration file you can use for testing purpose
 (anyway, **it needs to be adapted** to your real data, see inline comments)
@@ -122,6 +123,7 @@ and in your template (classes and methods **to be adapted**, see inline comments
       <?php echo link_to('&raquo;', 'yourModule/search?q=' . $query . '&p=' . $pager->getLastPage()) ?>
     <?php endif ?>
 
+
 ## Helper
 
 You can use the included `SearchHelper` static class to highlight search words
@@ -129,9 +131,12 @@ in results, with `highlight_search_result()` helper.
 The `get_search_results()` and `search_pager()` helpers are now deprecated:
 you could use them to retrieve results corresponding to Sphinx found ids and to
 manually paginate, but it's better to use `sfSphinxPropelPager` class.
-Be aware: `get_search_results()` requires PHP 5.2.3 as minimum version.
 Since version 0.0.7, if you prefer Doctrine, you can use `sfSphinxDoctrinePager` class
 instead of `sfSphinxPropelPager`.
+
+>**NOTE**
+>`get_search_results()` requires PHP 5.2.3 as minimum version.
+
 
 ## License
 

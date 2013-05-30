@@ -13,7 +13,7 @@
  *
  * @package    sfFeed2
  * @author     Fabien Potencier <fabien.potencier@symfony-project.com>
- * @version    SVN: $Id: sfRss091Feed.class.php 1 2009-09-06 18:35:08Z rauchg@gmail.com $
+ * @version    SVN: $Id: sfRssUserland091Feed.class.php 460 2006-01-18 14:45:19Z fabien $
  */
 class sfRss091Feed extends sfRssFeed
 {

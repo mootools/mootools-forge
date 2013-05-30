@@ -321,7 +321,7 @@ class sfImageOverlayGD extends sfImageTransformAbstract
     $overlay_w   = $this->overlay->getWidth();
     $overlay_h   = $this->overlay->getHeight();
     $overlay_img = $this->overlay->getAdapter()->getHolder();
-
+    
     // copy and merge the overlay image and the canvas image:
     imagecopy($canvas_img, $overlay_img, $this->left,$this->top,0,0, $overlay_w, $overlay_h);
 

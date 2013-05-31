@@ -78,10 +78,10 @@ class GravatarApi
    **/
   protected function buildGravatarPath($md5_email)
   {
-    return $this->base_url.'/avatar.php?gravatar_id='.$md5_email.
+    return $this->base_url.'/avatar/'.$md5_email.
                            '&size='.$this->image_size.
                            '&rating='.$this->rating.
-                           '&default=http://www.default.com';
+                           '&default=404';
   }
 
   /**

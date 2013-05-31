@@ -142,7 +142,7 @@ class userActions extends sfActions
 
 	public function executeLoginTwitter(){
 		$twitter = new EpiTwitter(sfConfig::get('app_twitter_consumer_key'), sfConfig::get('app_twitter_consumer_secret'));
-		header('Location:' . $twitter->getAuthorizationUrl());
+		header('Location:' . $twitter->getAuthorizeUrl());
 		exit;
 	}
 

@@ -1,4 +1,5 @@
 <?php
+
 class EpiCurl
 {
   const timeout = 3;

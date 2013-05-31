@@ -1,4 +1,5 @@
 <?php
+
 class EpiOAuth
 {
   public $version = '1.0';
@@ -17,7 +18,7 @@ class EpiOAuth
   protected $useSSL = false;
   protected $followLocation = false;
   protected $headers = array();
-  protected $userAgent = 'EpiOAuth (http://github.com/jmathai/twitter-async/tree/)';
+  protected $userAgent = 'EpiOAuth';
   protected $connectionTimeout = 5;
   protected $requestTimeout = 30;
 
@@ -52,12 +53,6 @@ class EpiOAuth
     $token = $token ? $token : $this->getRequestToken($params);
     if (is_object($token)) $token = $token->oauth_token;
     return $this->getUrl($this->authorizeUrl) . '?oauth_token=' . $token;
-  }
-
-  // DEPRECATED in favor of getAuthorizeUrl()
-  public function getAuthorizationUrl($token = null)
-  { 
-    return $this->getAuthorizeUrl($token);
   }
 
   public function getRequestToken($params = null)
@@ -130,7 +125,7 @@ class EpiOAuth
     $this->callback = $callback;
   }
 
-  public function useSSL($use = false)
+  public function useSSL($use = true)
   {
     $this->useSSL = (bool)$use;
   }
@@ -266,8 +261,10 @@ class EpiOAuth
     curl_setopt($ch, CURLOPT_POST, 1);
     // php's curl extension automatically sets the content type
     // based on whether the params are in string or array form
-    if($isMultipart)
-      curl_setopt($ch, CURLOPT_POSTFIELDS, $params['request']);
+    if($isMultipart) {
+      $params['request']['status'] = urldecode($params['request']['status']);
+      curl_setopt($ch, CURLOPT_POSTFILEDS, $params['request']);
+    }
     else
       curl_setopt($ch, CURLOPT_POSTFIELDS, $this->buildHttpQueryRaw($params['request']));
     $resp = $this->executeCurl($ch);
@@ -324,6 +321,11 @@ class EpiOAuth
     {
       $oauth['oauth_verifier'] = $params['oauth_verifier'];
       unset($params['oauth_verifier']);
+    }
+    if(isset($params['oauth_callback']))
+    {
+      $oauth['oauth_callback'] = $params['oauth_callback'];
+      unset($params['oauth_callback']);
     }
     $oauth['oauth_version'] = $this->version;
     // encode all oauth values

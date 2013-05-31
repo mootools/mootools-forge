@@ -9,3 +9,8 @@ all:
     default_image:      gravatar-48.png
     cache_dir_name:     avatars
     cache_expiration:   3 days
+
+  sfXssSafePlugin:
+    definition:
+      HTML:
+        DefinitionID:   default

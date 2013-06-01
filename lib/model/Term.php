@@ -7,6 +7,10 @@ class Term extends BaseTerm
 		return $this->getTitle();
 	}
 
+	public function getPluginsJoinPluginTag($criteria = null, $con = null, $join_behavior = Criteria::LEFT_JOIN){
+		return $this->getPluginsJoinPluginTagRelatedByStableTagId($criteria, $con, $join_behavior);
+	}
+
 }
 
 $columns_map = array('from' => TermPeer::TITLE, 'to' => TermPeer::SLUG);

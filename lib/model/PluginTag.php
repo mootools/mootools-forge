@@ -3,6 +3,46 @@
 class PluginTag extends BasePluginTag
 {
 
+	public function addPlugin(Plugin $l){
+		return $this->addPluginRelatedByStableTagId($l);
+	}
+
+	public function clearPlugins(){
+		return $this->clearPluginsRelatedByStableTagId();
+	}
+
+	public function countPlugins(Criteria $criteria = null, $distinct = false, PropelPDO $con = null){
+		return $this->countPluginsRelatedByStableTagId($criteria, $distinct, $con);
+	}
+
+	public function getPlugin(PropelPDO $con = null){
+		return $this->getPluginRelatedByPluginId($con);
+	}
+
+	public function getPlugins($criteria = null, PropelPDO $con = null){
+		return $this->getPluginsRelatedByStableTagId($criteria, $con);
+	}
+
+	public function getPluginsJoinAuthor($criteria = null, $con = null, $join_behavior = Criteria::LEFT_JOIN){
+		return $this->getPluginsRelatedByStableTagIdJoinAuthor($criteria, $con, $join_behavior);
+	}
+
+	public function getPluginsJoinTerm($criteria = null, $con = null, $join_behavior = Criteria::LEFT_JOIN){
+		return $this->getPluginsRelatedByStableTagIdJoinTerm($criteria, $con, $join_behavior);
+	}
+
+	public function initPlugins($overrideExisting = true){
+		return $this->initPluginsRelatedByStableTagId($overrideExisting);
+	}
+
+	public function setPlugin(Plugin $v = null){
+		return $this->setPluginRelatedByPluginId($v);
+	}
+
+	public function setPlugins(PropelCollection $plugins, PropelPDO $con = null){
+		return $this->setPluginsRelatedByStableTagId($plugins, $con);
+	}
+
 	public function __toString(){
 		return $this->getName();
 	}

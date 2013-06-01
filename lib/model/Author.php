@@ -7,6 +7,10 @@ class Author extends BaseAuthor
 		return $this->getUsername();
 	}
 
+	public function getPluginsJoinPluginTag($criteria = null, $con = null, $join_behavior = Criteria::LEFT_JOIN){
+		return $this->getPluginsJoinPluginTagRelatedByStableTagId($criteria, $con, $join_behavior);
+	}
+
 	public function save(PropelPDO $con = null){
 		# Unconfirm email upon change.
 		if (!$this->isNew() && in_array(AuthorPeer::EMAIL, $this->modifiedColumns)){

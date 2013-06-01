@@ -3,6 +3,38 @@
 class Plugin extends BasePlugin
 {
 
+	public function addPluginTag(PluginTag $l){
+		return $this->addPluginTagRelatedByPluginId($l);
+	}
+
+	public function clearPluginTags(){
+		return $this->clearPluginTagsRelatedByPluginId();
+	}
+
+	public function countPluginTags(Criteria $criteria = null, $distinct = false, PropelPDO $con = null){
+		return $this->countPluginTagsRelatedByPluginId($criteria, $distinct, $con);
+	}
+
+	public function getPluginTag(PropelPDO $con = null){
+		return $this->getPluginTagRelatedByStableTagId($con);
+	}
+
+	public function getPluginTags($criteria = null, PropelPDO $con = null){
+		return $this->getPluginTagsRelatedByPluginId($criteria, $con);
+	}
+
+	public function initPluginTags($overrideExisting = true){
+		return $this->initPluginTagsRelatedByPluginId($overrideExisting);
+	}
+
+	public function setPluginTag(PluginTag $v = null){
+		return $this->setPluginTagRelatedByStableTagId($v);
+	}
+
+	public function setPluginTags(PropelCollection $pluginTags, PropelPDO $con = null){
+		return $this->setPluginTagsRelatedByPluginId($pluginTags, $con);
+	}
+
 	public function isOfficial(){
 		return $this->getOfficial();
 	}

@@ -3,6 +3,7 @@
 }
 
 h2.green { color: #78ba91; }
+h3.blue { color: #6b7b95; font-weight: bold; }
 .breadcrumb { margin-bottom: 5px; font-size: 11px; }
 
 label { font-weight: normal; }
@@ -19,12 +20,13 @@ dl.table dt { float: left; display: block; width: 35%; margin: 0; }
 
 .input_submit input.input_submit_disabled { cursor: default; background: #E3E3E3; color: #B6B6B6 !important; text-shadow: 0 1px 0 #fff; border-color: #D6D6D6; }
 
-#project h2 { margin-bottom: 0.5em; }
+#project h1, #project h2, #project h3, #project h4, #project h5, #project h6 { font-weight: bold; margin-bottom: 0.5em; }
 #project h2 .version { font-size: 80%; float: right; font-weight: normal; }
+#project ul, #project ol { padding-left: 1.5em; }
 #project-desc #thumb { float: right; margin-left: 15px; }
 #project-desc p { margin-bottom: 15px; }
 
-#login-other-twitter { margin-bottom: 5px; }
+#login-other-twitter { margin-bottom: 5px; margin-top: 10px; }
 
 .link-boxes { text-align: center; }
 .link-boxes a { font-family: Arial Rounded, Helvetica, Tahoma; background: #c0c0c0; border: 1px solid #999; color: #333; text-shadow: 0 1px 0 #fff; border-radius: 10px; -webkit-border-radius: 10px; -moz-border-radius: 10px; text-transform: uppercase; font-weight: bold; padding: 5px 8px; cursor: pointer; text-decoration: none; display: inline-block; width: 110px; text-align: center; font-size: 14px; -webkit-box-shadow: rgba(0, 0, 0, 0.3) 0px 1px 8px; -moz-box-shadow: rgba(0, 0, 0, 0.3) 0px 1px 8px; margin: 0 10px; height: 20px; }
@@ -67,14 +69,11 @@ dl.table dt { float: left; display: block; width: 35%; margin: 0; }
 .authors li .badge { top: -8px; right: 15px; }
 .authors li:hover .badge { background-position: bottom; color: #fff; text-shadow: 0 1px 0 #074E99; }
 
-.tags-list { overflow: hidden; zoom: 1; margin: 0; }
+.tags-list, #project .tags-list { overflow: hidden; zoom: 1; margin: 0; padding: 0; }
 .tags-list li { list-style-type: none; }
 .tags-list li a { float: left; display: block; color: #464646; background: #DAE0EA; border-radius: 8px; -webkit-border-radius: 8px; -moz-border-radius: 8px; margin-right: 5px; margin-bottom: 5px; font-size: 11px; padding: 3px 8px 2px; text-decoration: none; font-weight: bold; }
 .tags-list li a:hover { background: #CBD0D8; }
 
-.versions-list { 
-	max-height: 180px;
-}
 .versions-list li, .versions-list li a { display: inline-block; }
 .versions-list li a {
 	display: inline-block;
@@ -113,13 +112,15 @@ dl.table dt { float: left; display: block; width: 35%; margin: 0; }
 #login-form { }
 #login-form li { overflow: hidden; }
 #login-form label { }
-#login-form input.text, #q { background: #eee; border: 1px solid #ccc; padding: 2px 4px; width: 95px; display: block; }
+#login-form input.text { width: 121px; display: block; }
 #login-form .input_submit { float: right; margin-top: -24px; }
 #login-form .input_submit input { font-size: 9px; padding: 3px 8px; line-height: 10px; }
 
+#sidebar h4 {margin-top:1em;}
+#sidebar ul {margin-left:1em;}
 #sidebar .required label { font-weight: normal; }
 
-#q { padding: 5px 4px; display: inline; width: 121px; }
+#q { width: 121px; }
 #search_field, #search_submit { display: inline; }
 
 #search-form { overflow: hidden; zoom: 1; }
@@ -149,10 +150,10 @@ dl.table dt { float: left; display: block; width: 35%; margin: 0; }
 .input_submit { position: relative; } 
 .input_submit .loader { top: 7px; left: 0; }
 
+.horizontal-form ul { margin-bottom: 1.5em; }
 .horizontal-form li { margin: 0; display: inline; padding-right: 20px; line-height: 30px; vertical-align: middle; }
-.horizontal-form .input_select select { background: #eee; border: 1px solid #ccc; }
-.horizontal-form .input_text input { width: 80px; font-size: 11px; padding: 4px; background: #eee; border: 1px solid #ccc; }
-.horizontal-form .input_check input { width: auto; height: auto; }
+.horizontal-form #search { float: none; margin-left: 0; }
+.horizontal-form .input_text input { width: 80px; }
 
 .screenshots-list li { float: left; list-style: none; }
 .screenshots-list li a { display: block; width: 120px; height: 85px; border: 1px solid rgb(153, 153, 153); background: #fff; margin-right: 15px; margin-bottom: 10px; float: left; padding: 1px; }

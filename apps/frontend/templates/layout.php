@@ -34,7 +34,7 @@
 				<ul>
 					<li><a href="/blog">Blog</a></li>
 					<li><a href="http://github.com/mootools">Contribute</a></li>
-					<li><a href="<?php echo url_for('@homepage') ?>">Forge</a></li>
+					<li class="selected"><a href="<?php echo url_for('@homepage') ?>">Forge</a></li>
 				</ul>
 				<form id="search" role="search" method="get" action="/">
 					<label for="search-field">

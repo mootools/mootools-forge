@@ -2,7 +2,7 @@
 	<div class="clearfix wrapper">
 		<div>
 			<h2><a href="<?php echo url_for('@homepage'); ?>">Forge</a></h2>
-			<p>Welcome to the MooTools Forge, the resource for plugins for <a href="http://www.mootools.net/core">MooTools Core</a> and <a href="http://www.mootools.net/more">More</a>.</p>
+			<p>Welcome to the MooTools Forge, the resource for plugins for <a href="/core">MooTools Core</a> and <a href="/more">More</a>.</p>
 			<p>For plugins, applications and modules for the new line of MooTools modules, you are encouraged to use the <a href="https://npmjs.org">the NPM registry</a> instead.</p>
 		</div>
 	</div>

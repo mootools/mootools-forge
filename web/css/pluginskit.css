@@ -2,6 +2,10 @@
 	margin-bottom: 1.3em;
 }
 
+#header { padding-bottom: 1.5em; margin-bottom: 1.5em; }
+#header h2 { margin-bottom: 0.5em; }
+#header p a { font-size: 1em; padding-bottom: 0.5em; }
+
 h2.green { color: #78ba91; }
 h3.blue { color: #6b7b95; font-weight: bold; }
 .breadcrumb { margin-bottom: 5px; font-size: 11px; }

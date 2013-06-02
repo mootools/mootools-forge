@@ -13,7 +13,9 @@
 class sfCacheSessionStorage extends sfStorage
 {
   protected
+    $id          = null,
     $context     = null,
+    $dispatcher  = null,
     $request     = null,
     $response    = null,
     $cache       = null,
@@ -31,19 +33,27 @@ class sfCacheSessionStorage extends sfStorage
    *                        session_cookie_secure [required] send only if secure connection
    *                        session_cookie_http_only [required] accessible only via http protocol
    *
-   * @return bool true, if initialization completes successfully, otherwise false.
+   * @return bool true, when initialization completes successfully.
    *
    * @throws <b>sfInitializationException</b> If an error occurs while initializing this Storage.
    */
   public function initialize($options = array())
   {
     // initialize parent
+    
+    // bc with a slightly different name formerly used here, let's be
+    // compatible with the base class name for it from here on out
+    if (isset($options['session_cookie_http_only']))
+    {
+      $options['session_cookie_httponly'] = $options['session_cookie_http_only'];
+    }
+    
     parent::initialize(array_merge(array('session_name' => 'sfproject',
                                          'session_cookie_lifetime' => '+30 days',
                                          'session_cookie_path' => '/',
                                          'session_cookie_domain' => null,
                                          'session_cookie_secure' => false,
-                                         'session_cookie_http_only' => true,
+                                         'session_cookie_httponly' => true,
                                          'session_cookie_secret' => 'sf$ecret'), $options));
 
     // create cache instance
@@ -106,20 +116,36 @@ class sfCacheSessionStorage extends sfStorage
                                   $this->options['session_cookie_path'],
                                   $this->options['session_cookie_domain'],
                                   $this->options['session_cookie_secure'],
-                                  $this->options['session_cookie_http_only']);
+                                  $this->options['session_cookie_httponly']);
 
        $this->data = array();
     }
     else
     {
-      // load data from cache
-      $this->data = $this->cache->get($this->id, array());
+      // load data from cache. Watch out for the default case. We could
+      // serialize(array()) as the default to the call but that would be a performance hit
+      $raw = $this->cache->get($this->id, null);
+      if (is_null($raw))
+      {
+        $this->data = array();
+      }
+      elseif (is_array($raw))
+      {
+        // probably an old cached value (BC)
+        $this->data = $raw;
+      }
+      else
+      {
+        $this->data = unserialize($raw);
+      }
 
       if(sfConfig::get('sf_logging_enabled'))
       {
         $this->dispatcher->notify(new sfEvent($this, 'application.log', array('Restored previous session')));
       }
     }
+    session_id($this->id);
+    $this->response->addCacheControlHttpHeader('private');
 
     return true;
   }
@@ -204,10 +230,12 @@ class sfCacheSessionStorage extends sfStorage
     }
 
     // generate session id
-    $this->id = md5(rand(0, 999999).$_SERVER['REMOTE_ADDR'].$_SERVER['HTTP_USER_AGENT'].$this->options['session_cookie_secret']);
+    $ua = isset($_SERVER['HTTP_USER_AGENT']) ? $_SERVER['HTTP_USER_AGENT'] : 'ua';
+    
+    $this->id = md5(rand(0, 999999).$_SERVER['REMOTE_ADDR'].$ua.$this->options['session_cookie_secret']);
 
     // save data to cache
-    $this->cache->set($this->id, $this->data);
+    $this->cache->set($this->id, serialize($this->data));
 
     // update session id in signed cookie
     $this->response->setCookie($this->options['session_name'],
@@ -216,8 +244,8 @@ class sfCacheSessionStorage extends sfStorage
                                $this->options['session_cookie_path'],
                                $this->options['session_cookie_domain'],
                                $this->options['session_cookie_secure'],
-                               $this->options['session_cookie_http_only']);
-
+                               $this->options['session_cookie_httponly']);
+    session_id($this->id);
     return true;
   }
 
@@ -245,11 +273,10 @@ class sfCacheSessionStorage extends sfStorage
     // only update cache if session has changed
     if($this->dataChanged === true)
     {
-      $this->cache->set($this->id, $this->data);
+      $this->cache->set($this->id, serialize($this->data));
       if(sfConfig::get('sf_logging_enabled'))
       {
         $this->dispatcher->notify(new sfEvent($this, 'application.log', array('Storing session to cache')));
-        // $this->dispatcher->notify(new sfEvent($this, 'application.log', array(var_export($this->data, true))));
       }
     }
   }

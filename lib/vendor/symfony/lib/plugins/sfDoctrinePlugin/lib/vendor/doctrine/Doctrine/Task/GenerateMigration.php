@@ -16,7 +16,7 @@
  *
  * This software consists of voluntary contributions made by many individuals
  * and is licensed under the LGPL. For more information, see
- * <http://www.phpdoctrine.org>.
+ * <http://www.doctrine-project.org>.
  */
 
 /**
@@ -25,7 +25,7 @@
  * @package     Doctrine
  * @subpackage  Task
  * @license     http://www.opensource.org/licenses/lgpl-license.php LGPL
- * @link        www.phpdoctrine.org
+ * @link        www.doctrine-project.org
  * @since       1.0
  * @version     $Revision: 2761 $
  * @author      Jonathan H. Wage <jwage@mac.com>
@@ -39,7 +39,7 @@ class Doctrine_Task_GenerateMigration extends Doctrine_Task
     
     public function execute()
     {
-        Doctrine::generateMigrationClass($this->getArgument('class_name'), $this->getArgument('migrations_path'));
+        Doctrine_Core::generateMigrationClass($this->getArgument('class_name'), $this->getArgument('migrations_path'));
         
         $this->notify(sprintf('Generated migration class: %s successfully to %s', $this->getArgument('class_name'), $this->getArgument('migrations_path')));
     }

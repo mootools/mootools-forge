@@ -1,6 +1,6 @@
 <?php
 /*
- *  $Id: Reporter.php 5801 2009-06-02 17:30:27Z piccoloprincipe $
+ *  $Id: Reporter.php 7490 2010-03-29 19:53:27Z jwage $
  *
  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
  * "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT
@@ -16,7 +16,7 @@
  *
  * This software consists of voluntary contributions made by many individuals
  * and is licensed under the LGPL. For more information, see
- * <http://www.phpdoctrine.org>.
+ * <http://www.doctrine-project.org>.
  */
 
 /**
@@ -26,20 +26,26 @@
  * @subpackage  Export
  * @author      Konsta Vesterinen <kvesteri@cc.hut.fi>
  * @license     http://www.opensource.org/licenses/lgpl-license.php LGPL
- * @link        www.phpdoctrine.org
+ * @link        www.doctrine-project.org
  * @since       1.0
- * @version     $Revision: 5801 $
+ * @version     $Revision: 7490 $
  */
-class Doctrine_Export_Reporter implements IteratorAggregate {
+class Doctrine_Export_Reporter implements IteratorAggregate
+{
     protected $messages = array();
 
-    public function add($code, $message) {
+    public function add($code, $message)
+    {
         $this->messages[] = array($code, $message);
     }
-    public function pop() {
+
+    public function pop()
+    {
         return array_pop($this->messages);
     }
-    public function getIterator() {
+
+    public function getIterator()
+    {
         return new ArrayIterator($this->messages);
     }
 }

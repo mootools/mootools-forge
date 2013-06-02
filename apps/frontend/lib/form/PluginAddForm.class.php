@@ -14,7 +14,7 @@ class PluginAddForm extends PluginForm
     unset($this['downloads_count'], $this['comments_count'], $this['slug'], $this['official'], $this['created_at'], $this['retrieved_at'], $this['updated_at'], $this['description_clean']);		
 		unset($this->widgetSchema);
 		
-		$this->setWidgets(array('url' => new sfWidgetFormInput));		
+		$this->setWidgets(array('url' => new sfWidgetFormInputText));
 		
 		unset($this->validatorSchema['description_clean']);
 		

@@ -40,6 +40,9 @@ default:
 
   view_cache_manager:
     class: sfViewCacheManager
+    param:
+      cache_key_use_vary_headers: true
+      cache_key_use_host_name:    true
 
   view_cache:
     class: sfFileCache
@@ -53,7 +56,7 @@ default:
     class: sfI18N
     param:
       source:               XLIFF
-      debug:                off
+      debug:                false
       untranslated_prefix:  "[T]"
       untranslated_suffix:  "[/T]"
       cache:
@@ -87,10 +90,25 @@ default:
           param:
             level: debug
             condition:       %SF_WEB_DEBUG%
-            xdebug_logging:  true
+            xdebug_logging:  false
             web_debug_class: sfWebDebug
         sf_file_debug:
           class: sfFileLogger
           param:
             level: debug
             file: %SF_LOG_DIR%/%SF_APP%_%SF_ENVIRONMENT%.log
+
+  mailer:
+    class: sfMailer
+    param:
+      logging:           %SF_LOGGING_ENABLED%
+      charset:           %SF_CHARSET%
+      delivery_strategy: realtime
+      transport:
+        class: Swift_SmtpTransport
+        param:
+          host:       localhost
+          port:       25
+          encryption: ~
+          username:   ~
+          password:   ~

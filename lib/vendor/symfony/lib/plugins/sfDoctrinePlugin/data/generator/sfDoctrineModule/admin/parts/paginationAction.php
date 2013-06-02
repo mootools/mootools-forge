@@ -22,7 +22,7 @@
   {
     $tableMethod = $this->configuration->getTableMethod();
 <?php if ($this->configuration->hasFilterForm()): ?>
-    if (is_null($this->filters))
+    if (null === $this->filters)
     {
       $this->filters = $this->configuration->getFilterForm($this->getFilters());
     }
@@ -31,12 +31,12 @@
 
     $query = $this->filters->buildQuery($this->getFilters());
 <?php else: ?>
-    $query = Doctrine::getTable('<?php echo $this->getModelClass() ?>')
+    $query = Doctrine_Core::getTable('<?php echo $this->getModelClass() ?>')
       ->createQuery('a');
 
     if ($tableMethod)
     {
-      $query = Doctrine::getTable('<?php echo $this->getModelClass() ?>')->$tableMethod($query);
+      $query = Doctrine_Core::getTable('<?php echo $this->getModelClass() ?>')->$tableMethod($query);
     }
 <?php endif; ?>
 

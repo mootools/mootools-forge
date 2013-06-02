@@ -16,7 +16,7 @@ require_once(dirname(__FILE__).'/sfPropelBaseTask.class.php');
  * @package    symfony
  * @subpackage propel
  * @author     Fabien Potencier <fabien.potencier@symfony-project.com>
- * @version    SVN: $Id: sfPropelGenerateAdminTask.class.php 15470 2009-02-12 21:27:18Z Kris.Wallsmith $
+ * @version    SVN: $Id: sfPropelGenerateAdminTask.class.php 28809 2010-03-26 17:19:58Z Jonathan.Wage $
  */
 class sfPropelGenerateAdminTask extends sfPropelBaseTask
 {
@@ -36,6 +36,7 @@ class sfPropelGenerateAdminTask extends sfPropelBaseTask
       new sfCommandOption('singular', null, sfCommandOption::PARAMETER_REQUIRED, 'The singular name', null),
       new sfCommandOption('plural', null, sfCommandOption::PARAMETER_REQUIRED, 'The plural name', null),
       new sfCommandOption('env', null, sfCommandOption::PARAMETER_REQUIRED, 'The environment', 'dev'),
+      new sfCommandOption('actions-base-class', null, sfCommandOption::PARAMETER_REQUIRED, 'The base class for the actions', 'sfActions'),
     ));
 
     $this->namespace = 'propel';
@@ -60,7 +61,7 @@ The task creates a module in the [%frontend%|COMMENT] application for the
 [%article%|COMMENT] route definition found in [routing.yml|COMMENT].
 
 For the filters and batch actions to work properly, you need to add
-the [wildcard|COMMENT] option to the route:
+the [with_wildcard_routes|COMMENT] option to the route:
 
   article:
     class: sfPropelRouteCollection
@@ -100,29 +101,22 @@ EOF;
     $model = $arguments['route_or_model'];
     $name = strtolower(preg_replace(array('/([A-Z]+)([A-Z][a-z])/', '/([a-z\d])([A-Z])/'), '\\1_\\2', $model));
 
+    if (isset($options['module']))
+    {
+      $route = $this->getRouteFromName($name);
+      if ($route && !$this->checkRoute($route, $model, $options['module']))
+      {
+        $name .= '_'.$options['module'];
+      }
+    }
+
     $routing = sfConfig::get('sf_app_config_dir').'/routing.yml';
     $content = file_get_contents($routing);
     $routesArray = sfYaml::load($content);
 
     if (!isset($routesArray[$name]))
     {
-      $class = $model.'MapBuilder';
-      $map = new $class();
-      if (!$map->isBuilt())
-      {
-        $map->doBuild();
-      }
-
-      $primaryKey = 'id';
-      foreach ($map->getDatabaseMap()->getTable(constant(constant($model.'::PEER').'::TABLE_NAME'))->getColumns() as $column)
-      {
-        if ($column->isPrimaryKey())
-        {
-          $primaryKey = call_user_func(array(constant($model.'::PEER'), 'translateFieldName'), $column->getPhpName(), BasePeer::TYPE_PHPNAME, BasePeer::TYPE_FIELDNAME);
-          break;
-        }
-      }
-
+      $primaryKey = $this->getPrimaryKey($model);
       $module = $options['module'] ? $options['module'] : $name;
       $content = sprintf(<<<EOF
 %s:
@@ -130,15 +124,20 @@ EOF;
   options:
     model:                %s
     module:               %s
-    prefix_path:          %s
+    prefix_path:          /%s
     column:               %s
     with_wildcard_routes: true
 
 
 EOF
-      , $name, $model, $module, $module, $primaryKey).$content;
+      , $name, $model, $module, isset($options['plural']) ? $options['plural'] : $module, $primaryKey).$content;
 
-      file_put_contents($routing, $content);
+      $this->logSection('file+', $routing);
+
+      if (false === file_put_contents($routing, $content))
+      {
+        throw new sfCommandException(sprintf('Unable to write to file, %s.', $routing));
+      }
     }
 
     $arguments['route'] = $this->getRouteFromName($name);
@@ -162,29 +161,20 @@ EOF
     // execute the propel:generate-module task
     $task = new sfPropelGenerateModuleTask($this->dispatcher, $this->formatter);
     $task->setCommandApplication($this->commandApplication);
-
-    $taskOptions = array(
-      '--theme='.$options['theme'],
-      '--env='.$options['env'],
-      '--route-prefix='.$routeOptions['name'],
-      '--with-propel-route',
-      '--generate-in-cache',
-      '--non-verbose-templates',
-    );
-
-    if (!is_null($options['singular']))
-    {
-      $taskOptions[] = '--singular='.$options['singular'];
-    }
-
-    if (!is_null($options['plural']))
-    {
-      $taskOptions[] = '--plural='.$options['plural'];
-    }
+    $task->setConfiguration($this->configuration);
 
     $this->logSection('app', sprintf('Generating admin module "%s" for model "%s"', $module, $model));
 
-    return $task->run(array($arguments['application'], $module, $model), $taskOptions);
+    return $task->run(array($arguments['application'], $module, $model), array(
+      'theme'                 => $options['theme'],
+      'route-prefix'          => $routeOptions['name'],
+      'with-propel-route'     => true,
+      'generate-in-cache'     => true,
+      'non-verbose-templates' => true,
+      'singular'              => $options['singular'],
+      'plural'                => $options['plural'],
+      'actions-base-class'    => $options['actions-base-class'],
+    ));
   }
 
   protected function getRouteFromName($name)
@@ -198,5 +188,47 @@ EOF
     }
 
     return false;
+  }
+
+  /**
+   * Checks whether a route references a model and module.
+   *
+   * @param mixed  $route  A route collection
+   * @param string $model  A model name
+   * @param string $module A module name
+   *
+   * @return boolean
+   */
+  protected function checkRoute($route, $model, $module)
+  {
+    if ($route instanceof sfPropelRouteCollection)
+    {
+      $options = $route->getOptions();
+      return $model == $options['model'] && $module == $options['module'];
+    }
+
+    return false;
+  }
+
+  /**
+   * Returns the name of the model's primary key column.
+   *
+   * @param string $model A model name
+   *
+   * @return string A column name
+   */
+  protected function getPrimaryKey($model)
+  {
+    $peer = constant($model.'::PEER');
+    $map = call_user_func(array($peer, 'getTableMap'));
+
+    if (!$pks = $map->getPrimaryKeys())
+    {
+      return 'id';
+    }
+
+    $column = array_shift($pks);
+
+    return call_user_func(array($peer, 'translateFieldName'), $column->getPhpName(), BasePeer::TYPE_PHPNAME, BasePeer::TYPE_FIELDNAME);
   }
 }

@@ -1,6 +1,6 @@
 <?php
 
-class SearchForm extends sfForm
+class SearchForm extends BaseForm
 {
 	
 	public function __construct($defaults = array(), $options = array(), $CSRFSecret = null){
@@ -9,7 +9,7 @@ class SearchForm extends sfForm
 	
 	public function configure(){
 		$this->setWidgets(array(
-			'q' => new sfWidgetFormInput()
+			'q' => new sfWidgetFormInputText()
 		));
 		$this->setValidators(array(
 			'q' => new sfValidatorString(array('max_length' => 100, 'required' => true))

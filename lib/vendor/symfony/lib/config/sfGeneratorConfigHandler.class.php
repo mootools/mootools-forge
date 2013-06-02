@@ -14,7 +14,7 @@
  * @package    symfony
  * @subpackage config
  * @author     Fabien Potencier <fabien.potencier@symfony-project.com>
- * @version    SVN: $Id: sfGeneratorConfigHandler.class.php 13464 2008-11-28 15:45:07Z fabien $
+ * @version    SVN: $Id: sfGeneratorConfigHandler.class.php 28366 2010-03-03 14:46:07Z fabien $
  */
 class sfGeneratorConfigHandler extends sfYamlConfigHandler
 {
@@ -65,7 +65,7 @@ class sfGeneratorConfigHandler extends sfYamlConfigHandler
     $generatorParam = (isset($config['param']) ? $config['param'] : array());
 
     // hack to find the module name (look for the last /modules/ in path)
-    preg_match('#.*/modules/([^/]+)/#', $configFiles[0], $match);
+    preg_match('#.*/modules/([^/]+)/#', str_replace('\\', '/', $configFiles[0]), $match);
     $generatorParam['moduleName'] = $match[1];
 
     // compile data
@@ -79,22 +79,7 @@ class sfGeneratorConfigHandler extends sfYamlConfigHandler
 
   static public function getContent(sfGeneratorManager $generatorManager, $class, $parameters)
   {
-    $data = '';
-
-    // needed to maintain BC with the 1.0 admin generator
-    $r = new ReflectionClass($class);
-    if (
-      (class_exists('sfPropelAdminGenerator') && ('sfPropelAdminGenerator' == $class || $r->isSubclassOf(new ReflectionClass('sfPropelAdminGenerator'))))
-      ||
-      (class_exists('sfDoctrineAdminGenerator') && ('sfDoctrineAdminGenerator' == $class || $r->isSubclassOf(new ReflectionClass('sfDoctrineAdminGenerator'))))
-    )
-    {
-      $data .= "require sfConfig::get('sf_symfony_lib_dir').'/plugins/sfCompat10Plugin/config/config.php';\n";
-    }
-
-    $data .= $generatorManager->generate($class, $parameters);
-
-    return $data;
+    return $generatorManager->generate($class, $parameters);
   }
 
   /**

@@ -16,7 +16,7 @@
  *
  * This software consists of voluntary contributions made by many individuals
  * and is licensed under the LGPL. For more information, see
- * <http://www.phpdoctrine.org>.
+ * <http://www.doctrine-project.org>.
  */
 
 /**
@@ -27,7 +27,7 @@
  * @author      Konsta Vesterinen <kvesteri@cc.hut.fi>
  * @license     http://www.opensource.org/licenses/lgpl-license.php LGPL
  * @version     $Revision$
- * @link        www.phpdoctrine.org
+ * @link        www.doctrine-project.org
  * @since       1.0
  */
 class Doctrine_Search_File extends Doctrine_Search
@@ -42,7 +42,9 @@ class Doctrine_Search_File extends Doctrine_Search
         parent::__construct($options);
 
         if ( ! isset($this->_options['resource'])) {
-            $table = new Doctrine_Table('File', Doctrine_Manager::connection());
+            $conn = Doctrine_Manager::connection();
+            $tableClass = $conn->getAttribute(Doctrine_Core::ATTR_TABLE_CLASS);
+            $table = new $tableClass('File', $conn);
 
             $table->setColumn('url', 'string', 255, array('primary' => true));
         }
@@ -53,10 +55,12 @@ class Doctrine_Search_File extends Doctrine_Search
 
         $this->initialize($table);
     }
+
     public function buildRelation()
     {
     	
-    }	
+    }
+
     /**
      * indexes given directory
      *

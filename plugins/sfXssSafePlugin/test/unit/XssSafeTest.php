@@ -1,21 +1,12 @@
 <?php
-/**
- * Unit tests
- *
- * @author heristop
- */
 
-define('SF_ROOT_DIR',    realpath(dirname(__FILE__).'/../../../../'));
-define('SF_APP',         'frontend');
-define('SF_ENVIRONMENT', 'dev');
-define('SF_DEBUG',       true);
+require_once dirname(__FILE__).'/../../../../test/bootstrap/unit.php';
 
-require_once SF_ROOT_DIR.'/config/ProjectConfiguration.class.php';
-$configuration = ProjectConfiguration::getApplicationConfiguration(SF_APP, SF_ENVIRONMENT, SF_DEBUG);
-sfContext::createInstance($configuration);
-echo sprintf("Bootstrapping application \033[32m%s\033[0m in \033[32m%s\033[0m environment\n\n", SF_APP, SF_ENVIRONMENT);
+//$configuration = ProjectConfiguration::getApplicationConfiguration('frontend', 'sample', true);
+//$definitions = sfConfig::get('app_sfXssSafePlugin_definition');
+//var_export($definitions);
 
-require_once SF_ROOT_DIR.'/lib/symfony/vendor/lime/lime.php';
+$configuration = ProjectConfiguration::getApplicationConfiguration('frontend', 'test', true);
 
 // add filters to the default configuration
 $definitions = array(
@@ -34,7 +25,7 @@ $definitions = array(
     ),
   'HTML' =>
     array(
-      'DefinitionID' => 'allow flash movies',
+      'DefinitionID' => 'sample escape 1',
       'DefinitionRev' => 1
     ),
   'AutoFormat' =>
@@ -73,7 +64,7 @@ $definitions = array(
               'height*' => 'Pixels',
               'src*' => 'URI',
               'flashvars' => 'Text',
-              /*'allowscriptaccess' => 'Enum#never',*/
+              //'allowscriptaccess' => 'Enum#never',
               'enablejsurls' => 'Enum#false',
               'enablehref' => 'Enum#false',
               'allowfullscreen' => 'Text',
@@ -88,6 +79,26 @@ $definitions = array(
               'name' => 'Text'
             )
           )
+        ),
+      'Attribute' =>
+        array (
+          'a' =>
+          array (
+            'attr_name' => 'target',
+            'def' => 'Enum#_blank,_self,_target,_top',
+          ),
+          0 =>
+          array (
+            'tag' => 'a',
+            'attr_name' => 'bb',
+            'def' => 'Text',
+          ),
+          1 =>
+          array (
+            'tag' => 'a',
+            'attr_name' => 'cc',
+            'def' => 'Text',
+          ),
         )
     )
 );
@@ -162,7 +173,7 @@ $xsssafe_tests = array(
   ),
   'IMG Embedded commands 1' => array(
     'input'   => '<IMG SRC="http://www.thesiteyouareon.com/somecommand.php?somevariables=maliciouscode">',
-    'output'  => '<img src="http://www.thesiteyouareon.com/somecommand.php?somevariables=maliciouscode" alt="somecommand.php?somevariables=maliciouscode" />'
+    'output'  => '<img src="http://www.thesiteyouareon.com/somecommand.php?somevariables=maliciouscode" alt="somecommand.php?somevariables=maliciousc" />'
   ),
   'IMG STYLE w/expression' => array(
     'input'   => 'exp/*<XSS STYLE=\'no\xss:noxss("*//*"); xss:&#101;x&#x2F;*XSS*//*/* /pression(alert("XSS"))\'>',
@@ -401,7 +412,12 @@ $miscellaneous_tests = array(
 </object>',
     'output'  => '<embed src="/player/player.swf" flashvars="video=http://www.toppeo.com/flv/demospectacle4473EE7B_8003221.flv" quality="high" bgcolor="#000000" name="video_small" allowfullscreen="true" type="application/x-shockwave-flash" pluginspage="http://www.macromedia.com/go/getflashplayer" align="middle" height="370" width="417" />',
     'filter'  => true
-  )
+  ),
+  'Custom attributes' => array(
+    'input'   => '<a aa="toto" bb="toto">Text</a> <a target="_blank">blank</a> <a target="_none">none</a>',
+    'output'  => '<a bb="toto">Text</a> <a target="_blank">blank</a> <a>none</a>',
+    'filter'  => true
+  ),
 );
 
 $t = new lime_test(count($xsssafe_tests)+count($miscellaneous_tests)+2, new lime_output_color());

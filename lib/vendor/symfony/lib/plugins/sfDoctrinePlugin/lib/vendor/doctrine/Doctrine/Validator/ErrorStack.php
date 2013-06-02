@@ -1,6 +1,6 @@
 <?php
 /*
- *  $Id: ErrorStack.php 5801 2009-06-02 17:30:27Z piccoloprincipe $
+ *  $Id: ErrorStack.php 7490 2010-03-29 19:53:27Z jwage $
  *
  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
  * "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT
@@ -16,7 +16,7 @@
  *
  * This software consists of voluntary contributions made by many individuals
  * and is licensed under the LGPL. For more information, see
- * <http://www.phpdoctrine.org>.
+ * <http://www.doctrine-project.org>.
  */
 
 /**
@@ -27,9 +27,9 @@
  * @author      Konsta Vesterinen <kvesteri@cc.hut.fi>
  * @author      Roman Borschel <roman@code-factory.org>
  * @license     http://www.opensource.org/licenses/lgpl-license.php LGPL
- * @link        www.phpdoctrine.org
+ * @link        www.doctrine-project.org
  * @since       1.0
- * @version     $Revision: 5801 $
+ * @version     $Revision: 7490 $
  */
 class Doctrine_Validator_ErrorStack extends Doctrine_Access implements Countable, IteratorAggregate
 {
@@ -71,12 +71,13 @@ class Doctrine_Validator_ErrorStack extends Doctrine_Access implements Countable
      */
     public function add($invalidFieldName, $errorCode = 'general')
     {
-        // FIXME: In the future the error stack should contain nothing but validator objects
-        if (is_object($errorCode) && strpos(get_class($errorCode), 'Doctrine_Validator_') !== false) {
+        if (is_object($errorCode)) {
+            if ( ! ($errorCode instanceof Doctrine_Validator_Driver)) {
+                throw new Doctrine_Exception('Validators must be an instance of Doctrine_Validator_Driver');
+            }
             $validator = $errorCode;
             $this->_validators[$invalidFieldName][] = $validator;
-            $className = get_class($errorCode);
-            $errorCode = strtolower(substr($className, strlen('Doctrine_Validator_'), strlen($className)));
+            $errorCode = (string) $validator;
         }
 
         $this->_errors[$invalidFieldName][] = $errorCode;
@@ -91,6 +92,9 @@ class Doctrine_Validator_ErrorStack extends Doctrine_Access implements Countable
     {
         if (isset($this->_errors[$fieldName])) {
             unset($this->_errors[$fieldName]);
+            if (isset($this->_validators[$fieldName])) {
+                unset($this->_validators[$fieldName]);
+            }
         }
     }
 
@@ -136,6 +140,7 @@ class Doctrine_Validator_ErrorStack extends Doctrine_Access implements Countable
     public function clear()
     {
         $this->_errors = array();
+        $this->_validators = array();
     }
 
     /**

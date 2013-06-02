@@ -14,7 +14,7 @@
  * @package    symfony
  * @subpackage validator
  * @author     Fabien Potencier <fabien.potencier@symfony-project.com>
- * @version    SVN: $Id: sfValidatorFromDescription.class.php 9048 2008-05-19 09:11:23Z FabianLange $
+ * @version    SVN: $Id: sfValidatorFromDescription.class.php 28700 2010-03-23 11:57:16Z fabien $
  */
 class sfValidatorFromDescription extends sfValidatorDecorator
 {
@@ -52,7 +52,7 @@ class sfValidatorFromDescription extends sfValidatorDecorator
    */
   public function getValidator()
   {
-    if (is_null($this->validator))
+    if (null === $this->validator)
     {
       $this->validator = $this->reduceTokens($this->tokens, 'getValidator');
     }
@@ -351,8 +351,8 @@ class sfValidatorFDTokenOperator
   {
     return sprintf('new %s(array(%s, %s), %s)',
       $this->class,
-      in_array(get_class($tokenLeft), array('sfValidatorFDToken', 'sfValidatorFDTokenFilter')) ? $tokenLeft->asPhp() : $tokenLeft,
-      in_array(get_class($tokenRight), array('sfValidatorFDToken', 'sfValidatorFDTokenFilter')) ? $tokenRight->asPhp() : $tokenRight,
+      is_object($tokenLeft) && in_array(get_class($tokenLeft), array('sfValidatorFDToken', 'sfValidatorFDTokenFilter')) ? $tokenLeft->asPhp() : $tokenLeft,
+      is_object($tokenRight) && in_array(get_class($tokenRight), array('sfValidatorFDToken', 'sfValidatorFDTokenFilter')) ? $tokenRight->asPhp() : $tokenRight,
       implode(', ', array_map(create_function('$a', 'return var_export($a, true);'), $this->arguments))
     );
   }

@@ -1,6 +1,6 @@
 <?php
 /*
- *  $Id: Mysql.php 5801 2009-06-02 17:30:27Z piccoloprincipe $
+ *  $Id: Mysql.php 7644 2010-06-08 15:12:02Z jwage $
  *
  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
  * "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT
@@ -16,7 +16,7 @@
  *
  * This software consists of voluntary contributions made by many individuals
  * and is licensed under the LGPL. For more information, see
- * <http://www.phpdoctrine.org>.
+ * <http://www.doctrine-project.org>.
  */
 
 /**
@@ -25,8 +25,8 @@
  * @license     http://www.opensource.org/licenses/lgpl-license.php LGPL
  * @author      Konsta Vesterinen <kvesteri@cc.hut.fi>
  * @author      Lukas Smith <smith@pooteeweet.org> (PEAR MDB2 library)
- * @version     $Revision: 5801 $
- * @link        www.phpdoctrine.org
+ * @version     $Revision: 7644 $
+ * @link        www.doctrine-project.org
  * @since       1.0
  */
 class Doctrine_Import_Mysql extends Doctrine_Import
@@ -67,8 +67,8 @@ class Doctrine_Import_Mysql extends Doctrine_Import
     {
         $keyName = 'Key_name';
         $nonUnique = 'Non_unique';
-        if ($this->conn->getAttribute(Doctrine::ATTR_PORTABILITY) & Doctrine::PORTABILITY_FIX_CASE) {
-            if ($this->conn->getAttribute(Doctrine::ATTR_FIELD_CASE) == CASE_LOWER) {
+        if ($this->conn->getAttribute(Doctrine_Core::ATTR_FIELD_CASE) && ($this->conn->getAttribute(Doctrine_Core::ATTR_PORTABILITY) & Doctrine_Core::PORTABILITY_FIX_CASE)) {
+            if ($this->conn->getAttribute(Doctrine_Core::ATTR_FIELD_CASE) == CASE_LOWER) {
                 $keyName = strtolower($keyName);
                 $nonUnique = strtolower($nonUnique);
             } else {
@@ -159,8 +159,8 @@ class Doctrine_Import_Mysql extends Doctrine_Import
                           'alltypes'      => $decl['type'],
                           'ntype'         => $val['type'],
                           'length'        => $decl['length'],
-                          'fixed'         => $decl['fixed'],
-                          'unsigned'      => $decl['unsigned'],
+                          'fixed'         => (bool) $decl['fixed'],
+                          'unsigned'      => (bool) $decl['unsigned'],
                           'values'        => $values,
                           'primary'       => (strtolower($val['key']) == 'pri'),
                           'default'       => $val['default'],
@@ -186,8 +186,8 @@ class Doctrine_Import_Mysql extends Doctrine_Import
     {
         $keyName = 'Key_name';
         $nonUnique = 'Non_unique';
-        if ($this->conn->getAttribute(Doctrine::ATTR_PORTABILITY) & Doctrine::PORTABILITY_FIX_CASE) {
-            if ($this->conn->getAttribute(Doctrine::ATTR_FIELD_CASE) == CASE_LOWER) {
+        if ($this->conn->getAttribute(Doctrine_Core::ATTR_FIELD_CASE) && ($this->conn->getAttribute(Doctrine_Core::ATTR_PORTABILITY) & Doctrine_Core::PORTABILITY_FIX_CASE)) {
+            if ($this->conn->getAttribute(Doctrine_Core::ATTR_FIELD_CASE) == CASE_LOWER) {
                 $keyName = strtolower($keyName);
                 $nonUnique = strtolower($nonUnique);
             } else {

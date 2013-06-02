@@ -16,7 +16,7 @@
  *
  * This software consists of voluntary contributions made by many individuals
  * and is licensed under the LGPL. For more information, see
- * <http://www.phpdoctrine.org>.
+ * <http://www.doctrine-project.org>.
  */
 
 /**
@@ -25,7 +25,7 @@
  * @package     Doctrine
  * @subpackage  Task
  * @license     http://www.opensource.org/licenses/lgpl-license.php LGPL
- * @link        www.phpdoctrine.org
+ * @link        www.doctrine-project.org
  * @since       1.0
  * @version     $Revision: 2761 $
  * @author      Jonathan H. Wage <jwage@mac.com>
@@ -39,18 +39,18 @@ class Doctrine_Task_Dql extends Doctrine_Task
 
     public function execute()
     {
-        Doctrine::loadModels($this->getArgument('models_path'));
+        Doctrine_Core::loadModels($this->getArgument('models_path'));
 
         $dql = $this->getArgument('dql_query');
 
-        $query = new Doctrine_Query();
+        $query = Doctrine_Query::create();
 
         $params = $this->getArgument('params');
         $params = $params ? explode(',', $params):array();
 
         $this->notify('executing: "' . $dql . '" (' . implode(', ', $params) . ')');
 
-        $results = $query->query($dql, $params, Doctrine::HYDRATE_ARRAY);
+        $results = $query->query($dql, $params, Doctrine_Core::HYDRATE_ARRAY);
 
         $this->_printResults($results);
     }

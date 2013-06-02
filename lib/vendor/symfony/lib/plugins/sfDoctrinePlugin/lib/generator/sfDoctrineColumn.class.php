@@ -16,7 +16,7 @@
  * @subpackage doctrine
  * @author     Fabien Potencier <fabien.potencier@symfony-project.com>
  * @author     Jonathan H. Wage <jonwage@gmail.com>
- * @version    SVN: $Id: sfDoctrineAdminColumn.class.php 12356 2008-10-23 21:54:50Z Jonathan.Wage $
+ * @version    SVN: $Id: sfDoctrineColumn.class.php 24604 2009-11-30 21:00:46Z Jonathan.Wage $
  */
 class sfDoctrineColumn implements ArrayAccess
 {
@@ -126,7 +126,7 @@ class sfDoctrineColumn implements ArrayAccess
     $doctrineType = $this->getDoctrineType();
 
     // we simulate the CHAR/VARCHAR types to generate input_tags
-    if ('string' == $doctrineType && !is_null($this->getSize()) && $this->getSize() <= 255)
+    if ('string' == $doctrineType && null !== $this->getSize() && $this->getSize() <= 255)
     {
       return 'VARCHAR';
     }
@@ -173,6 +173,26 @@ class sfDoctrineColumn implements ArrayAccess
       return $this->definition[$key];
     } else {
       return false;
+    }
+  }
+
+  /**
+   * Returns a value from the current column's relation.
+   * 
+   * @param string $key
+   * 
+   * @return mixed|null
+   */
+  public function getRelationKey($key)
+  {
+    foreach ($this->table->getRelations() as $relation)
+    {
+      $local = (array) $relation['local'];
+      $local = array_map('strtolower', $local);
+      if (in_array(strtolower($this->name), $local))
+      {
+        return $relation[$key];
+      }
     }
   }
 
@@ -227,7 +247,9 @@ class sfDoctrineColumn implements ArrayAccess
 
     foreach ($this->table->getRelations() as $relation)
     {
-      if (strtolower($relation['local']) == strtolower($this->name))
+      $local = (array) $relation['local'];
+      $local = array_map('strtolower', $local);
+      if (in_array(strtolower($this->name), $local))
       {
         $this->foreignClassName = $relation['class'];
         return true;
@@ -260,7 +282,7 @@ class sfDoctrineColumn implements ArrayAccess
   {
     if ($this->isForeignKey())
     {
-      return Doctrine::getTable($this->foreignClassName);
+      return Doctrine_Core::getTable($this->foreignClassName);
     } else {
       return false;
     }

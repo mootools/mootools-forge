@@ -18,7 +18,7 @@
  * @author          Simone Carletti <weppos@weppos.net>
  * @copyright       2007 The Authors
  * @license         http://www.symfony-project.com/content/license.html
- * @version         SVN: $Id: sfMarkdown.class.php 1 2009-09-06 18:35:08Z rauchg@gmail.com $
+ * @version         SVN: $Id: sfMarkdown.class.php 4712 2007-07-25 07:46:57Z Simone.Carletti $
  */
 
 

@@ -3,7 +3,7 @@
 /*
  * This file is part of the symfony package.
  * (c) Fabien Potencier <fabien.potencier@symfony-project.com>
- * 
+ *
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
  */
@@ -14,9 +14,9 @@
  * @package    symfony
  * @subpackage widget
  * @author     Fabien Potencier <fabien.potencier@symfony-project.com>
- * @version    SVN: $Id: sfWidgetFormChoice.class.php 21991 2009-09-13 21:32:42Z FabianLange $
+ * @version    SVN: $Id: sfWidgetFormChoice.class.php 32835 2011-07-27 07:07:00Z fabien $
  */
-class sfWidgetFormChoice extends sfWidgetForm
+class sfWidgetFormChoice extends sfWidgetFormChoiceBase
 {
   /**
    * Constructor.
@@ -36,11 +36,11 @@ class sfWidgetFormChoice extends sfWidgetForm
    * @param array $options     An array of options
    * @param array $attributes  An array of default HTML attributes
    *
-   * @see sfWidgetForm
+   * @see sfWidgetFormChoiceBase
    */
   protected function configure($options = array(), $attributes = array())
   {
-    $this->addRequiredOption('choices');
+    parent::configure($options, $attributes);
 
     $this->addOption('multiple', false);
     $this->addOption('expanded', false);
@@ -50,7 +50,7 @@ class sfWidgetFormChoice extends sfWidgetForm
   }
 
   /**
-   * Sets the format for HTML id attributes. This is made avaiable to the renderer, 
+   * Sets the format for HTML id attributes. This is made avaiable to the renderer,
    * as this widget does not render itself, but delegates to the renderer instead.
    *
    * @param string $format  The format string (must contain a %s for the id placeholder)
@@ -63,6 +63,8 @@ class sfWidgetFormChoice extends sfWidgetForm
   }
 
   /**
+   * Renders the widget.
+   *
    * @param  string $name        The element name
    * @param  string $value       The value selected in this widget
    * @param  array  $attributes  An array of HTML attributes to be merged with the default HTML attributes
@@ -112,17 +114,6 @@ class sfWidgetFormChoice extends sfWidgetForm
     return $this->getRenderer()->getJavaScripts();
   }
 
-  public function getChoices()
-  {
-    $choices = $this->getOption('choices');
-    if ($choices instanceof sfCallable)
-    {
-      $choices = $choices->call();
-    }
-
-    return $choices;
-  }
-
   public function getRenderer()
   {
     if ($this->getOption('renderer'))
@@ -136,20 +127,18 @@ class sfWidgetFormChoice extends sfWidgetForm
       $class = sprintf('sfWidgetFormSelect%s', ucfirst($type));
     }
 
-    return new $class(array_merge(array('choices' => new sfCallable(array($this, 'getChoices'))), $this->options['renderer_options']), $this->getAttributes());
-  }
+    $options = $this->options['renderer_options'];
+    $options['choices'] = new sfCallable(array($this, 'getChoices'));
 
-  public function __clone()
-  {
-    if ($this->getOption('choices') instanceof sfCallable)
-    {
-      $callable = $this->getOption('choices')->getCallable();
-      $class = __CLASS__;
-      if (is_array($callable) && $callable[0] instanceof $class)
-      {
-        $callable[0] = $this;
-        $this->setOption('choices', new sfCallable($callable));
-      }
+    $renderer = new $class($options, $this->getAttributes());
+
+    // choices returned by the callback will already be translated (so we need to avoid double-translation)
+    if ($renderer->hasOption('translate_choices')) {
+        $renderer->setOption('translate_choices', false);
     }
+
+    $renderer->setParent($this->getParent());
+
+    return $renderer;
   }
 }

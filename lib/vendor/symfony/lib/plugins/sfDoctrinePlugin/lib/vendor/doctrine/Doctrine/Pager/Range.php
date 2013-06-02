@@ -16,7 +16,7 @@
  *
  * This software consists of voluntary contributions made by many individuals
  * and is licensed under the LGPL. For more information, see
- * <http://www.phpdoctrine.org>.
+ * <http://www.doctrine-project.org>.
  */
 
 /**
@@ -27,7 +27,7 @@
  * @subpackage  Pager
  * @license     http://www.opensource.org/licenses/lgpl-license.php LGPL
  * @version     $Revision$
- * @link        www.phpdoctrine.org
+ * @link        www.doctrine-project.org
  * @since       0.9
  */
 abstract class Doctrine_Pager_Range
@@ -60,7 +60,6 @@ abstract class Doctrine_Pager_Range
         }
     }
 
-
     /**
      * getPager
      *
@@ -72,7 +71,6 @@ abstract class Doctrine_Pager_Range
     {
         return $this->pager;
     }
-
 
     /**
      * setPager
@@ -93,7 +91,6 @@ abstract class Doctrine_Pager_Range
         $this->_initialize();
     }
 
-
     /**
      * getOptions
      *
@@ -105,7 +102,6 @@ abstract class Doctrine_Pager_Range
     {
         return $this->_options;
     }
-
 
     /**
      * getOption
@@ -125,7 +121,6 @@ abstract class Doctrine_Pager_Range
         );
     }
 
-
     /**
      * _setOptions
      *
@@ -138,7 +133,6 @@ abstract class Doctrine_Pager_Range
     {
         $this->_options = $options;
     }
-
 
     /**
      * isInRange

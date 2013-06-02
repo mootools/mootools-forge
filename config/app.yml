@@ -1,19 +1,28 @@
+# vim:filetype=yaml:expandtab:tabstop=2:shiftwidth=2:
+
 all:
-  
   title_prefix:         MooTools Forge |
-  
+
   webmaster:
     email:              demo@pluginskit.com
-    
-  screenshots:     
+
+  screenshots:
     path:               screenshots
     width:              120
     height:             85
     primarywidth:       185
     primaryheight:      78
-    
+
+  git:
+    command:            /usr/bin/git #make sure it's correct
+    storage_path:       <?php echo sfConfig::get('sf_root_dir') ?>/git/
+
+  twitter:
+    consumer_key:       FrPf98reevKh2BGKzqRoA #fill for your local environment
+    consumer_secret:    LiIKnnribXNt2VHXHXbAnZpeo0gtDVnA2gsSFSrWPsw #fill for your local environment
+
   sfImageTransformPlugin:
     default_adapter: GD
     mime_type:
       auto_detect: true
-      library: GD_MIME_Type    
+      library: GD_MIME_Type

@@ -1,16 +1,17 @@
 <?php
 /**
  * sfSphinx Doctrine pager class
+ * @package sfSphinxPlugin
  * @author  Kamil Rojewski <krojew@o2.pl>
  */
 
 class sfSphinxDoctrinePager extends sfPager
 {
   protected
-    $keyword                = null,
-    $sphinx                 = null,
-    $pk_column              = 'id',
-    $query                  = null;
+    $keyword   = null,
+    $sphinx    = null,
+    $pk_column = 'id',
+    $query     = null;
 
   /**
    * Constructor
@@ -75,7 +76,6 @@ class sfSphinxDoctrinePager extends sfPager
 
   /**
    * Get the query for the pager
-   *
    * @return Doctrine_Query $query
    */
   public function getQuery()
@@ -85,18 +85,15 @@ class sfSphinxDoctrinePager extends sfPager
 
   /**
    * Set query object for the pager
-   *
-   * @param Doctrine_Query $query
-   * @return void
+   * @param  Doctrine_Query $query
    */
-  public function setQuery($query)
+  public function setQuery(Doctrine_Query $query)
   {
     $this->query = $query;
   }
 
   /**
    * Get Pk column name
-   *
    * @return string
    */
   public function getPkColumn()
@@ -106,8 +103,7 @@ class sfSphinxDoctrinePager extends sfPager
 
   /**
    * Set Pk column name
-   *
-   * @param string $column
+   * @param  string $column
    * @return void
    */
   public function setPkColumn($column)
@@ -126,46 +122,43 @@ class sfSphinxDoctrinePager extends sfPager
     $this->sphinx->SetLimits($offset - 1, 1); // We only need one object
 
     $res = $this->sphinx->getRes();
-    if ($res['total_found'])
-    {
-      $id = $match['id'][0];
-
-      $query = clone $this->getQuery();
-      $result = $query->where($this->pk_column.' = ?', $id)->execute();
-      return $result;
-    }
-    else
+    if ($res['total_found'] == 0)
     {
       return null;
     }
+
+    $id = $match['id'][0];
+
+    $query = clone $this->getQuery();
+
+    return $query
+      ->where($this->getPkColumn() . ' = ?', $id)
+      ->fetchOne();
   }
 
   /**
-   * Return an array of result on the given page
-   * @return array
+   * Return results for given page
+   * @return Doctrine_Collection
    */
   public function getResults()
   {
     $res = $this->sphinx->getRes();
-    if ($res['total_found'])
-    {
-      // First we need to get the Ids
-      $ids = array();
-      foreach ($res['matches'] as $match)
-      {
-        $ids[] = $match['id'];
-      }
-      // Then we retrieve the objects correspoding to the found Ids
-      $query = clone $this->getQuery();
-      $result = $query->whereIn($this->pk_column, $ids)->execute();
-      return $result ? $result : array();
-    }
-    else
+    if ($res['total_found'] == 0)
     {
       return array();
     }
+    // First we need to get the Ids
+    $ids = array();
+    foreach ($res['matches'] as $match)
+    {
+      $ids[] = $match['id'];
+    }
+    // Then we retrieve the objects correspoding to the found Ids
+    $query = clone $this->getQuery();
 
+    return $query
+      ->whereIn($this->getPkColumn(), $ids)
+      ->orderBy('FIELD(' . $this->getPkColumn() . ', ' . implode(',', $ids) . ')')
+      ->execute();
   }
-
 }
-

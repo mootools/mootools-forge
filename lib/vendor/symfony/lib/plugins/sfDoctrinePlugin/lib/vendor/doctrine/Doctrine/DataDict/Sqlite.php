@@ -1,6 +1,6 @@
 <?php
 /*
- *  $Id: Sqlite.php 5801 2009-06-02 17:30:27Z piccoloprincipe $
+ *  $Id: Sqlite.php 7490 2010-03-29 19:53:27Z jwage $
  *
  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
  * "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT
@@ -16,7 +16,7 @@
  *
  * This software consists of voluntary contributions made by many individuals
  * and is licensed under the LGPL. For more information, see
- * <http://www.phpdoctrine.org>.
+ * <http://www.doctrine-project.org>.
  */
 
 /**
@@ -25,8 +25,8 @@
  * @license     http://www.opensource.org/licenses/lgpl-license.php LGPL
  * @author      Konsta Vesterinen <kvesteri@cc.hut.fi>
  * @author      Lukas Smith <smith@pooteeweet.org> (PEAR MDB2 library)
- * @version     $Revision: 5801 $
- * @link        www.phpdoctrine.org
+ * @version     $Revision: 7490 $
+ * @link        www.doctrine-project.org
  * @since       1.0
  */
 class Doctrine_DataDict_Sqlite extends Doctrine_DataDict
@@ -73,7 +73,7 @@ class Doctrine_DataDict_Sqlite extends Doctrine_DataDict
 
                 $fixed  = ((isset($field['fixed']) && $field['fixed']) || $field['type'] == 'char') ? true : false;
 
-                return $fixed ? ($length ? 'CHAR('.$length.')' : 'CHAR('.$this->conn->getAttribute(Doctrine::ATTR_DEFAULT_TEXTFLD_LENGTH).')')
+                return $fixed ? ($length ? 'CHAR('.$length.')' : 'CHAR('.$this->conn->varchar_max_length.')')
                     : ($length ? 'VARCHAR('.$length.')' : 'TEXT');
             case 'clob':
                 if ( ! empty($field['length'])) {
@@ -115,10 +115,10 @@ class Doctrine_DataDict_Sqlite extends Doctrine_DataDict
                     //($this->conn->options['fixed_float']+2).','.$this->conn->options['fixed_float'].')' : '');
             case 'decimal':
                 $length = !empty($field['length']) ? $field['length'] : 18;
-                $scale = !empty($field['scale']) ? $field['scale'] : $this->conn->getAttribute(Doctrine::ATTR_DECIMAL_PLACES);
+                $scale = !empty($field['scale']) ? $field['scale'] : $this->conn->getAttribute(Doctrine_Core::ATTR_DECIMAL_PLACES);
                 return 'DECIMAL('.$length.','.$scale.')';
         }
-        throw new Doctrine_DataDict_Exception('Unknown field type \'' . $field['type'] .  '\'.');
+        return $field['type'] . (isset($field['length']) ? '('.$field['length'].')':null);
     }
 
     /**
@@ -250,7 +250,8 @@ class Doctrine_DataDict_Sqlite extends Doctrine_DataDict
                 $length = null;
                 break;
             default:
-                throw new Doctrine_DataDict_Exception('unknown database attribute type: '.$dbType);
+                $type[] = $field['type'];
+                $length = isset($field['length']) ? $field['length']:null;
         }
 
         return array('type'     => $type,

@@ -16,7 +16,7 @@
  *
  * This software consists of voluntary contributions made by many individuals
  * and is licensed under the LGPL. For more information, see
- * <http://www.phpdoctrine.org>.
+ * <http://www.doctrine-project.org>.
  */
 
 /**
@@ -28,7 +28,7 @@
  * @package     Doctrine
  * @subpackage  Template
  * @license     http://www.opensource.org/licenses/lgpl-license.php LGPL
- * @link        www.phpdoctrine.org
+ * @link        www.doctrine-project.org
  * @since       1.0
  * @version     $Revision$
  * @author      Konsta Vesterinen <kvesteri@cc.hut.fi>
@@ -46,7 +46,7 @@ class Doctrine_Template_Timestampable extends Doctrine_Template
                                                     'format'        =>  'Y-m-d H:i:s',
                                                     'disabled'      =>  false,
                                                     'expression'    =>  false,
-                                                    'options'       =>  array()),
+                                                    'options'       =>  array('notnull' => true)),
                                 'updated' =>  array('name'          =>  'updated_at',
                                                     'alias'         =>  null,
                                                     'type'          =>  'timestamp',
@@ -54,18 +54,7 @@ class Doctrine_Template_Timestampable extends Doctrine_Template
                                                     'disabled'      =>  false,
                                                     'expression'    =>  false,
                                                     'onInsert'      =>  true,
-                                                    'options'       =>  array()));
-
-    /**
-     * __construct
-     *
-     * @param string $array 
-     * @return void
-     */
-    public function __construct(array $options = array())
-    {
-        $this->_options = Doctrine_Lib::arrayDeepMerge($this->_options, $options);
-    }
+                                                    'options'       =>  array('notnull' => true)));
 
     /**
      * Set table definition for Timestampable behavior
@@ -74,7 +63,7 @@ class Doctrine_Template_Timestampable extends Doctrine_Template
      */
     public function setTableDefinition()
     {
-        if( ! $this->_options['created']['disabled']) {
+        if ( ! $this->_options['created']['disabled']) {
             $name = $this->_options['created']['name'];
             if ($this->_options['created']['alias']) {
                 $name .= ' as ' . $this->_options['created']['alias'];
@@ -82,7 +71,7 @@ class Doctrine_Template_Timestampable extends Doctrine_Template
             $this->hasColumn($name, $this->_options['created']['type'], null, $this->_options['created']['options']);
         }
 
-        if( ! $this->_options['updated']['disabled']) {
+        if ( ! $this->_options['updated']['disabled']) {
             $name = $this->_options['updated']['name'];
             if ($this->_options['updated']['alias']) {
                 $name .= ' as ' . $this->_options['updated']['alias'];

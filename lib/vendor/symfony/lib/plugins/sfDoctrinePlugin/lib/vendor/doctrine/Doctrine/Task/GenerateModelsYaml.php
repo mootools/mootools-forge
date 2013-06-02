@@ -16,7 +16,7 @@
  *
  * This software consists of voluntary contributions made by many individuals
  * and is licensed under the LGPL. For more information, see
- * <http://www.phpdoctrine.org>.
+ * <http://www.doctrine-project.org>.
  */
 
 /**
@@ -25,7 +25,7 @@
  * @package     Doctrine
  * @subpackage  Task
  * @license     http://www.opensource.org/licenses/lgpl-license.php LGPL
- * @link        www.phpdoctrine.org
+ * @link        www.doctrine-project.org
  * @since       1.0
  * @version     $Revision: 2761 $
  * @author      Jonathan H. Wage <jwage@mac.com>
@@ -39,7 +39,7 @@ class Doctrine_Task_GenerateModelsYaml extends Doctrine_Task
     
     public function execute()
     {
-        Doctrine::generateModelsFromYaml($this->getArgument('yaml_schema_path'), $this->getArgument('models_path'), $this->getArgument('generate_models_options', array()));
+        Doctrine_Core::generateModelsFromYaml($this->getArgument('yaml_schema_path'), $this->getArgument('models_path'), $this->getArgument('generate_models_options', array()));
         
         $this->notify('Generated models successfully from YAML schema');
     }

@@ -16,7 +16,7 @@
  *
  * This software consists of voluntary contributions made by many individuals
  * and is licensed under the LGPL. For more information, see
- * <http://www.phpdoctrine.org>.
+ * <http://www.doctrine-project.org>.
  */
 
 /**
@@ -26,7 +26,7 @@
  * @package     Doctrine
  * @subpackage  Template
  * @license     http://www.opensource.org/licenses/lgpl-license.php LGPL
- * @link        www.phpdoctrine.org
+ * @link        www.doctrine-project.org
  * @since       1.0
  * @version     $Revision$
  * @author      Konsta Vesterinen <kvesteri@cc.hut.fi>
@@ -63,7 +63,7 @@ class Doctrine_Template_Listener_Timestampable extends Doctrine_Record_Listener
             $createdName = $event->getInvoker()->getTable()->getFieldName($this->_options['created']['name']);
             $modified = $event->getInvoker()->getModified();
             if ( ! isset($modified[$createdName])) {
-                $event->getInvoker()->$createdName = $this->getTimestamp('created');
+                $event->getInvoker()->$createdName = $this->getTimestamp('created', $event->getInvoker()->getTable()->getConnection());
             }
         }
 
@@ -71,7 +71,7 @@ class Doctrine_Template_Listener_Timestampable extends Doctrine_Record_Listener
             $updatedName = $event->getInvoker()->getTable()->getFieldName($this->_options['updated']['name']);
             $modified = $event->getInvoker()->getModified();
             if ( ! isset($modified[$updatedName])) {
-                $event->getInvoker()->$updatedName = $this->getTimestamp('updated');
+                $event->getInvoker()->$updatedName = $this->getTimestamp('updated', $event->getInvoker()->getTable()->getConnection());
             }
         }
     }
@@ -88,7 +88,7 @@ class Doctrine_Template_Listener_Timestampable extends Doctrine_Record_Listener
             $updatedName = $event->getInvoker()->getTable()->getFieldName($this->_options['updated']['name']);
             $modified = $event->getInvoker()->getModified();
             if ( ! isset($modified[$updatedName])) {
-                $event->getInvoker()->$updatedName = $this->getTimestamp('updated');
+                $event->getInvoker()->$updatedName = $this->getTimestamp('updated', $event->getInvoker()->getTable()->getConnection());
             }
         }
     }
@@ -108,7 +108,7 @@ class Doctrine_Template_Listener_Timestampable extends Doctrine_Record_Listener
             $query = $event->getQuery();
 
             if ( ! $query->contains($field)) {
-                $query->set($field, '?', $this->getTimestamp('updated'));
+                $query->set($field, '?', $this->getTimestamp('updated', $event->getInvoker()->getTable()->getConnection()));
             }
         }
     }
@@ -119,12 +119,12 @@ class Doctrine_Template_Listener_Timestampable extends Doctrine_Record_Listener
      * @param string $type 
      * @return void
      */
-    public function getTimestamp($type)
+    public function getTimestamp($type, $conn = null)
     {
         $options = $this->_options[$type];
 
         if ($options['expression'] !== false && is_string($options['expression'])) {
-            return new Doctrine_Expression($options['expression']);
+            return new Doctrine_Expression($options['expression'], $conn);
         } else {
             if ($options['type'] == 'date') {
                 return date($options['format'], time());

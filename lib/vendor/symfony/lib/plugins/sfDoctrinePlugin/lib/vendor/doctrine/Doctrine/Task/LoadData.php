@@ -16,7 +16,7 @@
  *
  * This software consists of voluntary contributions made by many individuals
  * and is licensed under the LGPL. For more information, see
- * <http://www.phpdoctrine.org>.
+ * <http://www.doctrine-project.org>.
  */
 
 /**
@@ -25,7 +25,7 @@
  * @package     Doctrine
  * @subpackage  Task
  * @license     http://www.opensource.org/licenses/lgpl-license.php LGPL
- * @link        www.phpdoctrine.org
+ * @link        www.doctrine-project.org
  * @since       1.0
  * @version     $Revision: 2761 $
  * @author      Jonathan H. Wage <jwage@mac.com>
@@ -35,12 +35,12 @@ class Doctrine_Task_LoadData extends Doctrine_Task
     public $description          =   'Load data from a yaml data fixture file.',
            $requiredArguments    =   array('data_fixtures_path' =>  'Specify the complete path to load the yaml data fixtures files from.',
                                            'models_path'        =>  'Specify path to your Doctrine_Record definitions.'),
-           $optionalArguments    =   array();
+           $optionalArguments    =   array('append'             =>  'Whether or not to append the data');
     
     public function execute()
     {
-        Doctrine::loadModels($this->getArgument('models_path'));
-        Doctrine::loadData($this->getArgument('data_fixtures_path'));
+        Doctrine_Core::loadModels($this->getArgument('models_path'));
+        Doctrine_Core::loadData($this->getArgument('data_fixtures_path'), $this->getArgument('append', false));
         
         $this->notify('Data was successfully loaded');
     }

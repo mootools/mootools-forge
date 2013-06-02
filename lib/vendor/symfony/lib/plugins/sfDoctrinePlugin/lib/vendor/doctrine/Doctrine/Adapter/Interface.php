@@ -1,6 +1,6 @@
 <?php
 /*
- *  $Id: Interface.php 5801 2009-06-02 17:30:27Z piccoloprincipe $
+ *  $Id: Interface.php 7490 2010-03-29 19:53:27Z jwage $
  *
  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
  * "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT
@@ -16,7 +16,7 @@
  *
  * This software consists of voluntary contributions made by many individuals
  * and is licensed under the LGPL. For more information, see
- * <http://www.phpdoctrine.org>.
+ * <http://www.doctrine-project.org>.
  */
 
 /**
@@ -26,9 +26,9 @@
  * @license     http://www.opensource.org/licenses/lgpl-license.php LGPL
  * @package     Doctrine
  * @subpackage  Adapter
- * @link        www.phpdoctrine.org
+ * @link        www.doctrine-project.org
  * @since       1.0
- * @version     $Revision: 5801 $
+ * @version     $Revision: 7490 $
  */
 interface Doctrine_Adapter_Interface
 {
@@ -42,4 +42,6 @@ interface Doctrine_Adapter_Interface
     public function rollBack();
     public function errorCode();
     public function errorInfo();
+    public function setAttribute($attribute, $value);
+    public function getAttribute($attribute);
 }

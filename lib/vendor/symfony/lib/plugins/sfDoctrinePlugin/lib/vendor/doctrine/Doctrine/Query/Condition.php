@@ -1,6 +1,6 @@
 <?php
 /*
- *  $Id: Condition.php 5801 2009-06-02 17:30:27Z piccoloprincipe $
+ *  $Id: Condition.php 7490 2010-03-29 19:53:27Z jwage $
  *
  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
  * "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT
@@ -16,7 +16,7 @@
  *
  * This software consists of voluntary contributions made by many individuals
  * and is licensed under the LGPL. For more information, see
- * <http://www.phpdoctrine.org>.
+ * <http://www.doctrine-project.org>.
  */
 
 /**
@@ -25,9 +25,9 @@
  * @package     Doctrine
  * @subpackage  Query
  * @license     http://www.opensource.org/licenses/lgpl-license.php LGPL
- * @link        www.phpdoctrine.org
+ * @link        www.doctrine-project.org
  * @since       1.0
- * @version     $Revision: 5801 $
+ * @version     $Revision: 7490 $
  * @author      Konsta Vesterinen <kvesteri@cc.hut.fi>
  */
 abstract class Doctrine_Query_Condition extends Doctrine_Query_Part
@@ -44,7 +44,7 @@ abstract class Doctrine_Query_Condition extends Doctrine_Query_Part
         $tmp = trim($str);
         
         $parts = $this->_tokenizer->bracketExplode($str, array(' OR '), '(', ')');
-
+        
         if (count($parts) > 1) {
             $ret = array();
             foreach ($parts as $part) {
@@ -54,7 +54,7 @@ abstract class Doctrine_Query_Condition extends Doctrine_Query_Part
             $r = implode(' OR ', $ret);
         } else {
             $parts = $this->_tokenizer->bracketExplode($str, array(' AND '), '(', ')');
-            
+
             // Ticket #1388: We need to make sure we're not splitting a BETWEEN ...  AND ... clause
             $tmp = array();
 
@@ -62,6 +62,8 @@ abstract class Doctrine_Query_Condition extends Doctrine_Query_Part
                 $test = $this->_tokenizer->sqlExplode($parts[$i]);
 
                 if (count($test) == 3 && strtoupper($test[1]) == 'BETWEEN') {
+                    $tmp[] = $parts[$i] . ' AND ' . $parts[++$i];
+                } else if (count($test) == 4 && strtoupper($test[1]) == 'NOT' && strtoupper($test[2]) == 'BETWEEN') {
                     $tmp[] = $parts[$i] . ' AND ' . $parts[++$i];
                 } else {
                     $tmp[] = $parts[$i];
@@ -121,8 +123,10 @@ abstract class Doctrine_Query_Condition extends Doctrine_Query_Part
                 if ( ! is_numeric($a[0])) {
                     // a component found
                     $field     = array_pop($a);
-                	  $reference = implode('.', $a);
-                    $value = $this->query->getConnection()->quoteIdentifier($this->query->getTableAlias($reference). '.' . $field);
+                	$reference = implode('.', $a);
+                    $value     = $this->query->getConnection()->quoteIdentifier(
+                        $this->query->getSqlTableAlias($reference). '.' . $field
+                    );
                 }
             }
         } else {

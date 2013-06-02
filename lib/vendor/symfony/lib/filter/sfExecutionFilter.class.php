@@ -17,7 +17,7 @@
  * @subpackage filter
  * @author     Fabien Potencier <fabien.potencier@symfony-project.com>
  * @author     Sean Kerr <sean@code-box.org>
- * @version    SVN: $Id: sfExecutionFilter.class.php 17858 2009-05-01 21:22:50Z FabianLange $
+ * @version    SVN: $Id: sfExecutionFilter.class.php 29523 2010-05-19 12:50:54Z fabien $
  */
 class sfExecutionFilter extends sfFilter
 {
@@ -55,7 +55,7 @@ class sfExecutionFilter extends sfFilter
     }
   }
 
-  /*
+  /**
    * Handles the action.
    *
    * @param sfFilterChain $filterChain    The current filter chain
@@ -65,12 +65,14 @@ class sfExecutionFilter extends sfFilter
    */
   protected function handleAction($filterChain, $actionInstance)
   {
-    $uri = $this->context->getRouting()->getCurrentInternalUri();
-
-    if (sfConfig::get('sf_cache') && !is_null($uri) && $this->context->getViewCacheManager()->hasActionCache($uri))
+    if (sfConfig::get('sf_cache'))
     {
-      // action in cache, so go to the view
-      return sfView::SUCCESS;
+      $uri = $this->context->getViewCacheManager()->getCurrentCacheKey();
+      if (null !== $uri && $this->context->getViewCacheManager()->hasActionCache($uri))
+      {
+        // action in cache, so go to the view
+        return sfView::SUCCESS;
+      }
     }
 
     return $this->executeAction($actionInstance);
@@ -90,7 +92,7 @@ class sfExecutionFilter extends sfFilter
     $viewName = $actionInstance->execute($this->context->getRequest());
     $actionInstance->postExecute();
 
-    return is_null($viewName) ? sfView::SUCCESS : $viewName;
+    return null === $viewName ? sfView::SUCCESS : $viewName;
   }
 
   /**
@@ -121,7 +123,7 @@ class sfExecutionFilter extends sfFilter
    *
    *   - sfView::NONE: Nothing happens.
    *   - sfView::RENDER_CLIENT: View data populates the response content.
-   *   - sfView::RENDER_DATA: View data populates the data presentation variable.
+   *   - sfView::RENDER_VAR: View data populates the data presentation variable.
    *
    * @param string $moduleName     The module name
    * @param string $actionName     The action name

@@ -14,7 +14,7 @@
  * @package    symfony
  * @subpackage widget
  * @author     Fabien Potencier <fabien.potencier@symfony-project.com>
- * @version    SVN: $Id: sfWidgetFormInputCheckbox.class.php 11279 2008-09-01 13:33:04Z nicolas $
+ * @version    SVN: $Id: sfWidgetFormInputCheckbox.class.php 30762 2010-08-25 12:33:33Z fabien $
  */
 class sfWidgetFormInputCheckbox extends sfWidgetFormInput
 {
@@ -56,6 +56,8 @@ class sfWidgetFormInputCheckbox extends sfWidgetFormInput
   }
 
   /**
+   * Renders the widget.
+   *
    * @param  string $name        The element name
    * @param  string $value       The this widget is checked if value is not null
    * @param  array  $attributes  An array of HTML attributes to be merged with the default HTML attributes
@@ -67,12 +69,12 @@ class sfWidgetFormInputCheckbox extends sfWidgetFormInput
    */
   public function render($name, $value = null, $attributes = array(), $errors = array())
   {
-    if (!is_null($value) && $value !== false)
+    if (null !== $value && $value !== false)
     {
       $attributes['checked'] = 'checked';
     }
 
-    if (!isset($attributes['value']) && !is_null($this->getOption('value_attribute_value')))
+    if (!isset($attributes['value']) && null !== $this->getOption('value_attribute_value'))
     {
       $attributes['value'] = $this->getOption('value_attribute_value');
     }

@@ -1,12 +1,12 @@
 <?php
 
-class LoginForm extends sfForm
+class LoginForm extends BaseForm
 {
     
   public function configure()
   {
     $this->setWidgets(array(
-      'email'      => new sfWidgetFormInput(),
+      'email'      => new sfWidgetFormInputText(),
       'password'   => new sfWidgetFormInputPassword()
     ));
 

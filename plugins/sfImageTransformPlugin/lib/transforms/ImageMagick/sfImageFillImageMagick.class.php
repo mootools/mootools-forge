@@ -221,12 +221,23 @@ class sfImageFillImageMagick extends sfImageTransformAbstract
 
     $fill = new ImagickPixel();
     $fill->setColor($this->fill);
-    echo 
 
-    $border = new ImagickPixel();
-    $border->setColor($this->border);
+    /*
+     *  colorFloodfillImage has been depricated, use new method is available
+     */
+    if(method_exists($resource, 'floodFillPaintImage') && is_null($this->border))
+    {
+      $target = $resource->getImagePixelColor($this->getX(), $this->getY());
+      $resource->floodFillPaintImage($fill, $this->getFuzz(), $target, $this->getX(), $this->getY(), false);
+    }
 
-    $resource->colorFloodfillImage($fill, $this->fuzz, $border, $this->x, $this->y);
+    else
+    {
+      $border = new ImagickPixel();
+      $border->setColor($this->border);
+
+      $resource->colorFloodfillImage($fill, $this->getFuzz(), $border, $this->getX(), $this->getY());
+    }
 
     return $image;
   }

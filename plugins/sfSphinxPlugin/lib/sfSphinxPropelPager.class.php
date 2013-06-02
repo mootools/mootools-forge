@@ -5,12 +5,12 @@
  * @author  Hung Dao <hungdao@mahshelf.com>
  */
 
-class sfSphinxPager extends sfPropelPager
+class sfSphinxPropelPager extends sfPropelPager
 {
   protected
-    $peer_method_name       = 'retrieveByPKs',
-    $keyword                = null,
-    $sphinx                 = null;
+    $peer_method_name = 'retrieveByPKs',
+    $keyword          = null,
+    $sphinx           = null;
 
   /**
    * Constructor
@@ -83,55 +83,52 @@ class sfSphinxPager extends sfPropelPager
     $this->sphinx->SetLimits($offset - 1, 1); // We only need one object
 
     $res = $this->sphinx->getRes();
-    if ($res['total_found'])
-    {
-      $ids = array();
-      foreach ($res['matches'] as $match)
-      {
-        $ids[] = $match['id'];
-      }
-
-      // be smart and try to use best peer method
-      $peer_method = $this->getPeerMethod();
-      if ($peer_method == 'retrieveByPks')
-      {
-        $results = call_user_func(array($this->getClassPeer(), $peer_method), $ids);
-      }
-      else
-      {
-        $results = call_user_func(array($this->getClassPeer(), $peer_method), $this->getCriteria());
-      }
-      return is_array($results) && isset($results[0]) ? $results[0] : null;
-    }
-    else
+    if ($res['total_found'] == 0)
     {
       return null;
     }
+
+    $ids = array();
+    foreach ($res['matches'] as $match)
+    {
+      $ids[] = $match['id'];
+    }
+
+    // be smart and try to use best peer method
+    $peer_method = $this->getPeerMethod();
+    if ($peer_method == 'retrieveByPks')
+    {
+      $results = call_user_func(array($this->getClassPeer(), $peer_method), $ids);
+    }
+    else
+    {
+      $results = call_user_func(array($this->getClassPeer(), $peer_method), $this->getCriteria());
+    }
+
+    return is_array($results) && isset($results[0]) ? $results[0] : null;
   }
 
   /**
-   * Return an array of result on the given page
+   * Return results for given page
    * @return array
    */
   public function getResults()
   {
     $res = $this->sphinx->getRes();
-    if ($res['total_found'])
-    {
-      // First we need to get the Ids
-      $ids = array();
-      foreach ($res['matches'] as $match)
-      {
-        $ids[] = $match['id'];
-      }
-      // Then we retrieve the objects correspoding to the found Ids
-      return call_user_func(array($this->getClassPeer(), $this->getPeerMethod()), $ids);
-    }
-    else
+    if ($res['total_found'] == 0)
     {
       return array();
     }
 
+    // First we need to get the Ids
+    $ids = array();
+    foreach ($res['matches'] as $match)
+    {
+      $ids[] = $match['id'];
+    }
+    // Then we retrieve the objects correspoding to the found Ids
+
+    return call_user_func(array($this->getClassPeer(), $this->getPeerMethod()), $ids);
   }
 
 }

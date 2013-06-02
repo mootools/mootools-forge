@@ -11,7 +11,7 @@
  *
  * generic thumbnail transform
  *
- * Create a thumbnail 100 x 100
+ * Create a thumbnail 100 x 100, with the image resized to fit
  * <code>
  * <?php
  * $img = new sfImage('image1.jpg');
@@ -47,7 +47,7 @@ class sfImageThumbnailGeneric extends sfImageTransformAbstract
   /**
    * available methods for thumbnail creation
    */
-  protected $methods = array('fit', 'scale', 'inflate','deflate', 'left' ,'right', 'top', 'bottom', 'center');
+  protected $methods = array('fit', 'scale', 'inflate','deflate', 'left' ,'right', 'top', 'bottom', 'center', 'top-left', 'top-right', 'bottom-left', 'bottom-right');
   
   /*
    * background color in hex or null for transparent
@@ -65,8 +65,10 @@ class sfImageThumbnailGeneric extends sfImageTransformAbstract
    */
   public function __construct($width, $height, $method='fit', $background=null)
   {   
-    $this->setWidth($width);
-    $this->setHeight($height);
+    if(!$this->setWidth($width) || !$this->setHeight($height))
+		{
+			throw new sfImageTransformException(sprintf('Cannot perform thumbnail, a valid width and height must be supplied'));
+		}
     $this->setMethod($method);
     $this->setBackground($background);    
   }
@@ -111,8 +113,10 @@ class sfImageThumbnailGeneric extends sfImageTransformAbstract
     {
       $this->width = (int)$width;
       
-      return false;
+      return true;
     }
+    
+    return false;
   }
 
   /**
@@ -191,7 +195,8 @@ class sfImageThumbnailGeneric extends sfImageTransformAbstract
 
     $scale_w    = $this->getWidth()/$resource_w;
     $scale_h    = $this->getHeight()/$resource_h;
-    switch ($this->getMethod())
+    $method = $this->getMethod();
+    switch ($method)
     {
       case 'deflate':
       case 'inflate':
@@ -199,32 +204,44 @@ class sfImageThumbnailGeneric extends sfImageTransformAbstract
         return $image->resize($this->getWidth(), $this->getHeight());
 
       case 'left':
-        $image->scale(max($scale_w, $scale_h));
-
-        return $image->crop(0, (int)round(($image->getHeight() - $this->getHeight()) / 2), $this->getWidth(), $this->getHeight());
-
       case 'right':
-        $image->scale(max($scale_w, $scale_h));
-
-        return $image->crop(($image->getWidth() - $this->getWidth()), (int)round(($image->getHeight() - $this->getHeight()) / 2),$this->getWidth(), $this->getHeight());
-
       case 'top':
-        $image->scale(max($scale_w, $scale_h));
-
-        return $image->crop((int)round(($image->getWidth() - $this->getWidth()) / 2), 0, $this->getWidth(), $this->getHeight());
-
       case 'bottom':
-        $image->scale(max($scale_w, $scale_h));
-
-        return $image->crop((int)round(($image->getWidth() - $this->getWidth()) / 2), ($image->getHeight() - $this->getHeight()), $this->getWidth(), $this->getHeight());
-        
+      case 'top-left':
+      case 'top-right':
+      case 'bottom-left':
+      case 'bottom-right':
       case 'center':
         $image->scale(max($scale_w, $scale_h));
-        
-        $left = (int)round(($image->getWidth() - $this->getWidth()) / 2);
-        $top  = (int)round(($image->getHeight() - $this->getHeight()) / 2);
+
+        if(false !== strstr($method, 'top'))
+        {
+          $top = 0;
+        }
+        else if(false !== strstr($method, 'bottom'))
+        {
+          $top = $image->getHeight() - $this->getHeight();
+        }
+        else
+        {
+          $top = (int)round(($image->getHeight() - $this->getHeight()) / 2);
+        }
+
+        if(false !== strstr($method, 'left'))
+        {
+          $left = 0;
+        }
+        else if(false !== strstr($method, 'right'))
+        {
+          $left = $image->getWidth() - $this->getWidth();
+        }
+        else
+        {
+          $left = (int)round(($image->getWidth() - $this->getWidth()) / 2);
+        }
 
         return $image->crop($left, $top, $this->getWidth(), $this->getHeight());
+
       case 'scale':
         return $image->scale(min($scale_w, $scale_h));
 

@@ -1,4 +1,4 @@
-<form action="/forge/browse" id="search-form" class="block">
+<form action="<?php echo url_for('@browse') ?>" id="search-form" class="block">
 	<div id="search_field">
 		<input type="text" placeholder="Search" name="search" id="q" />
 	</div>

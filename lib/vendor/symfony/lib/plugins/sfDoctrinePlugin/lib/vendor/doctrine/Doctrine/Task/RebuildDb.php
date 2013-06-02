@@ -16,7 +16,7 @@
  *
  * This software consists of voluntary contributions made by many individuals
  * and is licensed under the LGPL. For more information, see
- * <http://www.phpdoctrine.org>.
+ * <http://www.doctrine-project.org>.
  */
 
 /**
@@ -25,7 +25,7 @@
  * @package     Doctrine
  * @subpackage  Task
  * @license     http://www.opensource.org/licenses/lgpl-license.php LGPL
- * @link        www.phpdoctrine.org
+ * @link        www.doctrine-project.org
  * @since       1.0
  * @version     $Revision: 2761 $
  * @author      Jonathan H. Wage <jwage@mac.com>
@@ -41,18 +41,22 @@ class Doctrine_Task_RebuildDb extends Doctrine_Task
         parent::__construct($dispatcher);
         
         $this->dropDb = new Doctrine_Task_DropDb($this->dispatcher);
-        $this->buildAll = new Doctrine_Task_BuildAll($this->dispatcher);
-        
-        $this->requiredArguments = array_merge($this->requiredArguments, $this->dropDb->requiredArguments, $this->buildAll->requiredArguments);
-        $this->optionalArguments = array_merge($this->optionalArguments, $this->dropDb->optionalArguments, $this->buildAll->optionalArguments);
+        $this->createDb = new Doctrine_Task_CreateDb($this->dispatcher);
+        $this->createTables = new Doctrine_Task_CreateTables($this->dispatcher);
+
+        $this->requiredArguments = array_merge($this->requiredArguments, $this->dropDb->requiredArguments, $this->createDb->requiredArguments, $this->createTables->requiredArguments);
+        $this->optionalArguments = array_merge($this->optionalArguments, $this->dropDb->optionalArguments, $this->createDb->optionalArguments, $this->createTables->optionalArguments);
     }
-    
+
     public function execute()
     {
         $this->dropDb->setArguments($this->getArguments());
         $this->dropDb->execute();
-        
-        $this->buildAll->setArguments($this->getArguments());
-        $this->buildAll->execute();
+
+        $this->createDb->setArguments($this->getArguments());
+        $this->createDb->execute();
+
+        $this->createTables->setArguments($this->getArguments());
+        $this->createTables->execute();
     }
 }

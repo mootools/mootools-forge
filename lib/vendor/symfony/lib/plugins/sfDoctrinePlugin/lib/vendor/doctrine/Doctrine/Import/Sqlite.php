@@ -1,6 +1,6 @@
 <?php
 /*
- *  $Id: Sqlite.php 5801 2009-06-02 17:30:27Z piccoloprincipe $
+ *  $Id: Sqlite.php 7644 2010-06-08 15:12:02Z jwage $
  *
  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
  * "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT
@@ -16,7 +16,7 @@
  *
  * This software consists of voluntary contributions made by many individuals
  * and is licensed under the LGPL. For more information, see
- * <http://www.phpdoctrine.org>.
+ * <http://www.doctrine-project.org>.
  */
 
 /**
@@ -25,8 +25,8 @@
  * @license     http://www.opensource.org/licenses/lgpl-license.php LGPL
  * @author      Konsta Vesterinen <kvesteri@cc.hut.fi>
  * @author      Lukas Smith <smith@pooteeweet.org> (PEAR MDB2 library)
- * @version     $Revision: 5801 $
- * @link        www.phpdoctrine.org
+ * @version     $Revision: 7644 $
+ * @link        www.doctrine-project.org
  * @since       1.0
  */
 class Doctrine_Import_Sqlite extends Doctrine_Import
@@ -79,8 +79,8 @@ class Doctrine_Import_Sqlite extends Doctrine_Import
                 $result[] = $sqn;
             }
         }
-        if ($this->conn->getAttribute(Doctrine::ATTR_PORTABILITY) & Doctrine::PORTABILITY_FIX_CASE) {
-            $result = array_map(($this->conn->getAttribute(Doctrine::ATTR_FIELD_CASE) == CASE_LOWER ? 'strtolower' : 'strtoupper'), $result);
+        if ($this->conn->getAttribute(Doctrine_Core::ATTR_FIELD_CASE) && ($this->conn->getAttribute(Doctrine_Core::ATTR_PORTABILITY) & Doctrine_Core::PORTABILITY_FIX_CASE)) {
+            $result = array_map(($this->conn->getAttribute(Doctrine_Core::ATTR_FIELD_CASE) == CASE_LOWER ? 'strtolower' : 'strtoupper'), $result);
         }
         return $result;
     }
@@ -97,7 +97,7 @@ class Doctrine_Import_Sqlite extends Doctrine_Import
 
         $query = "SELECT sql FROM sqlite_master WHERE type='index' AND ";
 
-        if ($this->conn->getAttribute(Doctrine::ATTR_PORTABILITY) & Doctrine::PORTABILITY_FIX_CASE) {
+        if ($this->conn->getAttribute(Doctrine_Core::ATTR_FIELD_CASE) && ($this->conn->getAttribute(Doctrine_Core::ATTR_PORTABILITY) & Doctrine_Core::PORTABILITY_FIX_CASE)) {
             $query .= 'LOWER(tbl_name) = ' . strtolower($table);
         } else {
             $query .= 'tbl_name = ' . $table;
@@ -115,8 +115,8 @@ class Doctrine_Import_Sqlite extends Doctrine_Import
             }
         }
 
-        if ($this->conn->getAttribute(Doctrine::ATTR_PORTABILITY) & Doctrine::PORTABILITY_FIX_CASE) {
-            $result = array_change_key_case($result, $this->conn->getAttribute(Doctrine::ATTR_FIELD_CASE));
+        if ($this->conn->getAttribute(Doctrine_Core::ATTR_FIELD_CASE) && ($this->conn->getAttribute(Doctrine_Core::ATTR_PORTABILITY) & Doctrine_Core::PORTABILITY_FIX_CASE)) {
+            $result = array_change_key_case($result, $this->conn->getAttribute(Doctrine_Core::ATTR_FIELD_CASE));
         }
         return array_keys($result);
     }
@@ -139,17 +139,18 @@ class Doctrine_Import_Sqlite extends Doctrine_Import
             $decl = $this->conn->dataDict->getPortableDeclaration($val);
 
             $description = array(
-                    'name'      => $val['name'],
-                    'ntype'     => $val['type'],
-                    'type'      => $decl['type'][0],
-                    'alltypes'  => $decl['type'],
-                    'notnull'   => (bool) $val['notnull'],
-                    'default'   => $val['dflt_value'],
-                    'primary'   => (bool) $val['pk'],
-                    'length'    => null,
-                    'scale'     => null,
-                    'precision' => null,
-                    'unsigned'  => null,
+                    'name'          => $val['name'],
+                    'ntype'         => $val['type'],
+                    'type'          => $decl['type'][0],
+                    'alltypes'      => $decl['type'],
+                    'notnull'       => (bool) $val['notnull'],
+                    'default'       => $val['dflt_value'],
+                    'primary'       => (bool) $val['pk'],
+                    'length'        => null,
+                    'scale'         => null,
+                    'precision'     => null,
+                    'unsigned'      => null,
+                    'autoincrement' => (bool) ($val['pk'] == 1 && $decl['type'][0] == 'integer'),
                     );
             $columns[$val['name']] = $description;
         }

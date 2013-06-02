@@ -14,7 +14,7 @@
  * @package    symfony
  * @subpackage cache
  * @author     Fabien Potencier <fabien.potencier@symfony-project.com>
- * @version    SVN: $Id: sfMemcacheCache.class.php 19701 2009-06-30 09:02:32Z fabien $
+ * @version    SVN: $Id: sfMemcacheCache.class.php 29490 2010-05-17 13:09:00Z fabien $
  */
 class sfMemcacheCache extends sfCache
 {
@@ -108,7 +108,7 @@ class sfMemcacheCache extends sfCache
    */
   public function set($key, $data, $lifetime = null)
   {
-    $lifetime = is_null($lifetime) ? $this->getOption('lifetime') : $lifetime;
+    $lifetime = null === $lifetime ? $this->getOption('lifetime') : $lifetime;
 
     // save metadata
     $this->setMetadata($key, $lifetime);
@@ -132,9 +132,13 @@ class sfMemcacheCache extends sfCache
    */
   public function remove($key)
   {
-    $this->memcache->delete($this->getOption('prefix').'_metadata'.self::SEPARATOR.$key);
-
-    return $this->memcache->delete($this->getOption('prefix').$key);
+    // delete metadata
+    $this->memcache->delete($this->getOption('prefix').'_metadata'.self::SEPARATOR.$key, 0);
+    if ($this->getOption('storeCacheInfo', false))
+    {
+      $this->setCacheInfo($key, true);
+    }
+    return $this->memcache->delete($this->getOption('prefix').$key, 0);
   }
 
   /**
@@ -185,12 +189,11 @@ class sfMemcacheCache extends sfCache
     }
 
     $regexp = self::patternToRegexp($this->getOption('prefix').$pattern);
-
     foreach ($this->getCacheInfo() as $key)
     {
       if (preg_match($regexp, $key))
       {
-        $this->memcache->delete($key);
+        $this->remove(substr($key, strlen($this->getOption('prefix'))));
       }
     }
   }
@@ -236,15 +239,31 @@ class sfMemcacheCache extends sfCache
    * Updates the cache information for the given cache key.
    *
    * @param string $key The cache key
+   * @param boolean $delete Delete key or not
    */
-  protected function setCacheInfo($key)
+  protected function setCacheInfo($key, $delete = false)
   {
     $keys = $this->memcache->get($this->getOption('prefix').'_metadata');
     if (!is_array($keys))
     {
       $keys = array();
     }
-    $keys[] = $this->getOption('prefix').$key;
+
+    if ($delete)
+    {
+       if (($k = array_search($this->getOption('prefix').$key, $keys)) !== false)
+       {
+         unset($keys[$k]);
+       }
+    }
+    else
+    {
+      if (!in_array($this->getOption('prefix').$key, $keys))
+      {
+        $keys[] = $this->getOption('prefix').$key;
+      }
+    }
+
     $this->memcache->set($this->getOption('prefix').'_metadata', $keys, 0);
   }
 

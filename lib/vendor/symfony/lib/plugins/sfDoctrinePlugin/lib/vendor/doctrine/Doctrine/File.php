@@ -16,7 +16,7 @@
  *
  * This software consists of voluntary contributions made by many individuals
  * and is licensed under the LGPL. For more information, see
- * <http://www.phpdoctrine.org>.
+ * <http://www.doctrine-project.org>.
  */
 
 /**
@@ -27,7 +27,7 @@
  * @author      Konsta Vesterinen <kvesteri@cc.hut.fi>
  * @license     http://www.opensource.org/licenses/lgpl-license.php LGPL
  * @version     $Revision$
- * @link        www.phpdoctrine.org
+ * @link        www.doctrine-project.org
  * @since       1.0
  */
 class Doctrine_File extends Doctrine_Record
@@ -36,6 +36,7 @@ class Doctrine_File extends Doctrine_Record
     {
         $this->hasColumn('url', 'string', 255);
     }
+
     public function setUp()
     {
         $this->actAs('Searchable', array('className' => 'Doctrine_File_Index',
@@ -43,6 +44,7 @@ class Doctrine_File extends Doctrine_Record
         
         $this->index('url', array('fields' => array('url')));
     }
+
     public function get($name, $load = true)
     {
         if ($name === 'content') {

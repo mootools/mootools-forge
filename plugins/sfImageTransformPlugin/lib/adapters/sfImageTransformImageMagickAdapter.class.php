@@ -111,20 +111,12 @@ class sfImageTransformImageMagickAdapter extends sfImageTransformAdapterAbstract
    *
    * @throws sfImageTransformException
    */
-  public function loadString($string)
-  {
-    $image = $this->getHolder()->readImageBlob($string);
-
-    if (is_object($image) && class_name($image) == 'Imagick')
-    {
-      $this->setHolder($image);
-
-      return true;
-    }
-
-    throw new sfImageTransformException('Cannot load image string');
-  }
-
+  
+   public function loadString($string)
+	{
+    return $this->getHolder()->readImageBlob($string);;
+	 }
+ 
   /**
    * Get the image as string
    *

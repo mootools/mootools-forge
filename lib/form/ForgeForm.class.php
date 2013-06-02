@@ -7,7 +7,7 @@
  * @subpackage form
  * @author Guillermo Rauch
  **/
-class ForgeForm extends sfForm
+class ForgeForm extends BaseForm
 {
 
 	/**
@@ -60,4 +60,4 @@ class ForgeForm extends sfForm
 		return json_encode(array('errors' => $errors));
 	}
 
-} // END class ForgeForm extends sfForm
+} // END class ForgeForm extends BaseForm

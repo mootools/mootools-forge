@@ -41,6 +41,10 @@
         <source>go</source>
         <target>ok</target>
       </trans-unit>
+      <trans-unit>
+        <source>Back to list</source>
+        <target>Zurück zur Liste</target>
+      </trans-unit>
 
       <!-- Filters -->
       <trans-unit>
@@ -121,6 +125,67 @@
         <source>The item was deleted successfully.</source>
         <target>Das Objekt wurde erfolgreich gelöscht.</target>
       </trans-unit>
-    </body>
+      <trans-unit>
+        <source>is empty</source>
+        <target>ist leer</target>
+      </trans-unit>
+      <trans-unit>
+        <source>yes or no</source>
+        <target>Ja oder Nein</target>
+      </trans-unit>
+      <trans-unit>
+        <source>yes</source>
+        <target>Ja</target>
+      </trans-unit>
+      <trans-unit>
+        <source>no</source>
+        <target>Nein</target>
+      </trans-unit>
+      <trans-unit>
+        <source><![CDATA[from %from_date% to %to_date%]]></source>
+        <target><![CDATA[von %from_date% bis %to_date%]]></target>
+      </trans-unit>
+      <trans-unit>
+        <source><![CDATA[from %from_date%<br />to %to_date%]]></source>
+        <target><![CDATA[von %from_date%<br />bis %to_date%]]></target>
+      </trans-unit>
+
+      <trans-unit>
+        <source>Required.</source>
+        <target>Erforderlich.</target>
+      </trans-unit>
+      <trans-unit>
+        <source>Invalid.</source>
+        <target>Ungültig.</target>
+      </trans-unit>
+      <trans-unit>
+        <source><![CDATA["%value%" is not an integer.]]></source>
+        <target><![CDATA["%value%" ist kein Integer.]]></target>
+      </trans-unit>
+      <trans-unit>
+        <source><![CDATA["%value%" is not a number.]]></source>
+        <target><![CDATA["%value%" ist keine Nummer.]]></target>
+      </trans-unit>
+      <trans-unit>
+        <source><![CDATA[At least %min% values must be selected (%count% values selected).]]></source>
+        <target><![CDATA[Es müssen mindestens %min% Werte ausgewählt werden (%count% Werte ausgewählt).]]></target>
+      </trans-unit>
+      <trans-unit>
+        <source><![CDATA[At most %max% values must be selected (%count% values selected).]]></source>
+        <target><![CDATA[Es können maximal %max% Werte ausgewählt werden (%count% Werte ausgewählt).]]></target>
+      </trans-unit>
+      <trans-unit>
+        <source><![CDATA[CSRF attack detected.]]></source>
+        <target><![CDATA[CSRF Attacke erkannt.]]></target>
+      </trans-unit>
+      <trans-unit>
+        <source>Checked</source>
+        <target>Ausgewählt</target>
+      </trans-unit>
+      <trans-unit>
+        <source>Are you sure?</source>
+        <target>Sind Sie sicher?</target>
+      </trans-unit>
+     </body>
   </file>
 </xliff>

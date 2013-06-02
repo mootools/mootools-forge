@@ -80,7 +80,7 @@ class sfImage
     // Otherwise create a new blank image
     else
     {
-      $this->create(1,1);
+      $this->create();
     }
 
   }
@@ -122,14 +122,49 @@ class sfImage
    * @access public
    * @param integer Width of image
    * @param integer Height of image
+   * @param string Backfground color of image
    */
-  public function create($x=1, $y=1)
+  public function create($x=null, $y=null, $color=null)
   {
+    $defaults = sfConfig::get('app_sfImageTransformPlugin_default_image',array('filename' => 'Untitled.png', 'mime_type' => 'image/png', 'width' => 100, 'height' => 100));
+
+    // Get default width
+    if (!is_numeric($x))
+    {
+      $x = 1;
+      if (isset($defaults['width']))
+      {
+        $x = (int)$defaults['width'];
+      }
+    }
+
+    // Get default height
+    if (!is_numeric($y))
+    {
+      $y = 1;
+      if (isset($defaults['height']))
+      {
+        $y = (int)$defaults['height'];
+      }
+    }
+  
     $this->getAdapter()->create($x, $y);
+    $this->getAdapter()->setFilename($defaults['filename']);
+    
+    // Set the image color if set
+    if(is_null($color))
+    {
+      $color = '#FFFFFF';
+      
+      if(isset($defaults['color']))
+      {
+        $color = $defaults['color'];
+      }
+    }
 
-    $default = sfConfig::get('app_sfImageTransformPlugin_default_image',array('filename' => 'Untitled.png', 'mime_type' => 'image/png'));
-
-    $this->getAdapter()->setFilename($default['filename']);
+    $this->fill(0, 0, $color);
+    
+    return $this;
   }
 
   /**
@@ -140,11 +175,11 @@ class sfImage
    * @access public
    * @param string Name of image file
    * @param string MIME type of image
-   * @return boolean
+   * @return sfImage
    */
   public function load($filename, $mime='')
   {
-    if (file_exists($filename))
+    if (file_exists($filename) && is_readable($filename))
     {
 
       if ('' == $mime)
@@ -159,7 +194,7 @@ class sfImage
 
       $this->getAdapter()->load($filename,$mime);
 
-      return true;
+      return $this;
     }
 
     throw new sfImageTransformException(sprintf('Unable to load %s. File does not exist or is unreadable',$filename));
@@ -172,10 +207,13 @@ class sfImage
    *
    * @access public
    * @param string Image string
+   * @preturn sfImage
    */
   public function loadString($string)
   {
     $this->getAdapter()->loadString($string);
+    
+    return $this;
   }
 
   /**
@@ -409,7 +447,7 @@ class sfImage
 
     foreach($this->types as $mime => $extension)
     {
-      if (in_array($pathinfo['extension'],$extension))
+      if (in_array(strtolower($pathinfo['extension']),$extension))
       {
         return $mime;
       }
@@ -462,7 +500,16 @@ class sfImage
 
         if(function_exists('finfo_file'))
         {
-          $finfo = finfo_open(FILEINFO_MIME);
+          // Support for PHP 5.3+
+          if(defined(FILEINFO_MIME_TYPE))
+          {
+            $finfo = finfo_open(FILEINFO_MIME_TYPE);
+          }
+
+          else
+          {
+            $finfo = finfo_open(FILEINFO_MIME);
+          }
 
           return finfo_file($finfo, $filename);
         }

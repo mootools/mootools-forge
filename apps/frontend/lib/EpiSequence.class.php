@@ -1,4 +1,5 @@
 <?php
+
 class EpiSequence
 {
   private $timers, $min, $max, $width = 100;

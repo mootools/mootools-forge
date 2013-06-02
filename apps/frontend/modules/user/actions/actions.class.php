@@ -35,7 +35,6 @@ class userActions extends sfActions
 			
 			$mailBody = $this->getPartial('signupEmail', array('name' => $user->getFirstName(), 'email' => $user->getEmail(), 'password' => $this->form->getValue('password'), 'hash' => $user->getCheckHash()));			
 			
-			require_once('lib/vendor/swift/swift_init.php'); # needed due to symfony autoloader
 			$mailer = Swift_Mailer::newInstance(Swift_MailTransport::newInstance());
 			$message = Swift_Message::newInstance('Welcome to MooTools Plugins')
 									->setFrom(array(sfConfig::get('app_webmaster_email') => 'MooTools Plugins'))
@@ -60,7 +59,6 @@ class userActions extends sfActions
 			$user = $this->form->getObject();
 			$mailBody = $this->getPartial('signupTwitterEmail', array('name' => $user->getFirstName()));						
 			
-			require_once('lib/vendor/swift/swift_init.php'); # needed due to symfony autoloader
 			$mailer = Swift_Mailer::newInstance(Swift_MailTransport::newInstance());
 			$message = Swift_Message::newInstance('Welcome to MooTools Plugins')
 									->setFrom(array(sfConfig::get('app_webmaster_email') => 'MooTools Plugins'))
@@ -131,7 +129,6 @@ class userActions extends sfActions
 		
 		$mailBody = $this->getPartial('confirmEmail', array('hash' => $user->getCheckHash(), 'name' => $user->getFirstName()));					
 		
-		require_once('lib/vendor/swift/swift_init.php'); # needed due to symfony autoloader
 		$mailer = Swift_Mailer::newInstance(Swift_MailTransport::newInstance());
 		$message = Swift_Message::newInstance('Confirm your email')
 								->setFrom(array(sfConfig::get('app_webmaster_email') => 'MooTools Plugins'))
@@ -145,7 +142,7 @@ class userActions extends sfActions
 
 	public function executeLoginTwitter(){
 		$twitter = new EpiTwitter(sfConfig::get('app_twitter_consumer_key'), sfConfig::get('app_twitter_consumer_secret'));
-		header('Location:' . $twitter->getAuthorizationUrl());
+		header('Location:' . $twitter->getAuthorizeUrl());
 		exit;
 	}
 
@@ -205,7 +202,6 @@ class userActions extends sfActions
 			$user->save();
 			$mailBody = $this->getPartial('forgotEmail', array('hash' => $hash, 'name' => $user->getFirstName()));			
 			
-			require_once('lib/vendor/swift/swift_init.php'); # needed due to symfony autoloader
 			$mailer = Swift_Mailer::newInstance(Swift_MailTransport::newInstance());
 			$message = Swift_Message::newInstance('Retrieve your password')
 									->setFrom(array(sfConfig::get('app_webmaster_email') => 'MooTools Plugins'))

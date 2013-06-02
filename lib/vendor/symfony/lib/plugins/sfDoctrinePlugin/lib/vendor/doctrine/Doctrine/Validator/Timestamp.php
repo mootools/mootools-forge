@@ -16,7 +16,7 @@
  *
  * This software consists of voluntary contributions made by many individuals
  * and is licensed under the LGPL. For more information, see
- * <http://www.phpdoctrine.org>.
+ * <http://www.doctrine-project.org>.
  */
 
 /**
@@ -25,15 +25,16 @@
  * @package     Doctrine
  * @subpackage  Validator
  * @license     http://www.opensource.org/licenses/lgpl-license.php LGPL
- * @link        www.phpdoctrine.org
+ * @link        www.doctrine-project.org
  * @since       1.0
  * @version     $Revision: 3884 $
  * @author      Mark Pearson <mark.pearson0@googlemail.com>
  */
-class Doctrine_Validator_Timestamp
+class Doctrine_Validator_Timestamp extends Doctrine_Validator_Driver
 {
     /**
-     * checks if given value is a valid timestamp (YYYY-MM-DD HH:MM:SS)
+     * checks if given value is a valid timestamp
+     * ISO-8601 timestamp (YYYY-MM-DDTHH:MM:SS+00:00) or (YYYY-MM-DD HH:MM:SS)
      *
      * @param mixed $value
      * @return boolean
@@ -44,9 +45,11 @@ class Doctrine_Validator_Timestamp
             return true;
         }
 
-        $e = explode(' ', trim($value));
-        $date = isset($e[0]) ? $e[0]:null;
-        $time = isset($e[1]) ? $e[1]:null;
+        $splitChar = false !== strpos($value, 'T') ? 'T' : ' ';
+
+        $e = explode($splitChar, trim($value));
+        $date = isset($e[0]) ? $e[0] : null;
+        $time = isset($e[1]) ? $e[1] : null;
 
         $dateValidator = Doctrine_Validator::getValidator('date');
         $timeValidator = Doctrine_Validator::getValidator('time');

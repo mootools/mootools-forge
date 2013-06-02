@@ -104,7 +104,7 @@ First add the following configuration in `app.yml` file :
           AutoFormat:
             Custom:                    AddParam # injector : call class "HTMLPurifier_Injector_AddParam"
             Element:
-              - param:
+              param:
                 type:                  false
                 contents:              Empty
                 attr_includes:         false
@@ -112,7 +112,7 @@ First add the following configuration in `app.yml` file :
                   'name':              Text
                   'value':             Text
                   
-              - object:
+              object:
                 type:                  Inline
                 contents:              'Optional: param | Flow | #PCDATA'
                 attr_includes:          false
@@ -124,7 +124,7 @@ First add the following configuration in `app.yml` file :
                   'bgcolor*':          Text
                   'quality*':          Text
                   
-              - embed:
+              embed:
                 type:                  Block
                 contents:              Empty
                 attr_includes:         false
@@ -162,10 +162,22 @@ The same way you can add an attribute to an element with `AutoFormat.Attribute` 
         definition:
           AutoFormat:
             Attribute:
-              - a:
+              a:
                 attr_name:             target
                 def:                   'Enum#_blank,_self,_target,_top'
+                
+            
+To allows multiple attributes to one tag, you can use this syntaxe :
 
+
+    all:
+      sfXssSafePlugin:
+        definition:
+          AutoFormat:
+            Attribute:
+              - {tag: a, attr_name: target, def: 'Enum#_blank,_self,_target,_top'}
+              - {tag: a, attr_name: toto, def: Text}
+                
 
 ### Override cleaner ###
 
@@ -180,6 +192,15 @@ There is also an auto-format injector that we called `AddParam` in our example.
 Finally, clear your cache to enable the autoloading Symfony feature to find the new classes.
 
 ## Changelog ##
+
+### 2011-10-04 | 1.1.0 ### 
+
+ * heristop : Allows multiple attributes to one tag
+ * heristop : Uses Cache.SerializerPath option instead of DefinitionImpl
+
+### 2011-08-26 | 1.0.0 ### 
+
+ * heristop : Migration to HTML Purifier 4.3
 
 ### 2009-10-02 | 0.9.5 ###
 

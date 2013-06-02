@@ -14,7 +14,7 @@
  * @package    symfony
  * @subpackage generator
  * @author     Fabien Potencier <fabien.potencier@symfony-project.com>
- * @version    SVN: $Id: sfModelGenerator.class.php 18498 2009-05-20 16:41:48Z Kris.Wallsmith $
+ * @version    SVN: $Id: sfModelGenerator.class.php 25459 2009-12-16 13:08:43Z fabien $
  */
 abstract class sfModelGenerator extends sfGenerator
 {
@@ -67,6 +67,16 @@ abstract class sfModelGenerator extends sfGenerator
     }
 
     return "require_once(sfConfig::get('sf_module_cache_dir').'/".$this->generatedModuleName."/actions/actions.class.php');";
+  }
+
+  /**
+   * Gets the actions base class for the generated module.
+   *
+   * @return string The actions base class
+   */
+  public function getActionsBaseClass()
+  {
+    return isset($this->params['actions_base_class']) ? $this->params['actions_base_class'] : 'sfActions';
   }
 
   /**
@@ -257,7 +267,7 @@ EOF;
     }
     else if ($field->isPartial())
     {
-      return sprintf("get_partial('%s', array('type' => 'list', '%s' => \$%s))", $field->getName(), $this->getSingularName(), $this->getSingularName());
+      return sprintf("get_partial('%s/%s', array('type' => 'list', '%s' => \$%s))", $this->getModuleName(), $field->getName(), $this->getSingularName(), $this->getSingularName());
     }
     else if ('Date' == $field->getType())
     {
@@ -314,9 +324,9 @@ EOF;
    */
   public function getFormObject()
   {
-    if (is_null($this->formObject))
+    if (null === $this->formObject)
     {
-      $class = is_null($this->configuration) ? $this->getModelClass().'Form' : $this->configuration->getFormClass();
+      $class = null === $this->configuration ? $this->getModelClass().'Form' : $this->configuration->getFormClass();
 
       $this->formObject = new $class();
     }

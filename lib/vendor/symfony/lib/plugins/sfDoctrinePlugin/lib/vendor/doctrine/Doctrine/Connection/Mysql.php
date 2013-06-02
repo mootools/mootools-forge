@@ -1,6 +1,6 @@
 <?php
 /*
- *  $Id: Mysql.php 6374 2009-09-17 19:02:00Z jwage $
+ *  $Id: Mysql.php 7490 2010-03-29 19:53:27Z jwage $
  *
  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
  * "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT
@@ -16,7 +16,7 @@
  *
  * This software consists of voluntary contributions made by many individuals
  * and is licensed under the LGPL. For more information, see
- * <http://www.phpdoctrine.org>.
+ * <http://www.doctrine-project.org>.
  */
 
 /**
@@ -27,8 +27,8 @@
  * @license     http://www.opensource.org/licenses/lgpl-license.php LGPL
  * @author      Konsta Vesterinen <kvesteri@cc.hut.fi>
  * @author      Lukas Smith <smith@pooteeweet.org> (PEAR MDB2 library)
- * @version     $Revision: 6374 $
- * @link        www.phpdoctrine.org
+ * @version     $Revision: 7490 $
+ * @link        www.doctrine-project.org
  * @since       1.0
  */
 class Doctrine_Connection_Mysql extends Doctrine_Connection_Common
@@ -46,7 +46,7 @@ class Doctrine_Connection_Mysql extends Doctrine_Connection_Common
      */
     public function __construct(Doctrine_Manager $manager, $adapter)
     {
-        $this->setAttribute(Doctrine::ATTR_DEFAULT_TABLE_TYPE, 'INNODB');
+        $this->setAttribute(Doctrine_Core::ATTR_DEFAULT_TABLE_TYPE, 'INNODB');
         $this->supported = array(
                           'sequences'            => 'emulated',
                           'indexes'              => true,
@@ -123,8 +123,8 @@ class Doctrine_Connection_Mysql extends Doctrine_Connection_Common
     public function setCharset($charset)
     {
         $query = 'SET NAMES ' . $this->quote($charset);
-
         $this->exec($query);
+        parent::setCharset($charset);
     }
 
     /**

@@ -239,6 +239,9 @@ class sfImageTextGD extends sfImageTransformAbstract
     $rgb = sscanf($this->color, '#%2x%2x%2x');
 
     $color = imagecolorallocate($resource, $rgb[0], $rgb[1], $rgb[2]);
+    
+    // disable alpha handling to enable font rendering
+    imagealphablending($resource, true);
 
     imagettftext($resource, $this->size, $this->angle, $this->x, $this->y + $textheight, $color, $this->font, $this->text);
 

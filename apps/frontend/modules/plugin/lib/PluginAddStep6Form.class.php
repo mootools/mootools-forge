@@ -14,7 +14,7 @@ class PluginAddStep6Form extends PluginAddStepForm
 
 	public function configure(){
 		$this->setWidgets(array(
-			'files' => new sfWidgetFormInput
+			'files' => new sfWidgetFormInputText
 		));
 
 		$this->setValidators(array(

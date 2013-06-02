@@ -246,6 +246,7 @@ class sfImageTransformGDAdapter extends sfImageTransformAdapterAbstract
     {
 
       $this->holder = $resource;
+      
       return true;
     }
 
@@ -475,12 +476,9 @@ class sfImageTransformGDAdapter extends sfImageTransformAdapterAbstract
         imagefill($dest_resource, 0, 0, $index);
 
         // Set the filled background color to be transparent
-        imagecolortransparent($dest_resource, $index);
-
+        imagecolortransparent($dest_resource, $index);    
       }
-
-      // Always make a transparent background color for PNGs that don't have one allocated already
-      elseif ($this->getMIMEType() == 'image/png')
+      else if ($this->getMIMEType() == 'image/png') // Always make a transparent background color for PNGs that don't have one allocated already
       {
 
         // Disabled blending

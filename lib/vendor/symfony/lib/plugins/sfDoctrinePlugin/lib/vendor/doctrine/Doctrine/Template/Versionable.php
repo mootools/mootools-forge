@@ -16,7 +16,7 @@
  *
  * This software consists of voluntary contributions made by many individuals
  * and is licensed under the LGPL. For more information, see
- * <http://www.phpdoctrine.org>.
+ * <http://www.doctrine-project.org>.
  */
 
 /**
@@ -27,13 +27,30 @@
  * @package     Doctrine
  * @subpackage  Template
  * @license     http://www.opensource.org/licenses/lgpl-license.php LGPL
- * @link        www.phpdoctrine.org
+ * @link        www.doctrine-project.org
  * @since       1.0
  * @version     $Revision$
  * @author      Konsta Vesterinen <kvesteri@cc.hut.fi>
  */
 class Doctrine_Template_Versionable extends Doctrine_Template
 {
+    /**
+     * Array of AuditLog Options
+     *
+     * @var array
+     */
+    protected $_options = array('version'           => array('name'   => 'version',
+                                                             'alias'  => null,
+                                                             'type'   => 'integer',
+                                                             'length' => 8,
+                                                             'options' => array()),
+								'generateRelations' => true,
+                                'tableName'         => false,
+                                'generateFiles'     => false,
+                                'auditLog'          => true,
+                                'deleteVersions'    => true,
+                                'listener'          => 'Doctrine_AuditLog_Listener');
+
     /**
      * __construct
      *
@@ -42,7 +59,8 @@ class Doctrine_Template_Versionable extends Doctrine_Template
      */
     public function __construct(array $options = array())
     {
-        $this->_plugin = new Doctrine_AuditLog($options);
+	    parent::__construct($options);
+        $this->_plugin = new Doctrine_AuditLog($this->_options);
     }
 
     /**
@@ -56,9 +74,12 @@ class Doctrine_Template_Versionable extends Doctrine_Template
             $this->_plugin->initialize($this->_table);
         }
 
-        $this->hasColumn('version', 'integer', 8);
+        $version = $this->_options['version'];
+        $name = $version['name'] . (isset($version['alias']) ? ' as ' . $version['alias'] : '');
+        $this->hasColumn($name, $version['type'], $version['length'], $version['options']);
 
-        $this->addListener(new Doctrine_AuditLog_Listener($this->_plugin));
+        $listener = $this->_options['listener'];
+        $this->addListener(new $listener($this->_plugin));
     }
 
     /**

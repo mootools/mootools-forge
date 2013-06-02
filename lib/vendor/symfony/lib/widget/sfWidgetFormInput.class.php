@@ -14,7 +14,7 @@
  * @package    symfony
  * @subpackage widget
  * @author     Fabien Potencier <fabien.potencier@symfony-project.com>
- * @version    SVN: $Id: sfWidgetFormInput.class.php 9046 2008-05-19 08:13:51Z FabianLange $
+ * @version    SVN: $Id: sfWidgetFormInput.class.php 30762 2010-08-25 12:33:33Z fabien $
  */
 class sfWidgetFormInput extends sfWidgetForm
 {
@@ -23,7 +23,7 @@ class sfWidgetFormInput extends sfWidgetForm
    *
    * Available options:
    *
-   *  * type: The widget type (text by default)
+   *  * type: The widget type
    *
    * @param array $options     An array of options
    * @param array $attributes  An array of default HTML attributes
@@ -32,12 +32,15 @@ class sfWidgetFormInput extends sfWidgetForm
    */
   protected function configure($options = array(), $attributes = array())
   {
-    $this->addOption('type', 'text');
+    $this->addRequiredOption('type');
 
-    $this->setOption('is_hidden', false);
+    // to maintain BC with symfony 1.2
+    $this->setOption('type', 'text');
   }
 
   /**
+   * Renders the widget.
+   *
    * @param  string $name        The element name
    * @param  string $value       The value displayed in this widget
    * @param  array  $attributes  An array of HTML attributes to be merged with the default HTML attributes

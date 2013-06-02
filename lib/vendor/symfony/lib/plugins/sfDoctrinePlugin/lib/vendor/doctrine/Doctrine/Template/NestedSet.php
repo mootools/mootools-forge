@@ -16,7 +16,7 @@
  *
  * This software consists of voluntary contributions made by many individuals
  * and is licensed under the LGPL. For more information, see
- * <http://www.phpdoctrine.org>.
+ * <http://www.doctrine-project.org>.
  */
 
 /**
@@ -25,31 +25,13 @@
  * @package     Doctrine
  * @subpackage  Template
  * @license     http://www.opensource.org/licenses/lgpl-license.php LGPL
- * @link        www.phpdoctrine.org
+ * @link        www.doctrine-project.org
  * @since       1.0
  * @version     $Revision$
  * @author      Roman Borschel <roman@code-factory.org>
  */
 class Doctrine_Template_NestedSet extends Doctrine_Template
 {
-    /**
-     * Array of options for NestedSet implementation
-     *
-     * @var array
-     */
-    private $_options;
-
-    /**
-     * __construct
-     *
-     * @param array $array 
-     * @return void
-     */
-    public function __construct(array $options = array())
-    {
-        $this->_options = Doctrine_Lib::arrayDeepMerge($this->_options, $options);
-    }
-
     /**
      * Set up NestedSet template
      *

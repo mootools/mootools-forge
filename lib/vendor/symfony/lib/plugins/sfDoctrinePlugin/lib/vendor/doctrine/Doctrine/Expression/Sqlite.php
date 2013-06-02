@@ -1,6 +1,6 @@
 <?php
 /*
- *  $Id: Sqlite.php 5801 2009-06-02 17:30:27Z piccoloprincipe $
+ *  $Id: Sqlite.php 7490 2010-03-29 19:53:27Z jwage $
  *
  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
  * "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT
@@ -16,7 +16,7 @@
  *
  * This software consists of voluntary contributions made by many individuals
  * and is licensed under the LGPL. For more information, see
- * <http://www.phpdoctrine.org>.
+ * <http://www.doctrine-project.org>.
  */
 
 /**
@@ -25,9 +25,9 @@
  * @package     Doctrine
  * @subpackage  Expression
  * @license     http://www.opensource.org/licenses/lgpl-license.php LGPL
- * @link        www.phpdoctrine.org
+ * @link        www.doctrine-project.org
  * @since       1.0
- * @version     $Revision: 5801 $
+ * @version     $Revision: 7490 $
  * @author      Konsta Vesterinen <kvesteri@cc.hut.fi>
  */
 class Doctrine_Expression_Sqlite extends Doctrine_Expression_Driver
@@ -79,21 +79,29 @@ class Doctrine_Expression_Sqlite extends Doctrine_Expression_Driver
     {
         return strpos($str, $substr);
     }
+
     public static function sha1Impl($str)
     {
         return sha1($str);
     }
+
     public static function ltrimImpl($str)
     {
         return ltrim($str);
     }
+
     public static function rtrimImpl($str)
     {
         return rtrim($str);
     }
+
     public static function trimImpl($str)
     {
         return trim($str);
+    }
+    public static function nowImpl()
+    {
+        return date('Y-m-d h:i:s');
     }
 
     /**

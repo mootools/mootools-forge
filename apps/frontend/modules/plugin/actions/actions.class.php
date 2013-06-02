@@ -283,7 +283,9 @@ class pluginActions extends ForgeActions
 		$this->getResponse()->setTitle(sfConfig::get('app_title_prefix') . ' ' . $this->plugin->getTitle());
 
 		$c = new Criteria();
+		$c->addDescendingOrderByColumn(PluginTagPeer::CURRENT);
 		$c->addDescendingOrderByColumn(PluginTagPeer::CREATED_AT);
+		$c->addDescendingOrderByColumn(PluginTagPeer::NAME);
 		$this->tags = $this->plugin->getPluginTags($c);
 
 		$this->termsTags = $this->plugin->getTermRelationships();

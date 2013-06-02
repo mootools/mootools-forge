@@ -12,18 +12,18 @@ class PluginAddStep5Form extends PluginAddStepForm
 
 	public function configure(){
 		$this->setWidgets(array(
-			'author' => new sfWidgetFormInput,
-			'arbitrarySections' => new sfWidgetFormInput,
-			'stabletag' => new sfWidgetFormInput,
-			'screenshots' => new sfWidgetFormInput,
-			'category' => new sfWidgetFormInput,
-			'tags' => new sfWidgetFormInput,
-			'title' => new sfWidgetFormInput,
-			'screenshot' => new sfWidgetFormInput,
-			'docsurl' => new sfWidgetFormInput,
-			'demourl' => new sfWidgetFormInput,
-			'howtouse' => new sfWidgetFormInput,
-			'description' => new sfWidgetFormInput
+			'author' => new sfWidgetFormInputText,
+			'arbitrarySections' => new sfWidgetFormInputText,
+			'stabletag' => new sfWidgetFormInputText,
+			'screenshots' => new sfWidgetFormInputText,
+			'category' => new sfWidgetFormInputText,
+			'tags' => new sfWidgetFormInputText,
+			'title' => new sfWidgetFormInputText,
+			'screenshot' => new sfWidgetFormInputText,
+			'docsurl' => new sfWidgetFormInputText,
+			'demourl' => new sfWidgetFormInputText,
+			'howtouse' => new sfWidgetFormInputText,
+			'description' => new sfWidgetFormInputText
 		));
 
 		$catsCriteria = new Criteria();

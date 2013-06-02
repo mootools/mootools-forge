@@ -177,6 +177,7 @@ class sfImageCropImageMagick extends sfImageTransformAbstract
   {
     $resource = $image->getAdapter()->getHolder();
     $resource->cropImage($this->getWidth(), $this->getHeight(), $this->getLeft(), $this->getTop());
+    $resource->setImagePage($this->getWidth(), $this->getHeight(), 0, 0);
 
     return $image;
   }

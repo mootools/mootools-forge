@@ -28,7 +28,7 @@ class BrowseForm extends BaseForm
 			'category' => new sfWidgetFormPropelChoice(array(
 			  'model'     => 'Term',
 			  'add_empty' => true,
-				'peer_method' => 'retrieveCategories',
+				'query_methods' => array('filterByCategory'=>array(true)),
 				'key_method' => 'getSlug'
 			))
 		));

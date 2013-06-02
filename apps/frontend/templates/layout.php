@@ -62,6 +62,19 @@
 		</div>
 	</div>
 
+	<hr>
+	<nav id="menu" role="navigation">
+		<div class="clearfix wrapper">
+			<h2 class="visually-hidden">Projects</h2>
+			<ul>
+				<li class="prime"><a href="/prime"><img src="/images/logo/prime.png" alt="Prime"></a></li>
+				<li class="elements"><a href="/elements"><img src="/images/logo/elements.png" alt="Elements"></a></li>
+				<li class="moofx"><a href="/moofx"><img src="/images/logo/moofx.png" alt="MooFx"></a></li>
+				<li class="agent"><a href="/agent"><img src="/images/logo/agent.png" alt="Agent"></a></li>
+			</ul>
+		</div>
+	</nav>
+
 	<footer id="footer" class="clearfix wrapper">
 		<nav id="sitemap" role="navigation">
 			<div>

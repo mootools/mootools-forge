@@ -3,7 +3,7 @@
 
 /* line 2 : /opt/mootools/website/views/css/mixins.styl */
 
-/* line 1206 : /opt/mootools/website/views/css/global.styl */
+/* line 1214 : /opt/mootools/website/views/css/global.styl */
 
 /* line 13 : /opt/mootools/website/node_modules/nib/lib/nib/index.styl */
 
@@ -1047,15 +1047,27 @@ body.mootools #global-bar h1 {
 
 /* line 663 : /opt/mootools/website/views/css/global.styl */
 #credits img.mootools {
-  height: 2em;
+  height: 2.2em;
 }
 
-/* line 669 : /opt/mootools/website/views/css/global.styl */
+/* line 665 : /opt/mootools/website/views/css/global.styl */
+#credits p.mediatemple a {
+  background: url("/images/credits/mediatemple.png") no-repeat left top;
+  -webkit-background-size: auto 16px;
+  -moz-background-size: auto 16px;
+  background-size: auto 16px;
+  color: #acaaa7;
+  font-size: 0.85em;
+  font-weight: 600;
+  padding-left: 46px;
+}
+
+/* line 676 : /opt/mootools/website/views/css/global.styl */
 .docs {
   padding-bottom: 2em;
 }
 
-/* line 672 : /opt/mootools/website/views/css/global.styl */
+/* line 679 : /opt/mootools/website/views/css/global.styl */
 .docs .versions {
   background: #f4f1ed;
   -webkit-border-radius: 5px;
@@ -1065,17 +1077,17 @@ body.mootools #global-bar h1 {
   padding: 0.5em 1em;
 }
 
-/* line 678 : /opt/mootools/website/views/css/global.styl */
+/* line 685 : /opt/mootools/website/views/css/global.styl */
 .docs .versions h3 {
   float: left;
 }
 
-/* line 681 : /opt/mootools/website/views/css/global.styl */
+/* line 688 : /opt/mootools/website/views/css/global.styl */
 .docs .versions ul {
   float: right;
 }
 
-/* line 683 : /opt/mootools/website/views/css/global.styl */
+/* line 690 : /opt/mootools/website/views/css/global.styl */
 .docs .versions ul li {
   font-weight: 400;
   float: left;
@@ -1083,7 +1095,7 @@ body.mootools #global-bar h1 {
   position: relative;
 }
 
-/* line 689 : /opt/mootools/website/views/css/global.styl */
+/* line 696 : /opt/mootools/website/views/css/global.styl */
 .docs .versions a {
   background: #fff;
   -webkit-border-radius: 3px;
@@ -1093,13 +1105,13 @@ body.mootools #global-bar h1 {
   padding: 0.25em 0.5em;
 }
 
-/* line 695 : /opt/mootools/website/views/css/global.styl */
+/* line 702 : /opt/mootools/website/views/css/global.styl */
 .docs .versions a.selected {
   background: #fff;
   color: #777571 !important;
 }
 
-/* line 698 : /opt/mootools/website/views/css/global.styl */
+/* line 705 : /opt/mootools/website/views/css/global.styl */
 .docs .versions a.selected:after {
   background: #fff;
   bottom: -4px;
@@ -1122,7 +1134,7 @@ body.mootools #global-bar h1 {
   width: 6px;
 }
 
-/* line 711 : /opt/mootools/website/views/css/global.styl */
+/* line 718 : /opt/mootools/website/views/css/global.styl */
 .docs .toc {
   -webkit-border-radius: 5px;
   border-radius: 5px;
@@ -1131,43 +1143,43 @@ body.mootools #global-bar h1 {
   line-height: 1em;
 }
 
-/* line 717 : /opt/mootools/website/views/css/global.styl */
+/* line 724 : /opt/mootools/website/views/css/global.styl */
 .docs .toc ul {
   border-top: solid #e5e3df 1px;
   padding: 1em 1em;
 }
 
-/* line 720 : /opt/mootools/website/views/css/global.styl */
+/* line 727 : /opt/mootools/website/views/css/global.styl */
 .docs .toc ul:first-child {
   border-top: none;
 }
 
-/* line 723 : /opt/mootools/website/views/css/global.styl */
+/* line 730 : /opt/mootools/website/views/css/global.styl */
 .docs .toc ul li ul {
   border-top: none;
   padding: 0;
 }
 
-/* line 727 : /opt/mootools/website/views/css/global.styl */
+/* line 734 : /opt/mootools/website/views/css/global.styl */
 .docs .toc ul a {
   color: #777571 !important;
   display: block;
   margin: 0.5em 0 0;
 }
 
-/* line 731 : /opt/mootools/website/views/css/global.styl */
+/* line 738 : /opt/mootools/website/views/css/global.styl */
 .docs .toc ul a:active,
 .docs .toc ul a:focus {
   color: #fff !important;
 }
 
-/* line 734 : /opt/mootools/website/views/css/global.styl */
+/* line 741 : /opt/mootools/website/views/css/global.styl */
 .docs .toc ul a.top {
   font-size: 1.2em;
   margin: 0 0 1em;
 }
 
-/* line 738 : /opt/mootools/website/views/css/global.styl */
+/* line 745 : /opt/mootools/website/views/css/global.styl */
 .docs .toc a.top:after {
   color: #acaaa7;
   content: "";
@@ -1176,26 +1188,26 @@ body.mootools #global-bar h1 {
   font-size: 140%;
 }
 
-/* line 745 : /opt/mootools/website/views/css/global.styl */
+/* line 752 : /opt/mootools/website/views/css/global.styl */
 .docs .content {
   margin: 0 0 2em;
 }
 
-/* line 747 : /opt/mootools/website/views/css/global.styl */
+/* line 754 : /opt/mootools/website/views/css/global.styl */
 .docs .content h1 {
   border-top: solid 1px #e5e3df;
   margin: 3em 0 0;
   padding: 1.5em 0 0;
 }
 
-/* line 751 : /opt/mootools/website/views/css/global.styl */
+/* line 758 : /opt/mootools/website/views/css/global.styl */
 .docs .content h1:first-child {
   border: 0;
   margin: 0;
   padding: 0;
 }
 
-/* line 756 : /opt/mootools/website/views/css/global.styl */
+/* line 763 : /opt/mootools/website/views/css/global.styl */
 .docs .content h2 {
   background: #777571;
   -webkit-border-radius: 5px;
@@ -1204,12 +1216,12 @@ body.mootools #global-bar h1 {
   padding: 0.15em 0.5em 0.25em;
 }
 
-/* line 761 : /opt/mootools/website/views/css/global.styl */
+/* line 768 : /opt/mootools/website/views/css/global.styl */
 .docs .content h2 a {
   color: #fff !important;
 }
 
-/* line 764 : /opt/mootools/website/views/css/global.styl */
+/* line 771 : /opt/mootools/website/views/css/global.styl */
 .docs .content h3 {
   -webkit-border-radius: 5px;
   border-radius: 5px;
@@ -1219,7 +1231,7 @@ body.mootools #global-bar h1 {
   padding: 0.15em 0.5em 0.25em;
 }
 
-/* line 771 : /opt/mootools/website/views/css/global.styl */
+/* line 778 : /opt/mootools/website/views/css/global.styl */
 .docs .content h4 {
   -webkit-border-radius: 5px;
   border-radius: 5px;
@@ -1231,7 +1243,7 @@ body.mootools #global-bar h1 {
   padding: 0.15em 0.5em 0.25em;
 }
 
-/* line 780 : /opt/mootools/website/views/css/global.styl */
+/* line 787 : /opt/mootools/website/views/css/global.styl */
 .docs .content h5 {
   color: #acaaa7;
   font-size: 1em;
@@ -1239,12 +1251,12 @@ body.mootools #global-bar h1 {
   margin: 1.5em 0 0;
 }
 
-/* line 786 : /opt/mootools/website/views/css/global.styl */
+/* line 793 : /opt/mootools/website/views/css/global.styl */
 .docs .content p {
   margin: 0.5em 0;
 }
 
-/* line 789 : /opt/mootools/website/views/css/global.styl */
+/* line 796 : /opt/mootools/website/views/css/global.styl */
 .docs .content ol {
   counter-reset: li;
 /* Initiate a counter */
@@ -1255,12 +1267,12 @@ body.mootools #global-bar h1 {
   position: relative;
 }
 
-/* line 794 : /opt/mootools/website/views/css/global.styl */
+/* line 801 : /opt/mootools/website/views/css/global.styl */
 .docs .content ol li {
   margin: 0.5em 0 0 1.5em;
 }
 
-/* line 796 : /opt/mootools/website/views/css/global.styl */
+/* line 803 : /opt/mootools/website/views/css/global.styl */
 .docs .content ol li:before {
   background: #f4f1ed;
   -webkit-border-radius: 3px;
@@ -1274,12 +1286,12 @@ body.mootools #global-bar h1 {
   position: absolute;
 }
 
-/* line 807 : /opt/mootools/website/views/css/global.styl */
+/* line 814 : /opt/mootools/website/views/css/global.styl */
 .docs .content ul li {
   margin: 0.5em 0 0;
 }
 
-/* line 809 : /opt/mootools/website/views/css/global.styl */
+/* line 816 : /opt/mootools/website/views/css/global.styl */
 .docs .content ul li:after {
   content: "";
   float: left;
@@ -1288,17 +1300,17 @@ body.mootools #global-bar h1 {
   margin: 0 0.25em 0 0;
 }
 
-/* line 816 : /opt/mootools/website/views/css/global.styl */
+/* line 823 : /opt/mootools/website/views/css/global.styl */
 .docs .content pre {
   margin: 0.5em 0 0;
 }
 
-/* line 820 : /opt/mootools/website/views/css/global.styl */
+/* line 827 : /opt/mootools/website/views/css/global.styl */
 .heading {
   position: relative;
 }
 
-/* line 823 : /opt/mootools/website/views/css/global.styl */
+/* line 830 : /opt/mootools/website/views/css/global.styl */
 a.back-to-top {
   background: #f4f1ed;
   -webkit-border-radius: 5px;
@@ -1312,7 +1324,7 @@ a.back-to-top {
 }
 @media only screen and (max-width: 47.999em) /* Less than 600 pixels */ {
 
-/* line 838 : /opt/mootools/website/views/css/global.styl */
+/* line 845 : /opt/mootools/website/views/css/global.styl */
   .arrow:after {
     font-size: 160%;
     margin-left: 0.25em;
@@ -1321,12 +1333,12 @@ a.back-to-top {
     vertical-align: baseline;
   }
 
-/* line 846 : /opt/mootools/website/views/css/global.styl */
+/* line 853 : /opt/mootools/website/views/css/global.styl */
   .home-page .arrow:after {
     top: 0.08em;
   }
 
-/* line 849 : /opt/mootools/website/views/css/global.styl */
+/* line 856 : /opt/mootools/website/views/css/global.styl */
   .slider:after {
     content: "";
     float: right;
@@ -1334,14 +1346,14 @@ a.back-to-top {
     font-size: 140%;
   }
 
-/* line 855 : /opt/mootools/website/views/css/global.styl */
+/* line 862 : /opt/mootools/website/views/css/global.styl */
   .overview {
     padding-top: 2em;
     padding-bottom: 180px;
     position: relative;
   }
 
-/* line 860 : /opt/mootools/website/views/css/global.styl */
+/* line 867 : /opt/mootools/website/views/css/global.styl */
   .overview .big-icon {
     width: 100%;
     bottom: 0;
@@ -1353,7 +1365,7 @@ a.back-to-top {
     text-align: center;
   }
 
-/* line 870 : /opt/mootools/website/views/css/global.styl */
+/* line 877 : /opt/mootools/website/views/css/global.styl */
   .overview .big-icon img {
     height: auto;
     opacity: 0.2;
@@ -1362,126 +1374,126 @@ a.back-to-top {
     max-width: 320px;
   }
 
-/* line 875 : /opt/mootools/website/views/css/global.styl */
+/* line 882 : /opt/mootools/website/views/css/global.styl */
   .overview .summary {
     font-size: 120%;
   }
 
-/* line 878 : /opt/mootools/website/views/css/global.styl */
+/* line 885 : /opt/mootools/website/views/css/global.styl */
   .overview .description {
     font-size: 100%;
   }
 
-/* line 881 : /opt/mootools/website/views/css/global.styl */
+/* line 888 : /opt/mootools/website/views/css/global.styl */
   .modules {
     padding-top: 1em;
     padding-bottom: 1em;
   }
 
-/* line 884 : /opt/mootools/website/views/css/global.styl */
+/* line 891 : /opt/mootools/website/views/css/global.styl */
   .modules div {
     margin-top: 1em;
   }
 
-/* line 887 : /opt/mootools/website/views/css/global.styl */
+/* line 894 : /opt/mootools/website/views/css/global.styl */
   .modules .docs {
     margin-top: 1em;
   }
 
-/* line 889 : /opt/mootools/website/views/css/global.styl */
+/* line 896 : /opt/mootools/website/views/css/global.styl */
   .modules .docs a {
     display: block;
   }
 
-/* line 893 : /opt/mootools/website/views/css/global.styl */
+/* line 900 : /opt/mootools/website/views/css/global.styl */
   .features {
     padding-top: 1em;
     padding-bottom: 1em;
   }
 
-/* line 896 : /opt/mootools/website/views/css/global.styl */
+/* line 903 : /opt/mootools/website/views/css/global.styl */
   .features section {
     margin-top: 1em;
   }
 
-/* line 898 : /opt/mootools/website/views/css/global.styl */
+/* line 905 : /opt/mootools/website/views/css/global.styl */
   .features section:first-child {
     margin-top: 0;
   }
 
-/* line 901 : /opt/mootools/website/views/css/global.styl */
+/* line 908 : /opt/mootools/website/views/css/global.styl */
   .features section p {
     max-width: 80%;
   }
 
-/* line 904 : /opt/mootools/website/views/css/global.styl */
+/* line 911 : /opt/mootools/website/views/css/global.styl */
   .features section a p {
     margin-top: 0.5em;
   }
 
-/* line 908 : /opt/mootools/website/views/css/global.styl */
+/* line 915 : /opt/mootools/website/views/css/global.styl */
   .docs .content {
     margin-top: 2em;
   }
 
-/* line 911 : /opt/mootools/website/views/css/global.styl */
+/* line 918 : /opt/mootools/website/views/css/global.styl */
 
-/* line 912 : /opt/mootools/website/views/css/global.styl */
+/* line 919 : /opt/mootools/website/views/css/global.styl */
 
-/* line 913 : /opt/mootools/website/views/css/global.styl */
+/* line 920 : /opt/mootools/website/views/css/global.styl */
   .docs .toc ul a.top {
     margin-bottom: 0;
   }
 
-/* line 916 : /opt/mootools/website/views/css/global.styl */
+/* line 923 : /opt/mootools/website/views/css/global.styl */
   .docs .toc ul ul {
     display: none;
 /* Simulate JS slider behaviour. It has to be replaced with JS. */
   }
 
-/* line 920 : /opt/mootools/website/views/css/global.styl */
+/* line 927 : /opt/mootools/website/views/css/global.styl */
   .updates section {
     margin-top: 1em;
   }
 
-/* line 922 : /opt/mootools/website/views/css/global.styl */
+/* line 929 : /opt/mootools/website/views/css/global.styl */
   .updates section:nth-of-type(1) {
     margin-top: 0;
   }
 
-/* line 925 : /opt/mootools/website/views/css/global.styl */
+/* line 932 : /opt/mootools/website/views/css/global.styl */
   #logo {
     float: none;
   }
 
-/* line 927 : /opt/mootools/website/views/css/global.styl */
+/* line 934 : /opt/mootools/website/views/css/global.styl */
   #logo h1 {
     text-align: center;
   }
 
-/* line 930 : /opt/mootools/website/views/css/global.styl */
+/* line 937 : /opt/mootools/website/views/css/global.styl */
   .home-page {
     padding-top: 1em;
     padding-bottom: 1em;
   }
 
-/* line 933 : /opt/mootools/website/views/css/global.styl */
+/* line 940 : /opt/mootools/website/views/css/global.styl */
   .home-page .big-icon {
     display: none;
   }
 
-/* line 936 : /opt/mootools/website/views/css/global.styl */
+/* line 943 : /opt/mootools/website/views/css/global.styl */
   #global-bar div.wrapper div.right {
     position: static;
     margin-top: 1.5em;
   }
 
-/* line 939 : /opt/mootools/website/views/css/global.styl */
+/* line 946 : /opt/mootools/website/views/css/global.styl */
   #global-bar div.wrapper div.right ul {
     display: none;
   }
 
-/* line 942 : /opt/mootools/website/views/css/global.styl */
+/* line 949 : /opt/mootools/website/views/css/global.styl */
   body.mootools #search {
     float: none;
     margin: 0 auto;
@@ -1489,26 +1501,26 @@ a.back-to-top {
     max-width: 293px;
   }
 
-/* line 947 : /opt/mootools/website/views/css/global.styl */
+/* line 954 : /opt/mootools/website/views/css/global.styl */
   body.mootools #search input {
     width: 100%;
-  }
-
-/* line 950 : /opt/mootools/website/views/css/global.styl */
-
-/* line 951 : /opt/mootools/website/views/css/global.styl */
-  #header .wrapper {
-    padding: 0;
-  }
-
-/* line 954 : /opt/mootools/website/views/css/global.styl */
-  #header h1 {
-    padding: 0.5em 4%;
   }
 
 /* line 957 : /opt/mootools/website/views/css/global.styl */
 
 /* line 958 : /opt/mootools/website/views/css/global.styl */
+  #header .wrapper {
+    padding: 0;
+  }
+
+/* line 961 : /opt/mootools/website/views/css/global.styl */
+  #header h1 {
+    padding: 0.5em 4%;
+  }
+
+/* line 964 : /opt/mootools/website/views/css/global.styl */
+
+/* line 965 : /opt/mootools/website/views/css/global.styl */
   #header ul li {
     overflow: hidden;
     height: 0;
@@ -1522,7 +1534,7 @@ a.back-to-top {
     transition: all 0.4s ease;
   }
 
-/* line 963 : /opt/mootools/website/views/css/global.styl */
+/* line 970 : /opt/mootools/website/views/css/global.styl */
   #header ul li a {
     border-top: solid #e5e3df 1px;
     cursor: pointer;
@@ -1530,7 +1542,7 @@ a.back-to-top {
     padding: 0.5em 4%;
   }
 
-/* line 969 : /opt/mootools/website/views/css/global.styl */
+/* line 976 : /opt/mootools/website/views/css/global.styl */
   #header ul.opened li,
   #header ul li.selected {
     height: 2.6em;
@@ -1539,34 +1551,34 @@ a.back-to-top {
     filter: none;
   }
 
-/* line 973 : /opt/mootools/website/views/css/global.styl */
+/* line 980 : /opt/mootools/website/views/css/global.styl */
   #menu li {
     float: left;
     width: 50%;
     margin: 1em 0 0;
   }
 
-/* line 977 : /opt/mootools/website/views/css/global.styl */
+/* line 984 : /opt/mootools/website/views/css/global.styl */
   #menu li:nth-of-type(1n) a {
     margin: 0 0.5em 0 0;
   }
 
-/* line 980 : /opt/mootools/website/views/css/global.styl */
+/* line 987 : /opt/mootools/website/views/css/global.styl */
   #menu li:nth-of-type(2n) a {
     margin: 0 0 0 0.5em;
   }
 
-/* line 983 : /opt/mootools/website/views/css/global.styl */
+/* line 990 : /opt/mootools/website/views/css/global.styl */
   #footer.wrapper {
     padding: 0;
   }
 
-/* line 986 : /opt/mootools/website/views/css/global.styl */
+/* line 993 : /opt/mootools/website/views/css/global.styl */
   #sitemap div {
     border-bottom: solid 1px #e5e3df;
   }
 
-/* line 988 : /opt/mootools/website/views/css/global.styl */
+/* line 995 : /opt/mootools/website/views/css/global.styl */
   #sitemap div h3 {
     background: #fff;
     color: #acaaa7;
@@ -1574,20 +1586,20 @@ a.back-to-top {
     padding: 0.5em 4%;
   }
 
-/* line 994 : /opt/mootools/website/views/css/global.styl */
+/* line 1001 : /opt/mootools/website/views/css/global.styl */
   #sitemap div ul {
     display: none;
 /* Simulate JS slider behaviour. It has to be replaced with JS. */
   }
 
-/* line 997 : /opt/mootools/website/views/css/global.styl */
+/* line 1004 : /opt/mootools/website/views/css/global.styl */
   #credits {
     padding: 1em 4% 2em;
   }
 }
 @media only screen and (min-width: 48em) /* More or equal to 768 pixels */ {
 
-/* line 1006 : /opt/mootools/website/views/css/global.styl */
+/* line 1013 : /opt/mootools/website/views/css/global.styl */
   .arrow:after {
     font-size: 160%;
     margin-left: 0.25em;
@@ -1596,13 +1608,13 @@ a.back-to-top {
     vertical-align: baseline;
   }
 
-/* line 1013 : /opt/mootools/website/views/css/global.styl */
+/* line 1020 : /opt/mootools/website/views/css/global.styl */
   .overview {
     padding-top: 2em;
     position: relative;
   }
 
-/* line 1016 : /opt/mootools/website/views/css/global.styl */
+/* line 1023 : /opt/mootools/website/views/css/global.styl */
   .overview .big-icon {
     bottom: 0;
     height: 230px;
@@ -1613,7 +1625,7 @@ a.back-to-top {
     z-index: -1;
   }
 
-/* line 1024 : /opt/mootools/website/views/css/global.styl */
+/* line 1031 : /opt/mootools/website/views/css/global.styl */
   .overview .big-icon img {
     height: auto;
     opacity: 0.2;
@@ -1622,194 +1634,194 @@ a.back-to-top {
     width: 100%;
   }
 
-/* line 1029 : /opt/mootools/website/views/css/global.styl */
+/* line 1036 : /opt/mootools/website/views/css/global.styl */
   .overview .use {
     max-width: 40%;
   }
 
-/* line 1032 : /opt/mootools/website/views/css/global.styl */
+/* line 1039 : /opt/mootools/website/views/css/global.styl */
   .modules {
     padding-top: 2em;
     padding-bottom: 2em;
   }
 
-/* line 1036 : /opt/mootools/website/views/css/global.styl */
+/* line 1043 : /opt/mootools/website/views/css/global.styl */
   .modules section {
     position: relative;
   }
 
-/* line 1039 : /opt/mootools/website/views/css/global.styl */
+/* line 1046 : /opt/mootools/website/views/css/global.styl */
   .modules div {
     margin-top: 2em;
     width: 48%;
   }
 
-/* line 1042 : /opt/mootools/website/views/css/global.styl */
+/* line 1049 : /opt/mootools/website/views/css/global.styl */
   .modules div:nth-of-type(1) {
     float: left;
   }
 
-/* line 1045 : /opt/mootools/website/views/css/global.styl */
+/* line 1052 : /opt/mootools/website/views/css/global.styl */
   .modules div:nth-of-type(2) {
     float: right;
   }
 
-/* line 1048 : /opt/mootools/website/views/css/global.styl */
+/* line 1055 : /opt/mootools/website/views/css/global.styl */
   .modules div pre {
     margin-top: 1em;
   }
 
-/* line 1051 : /opt/mootools/website/views/css/global.styl */
+/* line 1058 : /opt/mootools/website/views/css/global.styl */
   .modules .docs {
     position: absolute;
     right: 0;
     top: 0;
   }
 
-/* line 1056 : /opt/mootools/website/views/css/global.styl */
+/* line 1063 : /opt/mootools/website/views/css/global.styl */
   .features {
     padding-top: 2em;
     padding-bottom: 2em;
   }
 
-/* line 1060 : /opt/mootools/website/views/css/global.styl */
+/* line 1067 : /opt/mootools/website/views/css/global.styl */
   .features section {
     float: left;
     width: 33.333%;
   }
 
-/* line 1063 : /opt/mootools/website/views/css/global.styl */
+/* line 1070 : /opt/mootools/website/views/css/global.styl */
   .features section:nth-of-type(1) a {
     margin: 0 1.75em 0 0;
   }
 
-/* line 1066 : /opt/mootools/website/views/css/global.styl */
+/* line 1073 : /opt/mootools/website/views/css/global.styl */
   .features section:nth-of-type(2) a {
     margin: 0 1.25em 0;
   }
 
-/* line 1069 : /opt/mootools/website/views/css/global.styl */
+/* line 1076 : /opt/mootools/website/views/css/global.styl */
   .features section:nth-of-type(3) a {
     margin: 0 0 0 1.75em;
   }
 
-/* line 1072 : /opt/mootools/website/views/css/global.styl */
+/* line 1079 : /opt/mootools/website/views/css/global.styl */
   .features section a p {
     margin-top: 1em;
   }
 
-/* line 1075 : /opt/mootools/website/views/css/global.styl */
+/* line 1082 : /opt/mootools/website/views/css/global.styl */
 
-/* line 1076 : /opt/mootools/website/views/css/global.styl */
+/* line 1083 : /opt/mootools/website/views/css/global.styl */
   .docs .toc {
     float: left;
     width: 26%;
   }
 
-/* line 1080 : /opt/mootools/website/views/css/global.styl */
+/* line 1087 : /opt/mootools/website/views/css/global.styl */
   .docs .content {
     float: right;
     width: 70%;
   }
 
-/* line 1084 : /opt/mootools/website/views/css/global.styl */
+/* line 1091 : /opt/mootools/website/views/css/global.styl */
   .about {
     padding-top: 2em;
     padding-bottom: 2em;
   }
 
-/* line 1088 : /opt/mootools/website/views/css/global.styl */
+/* line 1095 : /opt/mootools/website/views/css/global.styl */
   .about .introduction {
     float: left;
     width: 70%;
   }
 
-/* line 1092 : /opt/mootools/website/views/css/global.styl */
+/* line 1099 : /opt/mootools/website/views/css/global.styl */
   .about .license {
     float: right;
     width: 25%;
   }
 
-/* line 1096 : /opt/mootools/website/views/css/global.styl */
+/* line 1103 : /opt/mootools/website/views/css/global.styl */
   .home-page {
     padding-top: 2em;
     padding-bottom: 2em;
   }
 
-/* line 1100 : /opt/mootools/website/views/css/global.styl */
+/* line 1107 : /opt/mootools/website/views/css/global.styl */
   .updates {
     padding-top: 2em;
     padding-bottom: 2em;
   }
 
-/* line 1103 : /opt/mootools/website/views/css/global.styl */
+/* line 1110 : /opt/mootools/website/views/css/global.styl */
   .updates section {
     float: left;
     width: 33.333%;
   }
 
-/* line 1106 : /opt/mootools/website/views/css/global.styl */
+/* line 1113 : /opt/mootools/website/views/css/global.styl */
   .updates section:nth-of-type(1) div.box {
     margin: 0 1.75em 0 0;
   }
 
-/* line 1109 : /opt/mootools/website/views/css/global.styl */
+/* line 1116 : /opt/mootools/website/views/css/global.styl */
   .updates section:nth-of-type(2) div.box {
     margin: 0 1.25em 0;
   }
 
-/* line 1112 : /opt/mootools/website/views/css/global.styl */
+/* line 1119 : /opt/mootools/website/views/css/global.styl */
   .updates section:nth-of-type(3) div.box {
     margin: 0 0 0 1.75em;
   }
 
-/* line 1116 : /opt/mootools/website/views/css/global.styl */
+/* line 1123 : /opt/mootools/website/views/css/global.styl */
 
-/* line 1117 : /opt/mootools/website/views/css/global.styl */
+/* line 1124 : /opt/mootools/website/views/css/global.styl */
   #header .wrapper div {
     position: relative;
   }
 
-/* line 1120 : /opt/mootools/website/views/css/global.styl */
+/* line 1127 : /opt/mootools/website/views/css/global.styl */
   #header h1 {
     padding: 1em 0;
   }
 
-/* line 1123 : /opt/mootools/website/views/css/global.styl */
+/* line 1130 : /opt/mootools/website/views/css/global.styl */
   #header nav {
     bottom: 0em;
     position: absolute;
     right: 0;
   }
 
-/* line 1127 : /opt/mootools/website/views/css/global.styl */
+/* line 1134 : /opt/mootools/website/views/css/global.styl */
   #header nav ul li {
     float: left;
     margin-left: 1em;
   }
 
-/* line 1130 : /opt/mootools/website/views/css/global.styl */
+/* line 1137 : /opt/mootools/website/views/css/global.styl */
   #header nav ul li:first-child {
     margin-left: 0;
   }
 
-/* line 1133 : /opt/mootools/website/views/css/global.styl */
+/* line 1140 : /opt/mootools/website/views/css/global.styl */
   #header nav ul li a {
     position: relative;
   }
 
-/* line 1135 : /opt/mootools/website/views/css/global.styl */
+/* line 1142 : /opt/mootools/website/views/css/global.styl */
   #header nav ul li a span {
     position: relative;
     top: -1em;
   }
 
-/* line 1139 : /opt/mootools/website/views/css/global.styl */
+/* line 1146 : /opt/mootools/website/views/css/global.styl */
   #header nav ul li.selected a {
     color: #777571;
   }
 
-/* line 1141 : /opt/mootools/website/views/css/global.styl */
+/* line 1148 : /opt/mootools/website/views/css/global.styl */
   #header nav ul li.selected a:after {
     background: #fff;
     border: solid 1px;
@@ -1834,83 +1846,84 @@ a.back-to-top {
     width: 10px;
   }
 
-/* line 1156 : /opt/mootools/website/views/css/global.styl */
+/* line 1163 : /opt/mootools/website/views/css/global.styl */
   #menu {
     padding-top: 1em;
   }
 
-/* line 1158 : /opt/mootools/website/views/css/global.styl */
+/* line 1165 : /opt/mootools/website/views/css/global.styl */
   #menu li {
     float: left;
     width: 25%;
   }
 
-/* line 1162 : /opt/mootools/website/views/css/global.styl */
+/* line 1169 : /opt/mootools/website/views/css/global.styl */
   #menu li:nth-of-type(1) a {
     margin: 0 0.6em 0 0;
   }
 
-/* line 1165 : /opt/mootools/website/views/css/global.styl */
+/* line 1172 : /opt/mootools/website/views/css/global.styl */
   #menu li:nth-of-type(2) a {
     margin: 0 0.45em 0 0.3em;
   }
 
-/* line 1168 : /opt/mootools/website/views/css/global.styl */
+/* line 1175 : /opt/mootools/website/views/css/global.styl */
   #menu li:nth-of-type(3) a {
     margin: 0 0.3em 0 0.45em;
   }
 
-/* line 1171 : /opt/mootools/website/views/css/global.styl */
+/* line 1178 : /opt/mootools/website/views/css/global.styl */
   #menu li:nth-of-type(4) a {
     margin: 0 0 0 0.6em;
   }
 
-/* line 1174 : /opt/mootools/website/views/css/global.styl */
+/* line 1181 : /opt/mootools/website/views/css/global.styl */
   #footer.wrapper {
     padding-top: 2em;
     padding-bottom: 4em;
   }
 
-/* line 1178 : /opt/mootools/website/views/css/global.styl */
+/* line 1185 : /opt/mootools/website/views/css/global.styl */
   #sitemap {
     float: right;
   }
 
-/* line 1181 : /opt/mootools/website/views/css/global.styl */
+/* line 1188 : /opt/mootools/website/views/css/global.styl */
   #sitemap div {
     float: left;
     margin-left: 2em;
+    width: 8.6em;
   }
 
-/* line 1185 : /opt/mootools/website/views/css/global.styl */
+/* line 1193 : /opt/mootools/website/views/css/global.styl */
   #sitemap h3 {
     margin-bottom: 0.3em;
   }
 
-/* line 1188 : /opt/mootools/website/views/css/global.styl */
+/* line 1196 : /opt/mootools/website/views/css/global.styl */
   #credits {
     float: left;
   }
 
-/* line 1191 : /opt/mootools/website/views/css/global.styl */
+/* line 1199 : /opt/mootools/website/views/css/global.styl */
   .prime .big-icon {
     height: 230px;
     width: 340px;
   }
 
-/* line 1195 : /opt/mootools/website/views/css/global.styl */
+/* line 1203 : /opt/mootools/website/views/css/global.styl */
   .elements .big-icon {
     height: 230px;
     width: 340px;
   }
 
-/* line 1199 : /opt/mootools/website/views/css/global.styl */
+/* line 1207 : /opt/mootools/website/views/css/global.styl */
   .moofx .big-icon {
     height: 250px;
     width: 340px;
   }
 
-/* line 1203 : /opt/mootools/website/views/css/global.styl */
+/* line 1211 : /opt/mootools/website/views/css/global.styl */
   .agent .big-icon {
     height: 250px;
     width: 340px;

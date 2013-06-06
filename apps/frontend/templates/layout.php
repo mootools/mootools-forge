@@ -107,7 +107,7 @@
 		<div id="credits" role="contentinfo">
 			<p><a href="/"><img class="mootools" src="/images/logo/mootools.png" alt="MooTools"></a></p>
 			<p>Copyright © 2006-2013<br>Valerio Proietti & MooTools Developers</p>
-			<p><a href="http://mediatemple.net"><img src="/images/credits/mediatemple.png" alt="In partnership with Media Temple"></a></p>
+			<p class="mediatemple"><a href="http://mediatemple.net">Web Hosting by Media Temple</a></p>
 		</div>
 	</footer>
 </body>

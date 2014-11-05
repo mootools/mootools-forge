@@ -2,9 +2,11 @@
 	margin-bottom: 1.3em;
 }
 
-#header { padding-bottom: 1.5em; margin-bottom: 1.5em; }
-#header h2 { margin-bottom: 0.5em; }
-#header p a { font-size: 1em; padding-bottom: 0.5em; }
+#main, #sidebar { margin-top: 3em}
+
+#forge-header { padding-bottom: 1.5em; margin-bottom: 1.5em; }
+#forge-header h2 { margin-bottom: 0.5em; }
+#forge-header p a { font-size: 1em; padding-bottom: 0.5em; }
 
 h2.green { color: #78ba91; }
 h3.blue { color: #6b7b95; font-weight: bold; }
@@ -65,7 +67,7 @@ dl.table dt { float: left; display: block; width: 35%; margin: 0; }
 
 .authors { margin: 8px; }
 .authors li { list-style-type: none; display: inline-block; vertical-align: top; position: relative; }
-.authors li a { text-decoration: none; display: inline-block; width: 90px; padding: 0 3px; text-align: center; font-size: 11px; margin-bottom: 10px; }
+.authors li a { text-decoration: none; display: inline-block; width: 90px; text-align: center; font-size: 11px; margin-bottom: 10px; }
 .authors li .avatar, .authors li .name { display: block; margin-bottom: 5px; }
 .authors li .avatar { display: block; width: 50px; height: 50px; margin-left: auto; margin-right: auto; border: 1px solid #999; }
 .authors li .name { display: block; font-weight: bold; color: #464646; }

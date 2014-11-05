@@ -12,6 +12,9 @@
 	<?php include_javascripts() ?>
 	<?php include_stylesheets() ?>
 
+	<link rel="shortcut icon" type="image/x-icon" href="/images/favicon/mootools.ico">
+	<link rel="icon" type="image/png" href="/images/favicon/mootools.png">
+
 	<script type="text/javascript">/*<![CDATA[*/
 		var _gaq = _gaq || [];
 		_gaq.push(['_setAccount', 'UA-1122274-8'], ['_trackPageview']);
@@ -30,25 +33,28 @@
 			<div id="logo">
 				<p><a href="/"><img src="/images/logo/mootools.png" alt="MooTools Home"></a></p>
 			</div>
-			<div class="right clearfix">
+			<div id="main-header" class="right clearfix">
 				<ul>
+					<li><a href="/core/">Core</a></li>
+					<li><a href="/more/"> More</a></li>
 					<li><a href="/blog">Blog</a></li>
-					<li><a href="http://github.com/mootools">Contribute</a></li>
 					<li class="selected"><a href="<?php echo url_for('@homepage') ?>">Forge</a></li>
+					<li><a href="http://github.com/mootools">Contribute</a></li>
 				</ul>
-				<form id="search" role="search" method="get" action="/">
+				<form id="search" role="search" method="get" action="/search">
 					<label for="search-field">
 						<span aria-hidden="true" class="icon search"></span>
-						<input id="search-field" type="search" placeholder="Search in the site">
+						<input id="search-field" name="q" type="search" placeholder="Search in the site">
 					</label>
 				</form>
 			</div>
 		</div>
 	</div>
 	<hr>
+	<header id="header" role="banner"></header>
 
 	<div role="main" class="main clearfix">
-		<div class="overview clearfix wrapper">
+		<div class="clearfix wrapper">
 			<div id="main" class="span-18 colborder">
 				<?php if ($sf_user->hasFlash('notice')): ?>
 					<div class="notice"><?php echo $sf_user->getFlash('notice') ?></div>
@@ -63,50 +69,46 @@
 	</div>
 
 	<hr>
-	<nav id="menu" role="navigation">
-		<div class="clearfix wrapper">
-			<h2 class="visually-hidden">Projects</h2>
-			<ul>
-				<li class="prime"><a href="/prime"><img src="/images/logo/prime.png" alt="Prime"></a></li>
-				<li class="elements"><a href="/elements"><img src="/images/logo/elements.png" alt="Elements"></a></li>
-				<li class="moofx"><a href="/moofx"><img src="/images/logo/moofx.png" alt="MooFx"></a></li>
-				<li class="agent"><a href="/agent"><img src="/images/logo/agent.png" alt="Agent"></a></li>
-			</ul>
-		</div>
-	</nav>
-
 	<footer id="footer" class="clearfix wrapper">
 		<nav id="sitemap" role="navigation">
 			<div>
 				<h3>About<span aria-hidden="true" class="slider"></span></h3>
 				<ul>
 					<li><a href="/blog">Blog</a></li>
-					<li><a href="#">Books</a></li>
-					<li><a href="#">Developers</a></li>
-					<li><a href="#">Merchandising</a></li>
+					<li><a href="/books">Books</a></li>
+					<li><a href="/developers">Developers</a></li>
+					<li><a href="http://mad4milk.spreadshirt.net/" target="_blank">Merchandising</a></li>
 				</ul>
 			</div>
 			<div>
 				<h3>Support<span aria-hidden="true" class="slider"></span></h3>
 				<ul>
-					<li><a href="irc://irc.freenode.net/#mootools">IRC Channel</a></li>
-					<li><a href="http://groups.google.com/group/mootools-users">User Group</a></li>
-					<li><a href="http://mootorial.com">The MooTorial</a></li>
+					<li><a href="irc://irc.freenode.net/#mootools" target="_blank">IRC Channel</a></li>
+					<li><a href="http://groups.google.com/group/mootools-users" target="_blank">User Group</a></li>
+					<li><a href="http://mootorial.com" target="_blank">The MooTorial</a></li>
+					<li><a href="http://stackoverflow.com/questions/tagged/mootools" target="_blank">Stack Overflow</a></li>
 				</ul>
 			</div>
 			<div>
 				<h3>Connect with us<span aria-hidden="true" class="slider"></span></h3>
 				<ul>
-					<li><a href="http://github.com/mootools"><span aria-hidden="true" class="icon github"></span>GitHub</a></li>
-					<li><a href="http://twitter.com/mootools"><span aria-hidden="true" class="icon twitter"></span>Twitter</a></li>
-					<li><a href="#"><span aria-hidden="true" class="icon facebook"></span>Facebook</a></li>
-					<li><a href="#"><span aria-hidden="true" class="icon googleplus"></span>Google+</a></li>
+					<li><a href="http://github.com/mootools" target="_blank"><span aria-hidden="true" class="icon github"></span>GitHub</a></li>
+					<li><a href="http://twitter.com/mootools" target="_blank"><span aria-hidden="true" class="icon twitter"></span>Twitter</a></li>
+					<li><a href="https://www.facebook.com/mootools" target="_blank"><span aria-hidden="true" class="icon facebook"></span>Facebook</a></li>
+					<li><a href="https://plus.google.com/u/0/117731876964599459921/posts" target="_blank"><span aria-hidden="true" class="icon googleplus"></span>Google+</a></li>
+				</ul>
+			</div>
+			<div>
+				<h3>Documentation<span aria-hidden="true" class="slider"></span></h3>
+				<ul>
+					<li><a href="/core/docs">MooTools Core</a></li>
+					<li><a href="/more/docs">MooTools More</a></li>
 				</ul>
 			</div>
 		</nav>
 		<div id="credits" role="contentinfo">
-			<p><a href="/"><img class="mootools" src="/images/logo/mootools.png" alt="MooTools"></a></p>
-			<p>Copyright © 2006-2013<br>Valerio Proietti & MooTools Developers</p>
+			<p><a href="/"><img src="/images/logo/mootools.png" alt="MooTools" class="mootools"></a></p>
+			<p>Copyright © 2006-2014<br />Valerio Proietti &amp; MooTools Developers</p>
 			<p class="mediatemple"><a href="http://mediatemple.net">Web Hosting by Media Temple</a></p>
 		</div>
 	</footer>

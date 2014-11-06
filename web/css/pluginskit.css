@@ -18,7 +18,7 @@ label { font-weight: normal; }
 dl.table dd { display: block; float: left; clear: right; margin: 0 0 10px 0; width: 65%; }
 dl.table dt { float: left; display: block; width: 35%; margin: 0; }
 
-.input_submit input, .button { background: #c0c0c0  -webkit-gradient(linear, 0% 0%, 0% 100%, from(#eee), to(#C1C1C1)); border: 1px solid #999; color: #333 !important; text-shadow: 0 1px 0 #fff; border-radius: 8px; -webkit-border-radius: 8px; -moz-border-radius: 8px; text-transform: uppercase; font-weight: bold; padding: 5px 8px; cursor: pointer; }
+.input_submit input, .button { display: inline-block; background: #c0c0c0  -webkit-gradient(linear, 0% 0%, 0% 100%, from(#eee), to(#C1C1C1)); border: 1px solid #999; color: #333 !important; text-shadow: 0 1px 0 #fff; border-radius: 8px; -webkit-border-radius: 8px; -moz-border-radius: 8px; text-transform: uppercase; font-weight: bold; padding: 5px 8px; cursor: pointer; }
 .input_submit input:hover, .button:hover { background: #ccc; }
 .input_submit input:active, .button:active { background: #fff; }
 

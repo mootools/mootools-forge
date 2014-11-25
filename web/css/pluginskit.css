@@ -189,3 +189,110 @@ a.twitter_button:active { background-position: bottom; }
 
 form .note { font-size: 11px; margin-top: -10px; margin-bottom: 10px; margin-left: 150px; color: #666; }
 form .note-warning { color: #cc0000; }
+
+/* CSS patch for new NodeJS website */
+
+#main, #sidebar {
+    padding-top: 4em !important;
+    padding-bottom: 1em !important;
+    text-shadow: none !important;
+}
+#main input, #sidebar input, #main select, #sidebar select {
+    text-transform: none !important;
+    font-weight: 200 !important;
+    line-height: 1em !important;
+    font-size: 1.1em !important;
+    max-width: 8em;
+}
+#main .horizontal-form li, #sidebar .horizontal-form li {
+    padding-right: 0.5em !important;
+}
+#main .horizontal-form li #submit_filter, #sidebar .horizontal-form li #submit_filter {
+    margin-right: 0.5em;
+}
+#main {
+    width: 69% !important;
+}
+#main h2, #main h3 {
+    font-size: 2em !important;
+    padding-bottom: 0.5em !important;
+    color: #7d8aa5 !important;
+    font-weight: 200 !important;
+}
+#main p a {
+    color: #7d8aa5 !important;
+}
+#sidebar {
+    float: right !important;
+    width: 25% !important;
+}
+#sidebar input[type="text"], #sidebar input[type="password"] {
+    width: 100% !important;
+    max-width: 100% !important;
+}
+#sidebar h4 {
+    background: #5a5d60;
+    border-radius: 5px;
+    margin: 2em 0 0.5em;
+    padding: 0.5em;
+    color: #fff !important;
+}
+a, color: #e5e8ed, input[type="text"], input[type="password"], select {
+    background-color: #fff !important;
+}
+#search {
+    width: 12em !important;
+    font-size: 0.85em !important;
+}
+#main input[type="checkbox"] {
+    box-sizing: border-box;
+    padding: 0;
+    width: 0.7em;
+    height: 0.7em;
+    margin: 0.15em;
+    border-radius: 3px;
+}
+#main input[type="checkbox"]: checked {
+    background: #777571;
+}
+#login_submit, #search_submit input, #submit_filter {
+    background: #e5e8ed !important;
+    border-radius: 5px !important;
+    color: #7d8aa3 !important;
+    display: block !important;
+    position: relative !important;
+    font-size: 1.1em !important;
+    cursor: pointer !important;
+    border-radius: 3px !important;
+    padding: 0.35em !important;
+    border: none !important;
+}
+#login_submit: active, #search_submit input: active, #submit_filter: active, #login_submit: focus, #search_submit input: focus, #submit_filter: focus {
+    background-color: #777571 !important;
+}
+#submit_filter {
+    display: inline-block !important;
+}
+#login-form, #login-other, #sidebar ul {
+    margin-left: 0px !important;
+}
+#login-form div.input_submit {
+    float: left !important;
+    margin: 0.5em 0 !important;
+}
+#search_submit input {
+    margin-top: 0.5em !important;
+}
+.tags-list a {
+    background: #f4f1ed !important;
+    color: #777571 !important;
+    border-radius: 3px !important;
+    display: inline !important;
+    padding: 0 0.5em !important;
+}
+.features {
+    text-align: left;
+}
+.features section {
+    width: 50%;
+}
